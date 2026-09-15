@@ -6,8 +6,8 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 
 **0.1.0 is a preview.** Local saving, workout progression, planning, recovery, history, backups, and exports are functional. Cloud account integration is implemented, but the public preview has no live account service configured. It currently saves on each device. Use a JSON backup to move your full history between devices.
 
-- Desktop downloads: use the assets on this repository’s Releases page.
-- Phone or desktop browser: use the GitHub Pages app, then install it from your browser. The Pages build is local-only.
+- Desktop downloads: [get the preview release](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.1.0) or [view all releases](https://github.com/JCarterJohnson/PANDR-5/releases).
+- Phone or desktop browser: [open PANDR-5](https://jcarterjohnson.github.io/PANDR-5/), then install it from your browser. The Pages build is local-only.
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Review the source and download only from this repository; operating systems may display security warnings. Do not disable system security protections globally.
 - No domain purchase, subscription, analytics, advertising, or paid API is needed for local use.
 

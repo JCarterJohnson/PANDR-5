@@ -21,9 +21,9 @@ Use this exact JSON shape. Extra fields are rejected. All exercise content must 
       "name": "Name from your exercise source",
       "equipment": "Equipment from your source",
       "contributions": [
-        { "muscle": "Primary muscle name", "coefficient": 1 },
-        { "muscle": "Secondary muscle name", "coefficient": 0.5 },
-        { "muscle": "Tertiary muscle name", "coefficient": 0.25 }
+        { "muscle": "chest", "coefficient": 1 },
+        { "muscle": "anterior-delts", "coefficient": 0.5 },
+        { "muscle": "triceps", "coefficient": 0.25 }
       ],
       "source": "Your source or citation",
       "beyondFailureAllowed": false
@@ -38,7 +38,7 @@ Coefficients encode primary (1), secondary (0.5), and tertiary (0.25) roles. Mul
 
 1. Use an owner-controlled Supabase project. No paid plan is required by this implementation; review the provider's current free limits before provisioning.
 2. Apply `supabase/schema.sql` once in the project's SQL editor. The script creates two private tables and explicit Data API grants. Do not apply it to unrelated tables or use a service key in the app.
-3. Enable email/password authentication in Supabase. Set the site's URL and allowed confirmation/reset redirects to the actual deployed HTTPS app URL. Keep email confirmation enabled when distributing the app publicly.
+3. Enable email/password authentication in Supabase. The provider’s default email sender is limited and is not a public production mail service; configure an appropriate SMTP sender before offering public email confirmation and recovery. Keep it inside its free quota, or use a deliberately configured identity provider (not implemented in this preview). Set the site's URL and allowed confirmation/reset redirects to the actual deployed HTTPS app URL. Keep email confirmation enabled when distributing the app publicly.
 4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` at build time. Only an `sb_publishable_…` key or legacy JWT with role `anon` is accepted. A secret or service-role key is rejected.
 5. Build and redeploy. Without these variables, the account controls should explain that local mode is available and cloud is not configured.
 6. Verify two real test accounts before release: owner can read/write their profile; the other account sees no rows and cannot insert/update rows for the owner; a signed-out client receives no table access. Also verify password reset, email confirmation, and logout on the deployed redirect URL.
