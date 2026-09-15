@@ -1,0 +1,64 @@
+name: Deploy local-only PWA to GitHub Pages
+
+# Publishing is an explicit action. Pushes never deploy this site.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Find app folder
+        id: location
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "app=." >> "$GITHUB_OUTPUT"
+          elif [ -f App/package.json ]; then
+            echo "app=App" >> "$GITHUB_OUTPUT"
+          else
+            echo "PANDR-5 package.json was not found."
+            exit 1
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: ${{ steps.location.outputs.app }}/package-lock.json
+      - run: npm ci
+        working-directory: ${{ steps.location.outputs.app }}
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      - run: npm run check
+        working-directory: ${{ steps.location.outputs.app }}
+        env:
+          VITE_ENABLE_CLOUD_SYNC: 'false'
+          VITE_SUPABASE_URL: ''
+          VITE_SUPABASE_PUBLISHABLE_KEY: ''
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ${{ steps.location.outputs.app }}/dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

@@ -1,0 +1,67 @@
+,"PANDR-5™ Model  v1.1.1
+(PPLUL, Abating, Non-competing, Double Progression, RIR, 5-day)",,,,,,Sets Per Muscle Group Per Week,,,,,
+,"The PANDR-5™ model is a structured five-day Push, Pull, Legs, Upper, Lower plan that hits each muscle twice per week. Every lift uses a relatively wide rep range (e.g., 6–10) with a planned RIR staircase between 3 - <0 RIR. You keep one load across sets and add reps over time. When the final set reaches the top of the range at 0–1 RIR, increase the load 2–5% next session and restart at the low end. If that last set overshoots the cap at the target RIR, treat it the same (add weight next time). If the last set falls below the floor at 0–1 RIR, reduce the load slightly (about 2–3%) next session; if it’s within the range but easier than 1 RIR, keep the load and chase reps until the anchor set lands at ≤1 RIR. *When a movement includes a beyond-failure finisher (<0 RIR), use the preceding set as your progression anchor. If that set reaches the top of the rep range at its assigned RIR, increase the load by 2–5% next session. The extra work past failure doesn’t change the load bump.
+
+You use the same weight for all sets, adding reps over time until your final set can hit the top of the range without exceeding your target RIR. When that happens, you increase the weight slightly and restart at the low end of the range. For heavy barbell compounds, 0 RIR is treated as technical failure (last clean rep), while supported machines and isolations can safely be taken to true failure and occasionally beyond (<0). Beyond failure sets are strategically placed only (for the most part) on the last set of the last exercise of a given muscle group.
+
+The split uses non-competing pairs (NCP) to maximize performance. For chest days, I pair chest with biceps. In pressing movements, the triceps work as prime synergists with the pecs, so training triceps would compete with pressing. By contrast, the biceps contribute little to pressing (they act as elbow antagonists and primarily as shoulder stabilizers) so overlap is minimal. That lets me press heavy without arm pre-fatigue, then train biceps hard without compromising performance.
+
+The weekly set targets for each muscle group are calculated roughly (!) using the concept of fractional set allocation (also called effective sets or set-equivalent estimation in some research literature). This method accounts for the fact that multi-joint lifts stimulate multiple muscles to varying degrees. For example, a bench press provides full set credit to the chest, partial set credit to the triceps, and minimal direct stimulus to the biceps. By assigning ≤1.0 of a set to each muscle based on its role in the movement, the program ensures each muscle hits an optimal weekly volume without unnecessary overlap or fatigue spillover. Note* Given the limited research, this concept is applied conservatively. The set-equivalent multipliers represent approximate averages for managing weekly volume, not exact prescriptions for each muscle’s involvement in a specific movement.
+
+This method (somewhat expirimentally) balances effort and recovery, gives a clear and consistent trigger for progression, and naturally adjusts to your current strength level while keeping training enjoyable and sustainable.",,,,,,,"Note: The total set count shown here does not mean you’ll be performing all those sets back-to-back for each muscle group. Many of these sets are counted across overlapping, synergistic muscles. In practice, you only need to follow the set numbers listed in your written plan as those already account for all the indirect work. What this table aims to demonstrate is how close a given muscle group is to the optimal (yet very wide) range of 10-20ish (maybe a few more) sets per week.",,,,
+,,,,,,,,Primary Mover ≈ 1 Set | Secondary Synergist ≈ 1/2 Set | Tertiary/Minor Synergist ≈ 1/4 Set,,,,
+,Day,Exercise,Sets,Rep Range,RIR (≈n),,,Muscle Group,Direct Sets,Fractional Sets (≈),Total Sets,Total Sets (Whole Group)
+,(1) Push + NCP,Bench Press,4,5 - 8,"3, 2, 1, 0-1",,Chest,Chest (pec major),20,0,20,20
+,,Incline Dumbbell Press,3,8 - 11,"2, 1, 0-1",,Shoulders,Anterior Delts,0,7,7,21
+,,Machine Chest Flyes,3,12 - 15,"1, 0, <0⚠️",,,Lateral Delts,9,0,9,
+,,"Close-Grip Chinups (Assisted, BW, or Weighted)",2,5 - 7,"2, 0-1",,,Rear Delts,0,5,5,
+,,Preacher Curls (Machine),3,8 - 12,"2, 1, 0-1",,Arms,Triceps,15,3.5,18.5,43.25
+,,Hammer Curls,3,8 - 12,"2, 0-1, <0⚠️",,,Biceps (Brachii),7,8,15,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,Brachialis,3,3.5,6.5,
+,,,,,,,,Brachioradial.,0,3.25,3.25,
+,(2) Pull + NCP,Single-Arm Bent-Over Dumbbell Row,3,6 - 9,"3, 2, 0-1",,Back,Lats / teres major,20,0,20,25
+,,Lat Pulldown (Standard Bar),4,8 - 11,"3, 2, 1, 0-1",,,Mid / Low Traps & Rhomboids,0,5,5,
+,,Lat Pullovers (Cable; any attachment),3,12 - 15,"2, 0-1, <0⚠️",,,Upper Traps,0,0,0,
+,,Ez-Bar Tricep Overhead Extension,3,6 - 9,"3, 2, 0-1",,Legs,Quads,20,0,20,76.5
+,,Tricep Cable Pushdown (preferred attachment),3,10 - 12,"3, 2, 0-1",,,Hamstrings,12,7.5,19.5,
+,,Tricep Cable Overhead Extension (preferred attachment),3,12 - 15,"2, 0-1, <0⚠️",,,Glute max,3,8.75,11.75,
+,,,,,,,,Glute med/min,0,1.5,1.5,
+,(3) Legs,Seated Hamstring Curls,4,8 - 10,"3, 2, 1, 0-1",,,Adductors,0,4.75,4.75,
+,,RDL (Barbell or Dumbell),4,5 - 8,"3, 2, 1, 0-1",,,Gastroc.,10,0,10,
+,,Leg Press,4,6 - 9,"3, 2, 1, 0-1",,,Soleus,0,5,5,
+,,Dumbbell Heel-Elevated Squat,3,12 - 15,"2, 0-1, <0⚠️",,,Erector Spinae,0,4,4,
+,,Leg Extension,3,10 - 12,"2, 1, 0-1",,,,,,,
+,,Standing Calf Raise (Machine) ,5,12 - 15,"3, 2, 1, 0-1, <0⚠️",,,,,,,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,,,,,
+,,,,,,,,,,,,
+,(4) Active Rest,"Decision rule: if sleep was poor, you feel run-down, resting HR is up, or soreness is lingering, take passive rest (easy steps only, no planned cardio). Otherwise do 20–30 min very easy aerobic work at conversational pace (≈40–60% max HR) plus 5–10 min mobility. Nutrition: hit 1.6–2.2 g/kg protein, spread across the day; hydrate; optional 30–40 g protein before bed. Sleep: aim 7–9 h; dark, cool room; screens off the last hour. Recovery guardrails: no failure work, no HIIT, no “make-up” lifting.",,,,,,,,,,
+,,,,,,,,,,,,
+,(5) Upper,Wide-Grip Seated Cable Rows,4,8 - 10,"3, 2, 1, 0-1",,,,,,,
+,,Lat Pullovers (Cable; any attachment),4,12 - 15,"3, 2, 0-1, <0⚠️",,,,,,,
+,,Incline Dumbbell Press,4,6 - 9,"3, 2, 1, 0-1",,,,,,,
+,,Machine Chest Flyes,3,10 -  12,"3, 2, 0-1",,,,,,,
+,,Incline/Elevated Pushups,3,10 - 20,"1, 0-1, <0⚠️",,,,,,,
+,,Incline Curls,4,8 - 12,"2, 1, 0-1, <0⚠️",,,,,,,
+,,Tricep Cable Pushdown (preferred attachment),3,8 - 12,"2, 1, 0-1",,,,,,,
+,,Tricep Cable Overhead Extension (preferred attachment),3,12 - 15,"2, 0-1, <0⚠️",,,,,,,
+,,,,,,,,,,,,
+,(6) Lower,Lying Hamstring Curls,4,8 - 12,"3, 2, 1, 0-1",,,,,,,
+,,45° Hip Extension,4,10 - 15,"3, 2, 1, 0-1",,,,,,,
+,,Hack Squat,4,5 - 8,"3, 2, 1, 0-1",,,,,,,
+,,Leg Extension,3,10 - 12,"2, 0-1, <0⚠️",,,,,,,
+,,Lunges,3,7 - 10,"3, 2, 0-1",,,,,,,
+,,Standing Calf Raise (Machine) ,5,12 - 15,"3, 2, 1, 0-1, <0⚠️",,,,,,,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,,,,,
+,,,,,,,,,,,,
+,(7) Active Rest,"Decision rule: if sleep was poor, you feel run-down, resting HR is up, or soreness is lingering, take passive rest (easy steps only, no planned cardio). Otherwise do 20–30 min very easy aerobic work at conversational pace (≈40–60% max HR) plus 5–10 min mobility. Nutrition: hit 1.6–2.2 g/kg protein, spread across the day; hydrate; optional 30–40 g protein before bed. Sleep: aim 7–9 h; dark, cool room; screens off the last hour. Recovery guardrails: no failure work, no HIIT, no “make-up” lifting. Weekly check: if two or more red flags appear (performance dip, nagging joints, poor sleep), schedule a 1-week pivot next week (halve sets, keep loads similar), then resume normal training.",,,,,,,,,,
+,,,,,,,,,,,,
+,Updates,,,,,,,,,,,
+,"v1.1.0 
+- Introduced the Blank Fillout sheet version of the PANDR-5 model. See sheet selection at the bottom of the page.
+- Introduced semantic versioning update numbering system (i.e. v#.#.#)
+- Replaced sissy squats (previously D24) with Dumbbell Heel-Elevated Squat (now D23). Replaced due to not being able to conventiently load with weight for double progression scheme.
+- Leg extensions (previously D23) moved to after Dumbbell Heel-Elevated Squat (now D23)
+
+v1.1.1
+- changed Lat Pullover (D15 & D31) rep range from 15 - 20 to 12 - 15
+- changed Incline Pushups (D34) reps from 15 - 20 to 10 - 20",,,,,,,,,,,

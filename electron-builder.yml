@@ -1,0 +1,55 @@
+appId: app.pandr.five
+productName: PANDR-5
+copyright: Copyright © 2026 PANDR-5 contributors
+asar: true
+npmRebuild: false
+directories:
+  output: release
+  buildResources: desktop/resources
+files:
+  - dist/**/*
+  - desktop/main.cjs
+  - desktop/security.cjs
+  - package.json
+  - '!node_modules/**/*'
+extraMetadata:
+  main: desktop/main.cjs
+artifactName: '${productName}-${version}-${os}-${arch}.${ext}'
+publish: null
+mac:
+  category: public.app-category.healthcare-fitness
+  icon: public/icons/icon-1024.png
+  target:
+    - dmg
+    - zip
+  identity: null
+  hardenedRuntime: false
+  notarize: false
+dmg:
+  title: 'PANDR-5 ${version}'
+  contents:
+    - x: 130
+      y: 180
+    - x: 410
+      y: 180
+      type: link
+      path: /Applications
+win:
+  icon: public/icons/icon-512.png
+  target:
+    - portable
+    - nsis
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+  artifactName: '${productName}-${version}-${os}-${arch}-setup.${ext}'
+portable:
+  artifactName: '${productName}-${version}-${os}-${arch}-portable.${ext}'
+linux:
+  icon: public/icons/icon-512.png
+  category: Utility
+  target:
+    - AppImage
+  executableName: pandr-5

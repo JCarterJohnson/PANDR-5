@@ -1,0 +1,60 @@
+,"PANDR-5™ Model  v1.1.1
+Blank Fillout Version (read below)",,,,,,,,,Updates
+,"This is the editable tracker for the PANDR-5 model. It’s always kept up-to-date with the most current version of the program. To use it, make a copy to your own account so you can record your data without affecting the original.
+
+In keeping with the PANDR-5 methodology, the load for each exercise stays consistent across all working sets. This means you don’t need to log weight for every set, just record the load once. Likewise, when logging reps, you only need to record the number achieved on your final set of the exercise. That last set is your progression anchor. The one exception is if the exercise ends with a beyond-failure finisher (<0 RIR); in that case, use the preceding set as the anchor. If that anchor set reaches the top of the rep range at its assigned RIR, increase the load by 2–5% next session. The extra work past failure doesn’t affect when you bump the weight.
+
+While I recommend running the default exercise selections unless you’re experienced, it’s possible to swap exercises if needed for preference, equipment, or circumstances. The individual lifts are less structurally important than the overarching methodology. If you do make swaps, make sure you research the prime movers and synergists so you can correctly update the fractional set allocation in the main guide sheet. This keeps total volume per muscle accurate.",,,,,,,,,"v1.1.0 
+- Introduced the Blank Fillout sheet version of the PANDR-5 model. See sheet selection at the bottom of the page.
+- Introduced semantic versioning update numbering system (i.e. v#.#.#)
+- Replaced sissy squats (previously D24) with Dumbbell Heel-Elevated Squat (now D23). Replaced due to not being able to conventiently load with weight for double progression scheme.
+- Leg extensions (previously D23) moved to after Dumbbell Heel-Elevated Squat (now D23)
+
+v1.1.1
+- changed Lat Pullover (D15 & D31) rep range from 15 - 20 to 12 - 15
+- changed Incline Pushups (D34) reps from 15 - 20 to 10 - 20"
+,,,,,,,,,,
+,Day,Exercise,Sets,Rep Range,RIR (≈n),,Weight,Reps,,
+,(1) Push + NCP,Bench Press,4,5 - 8,"3, 2, 1, 0-1",,,,,
+,,Incline Dumbbell Press,3,8 - 11,"2, 1, 0-1",,,,,
+,,Machine Chest Flyes,3,12 - 15,"1, 0, <0⚠️",,,,,
+,,"Close-Grip Chinups (Assisted, BW, or Weighted)",2,5 - 7,"2, 0-1",,,,,
+,,Preacher Curls (Machine),3,8 - 12,"2, 1, 0-1",,,,,
+,,Hammer Curls,3,8 - 12,"2, 0-1, <0⚠️",,,,,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,,,
+,,,,,,,,,,
+,(2) Pull + NCP,Single-Arm Bent-Over Dumbbell Row,3,6 - 9,"3, 2, 0-1",,,,,
+,,Lat Pulldown (Standard Bar),4,8 - 11,"3, 2, 1, 0-1",,,,,
+,,Lat Pullovers (Cable; any attachment),3,12 - 15,"2, 0-1, <0⚠️",,,,,
+,,Ez-Bar Tricep Overhead Extension,3,6 - 9,"3, 2, 0-1",,,,,
+,,Tricep Cable Pushdown (preferred attachment),3,10 - 12,"3, 2, 0-1",,,,,
+,,Tricep Cable Overhead Extension (preferred attachment),3,12 - 15,"2, 0-1, <0⚠️",,,,,
+,,,,,,,,,,
+,(3) Legs,Seated Hamstring Curls,4,8 - 10,"3, 2, 1, 0-1",,,,,
+,,RDL (Barbell or Dumbell),4,5 - 8,"3, 2, 1, 0-1",,,,,
+,,Leg Press,4,6 - 9,"3, 2, 1, 0-1",,,,,
+,,Dumbbell Heel-Elevated Squat,3,12 - 15,"2, 0-1, <0⚠️",,,,,
+,,Leg Extension,3,10 - 12,"2, 1, 0-1",,,,,
+,,Standing Calf Raise (Machine) ,5,12 - 15,"3, 2, 1, 0-1, <0⚠️",,,,,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,,,
+,,,,,,,,,,
+,(4) Active Rest,"Decision rule: if sleep was poor, you feel run-down, resting HR is up, or soreness is lingering, take passive rest (easy steps only, no planned cardio). Otherwise do 20–30 min very easy aerobic work at conversational pace (≈40–60% max HR) plus 5–10 min mobility. Nutrition: hit 1.6–2.2 g/kg protein, spread across the day; hydrate; optional 30–40 g protein before bed. Sleep: aim 7–9 h; dark, cool room; screens off the last hour. Recovery guardrails: no failure work, no HIIT, no “make-up” lifting.",,,,,n/a,,,
+,,,,,,,,,,
+,(5) Upper,Wide-Grip Seated Cable Rows,4,8 - 10,"3, 2, 1, 0-1",,,,,
+,,Lat Pullovers (Cable; any attachment),4,12 - 15,"3, 2, 0-1, <0⚠️",,,,,
+,,Incline Dumbbell Press,4,6 - 9,"3, 2, 1, 0-1",,,,,
+,,Machine Chest Flyes,3,10 -  12,"3, 2, 0-1",,,,,
+,,Incline/Elevated Pushups,3,10 - 20,"1, 0-1, <0⚠️",,,,,
+,,Incline Curls,4,8 - 12,"2, 1, 0-1, <0⚠️",,,,,
+,,Tricep Cable Pushdown (preferred attachment),3,8 - 12,"2, 1, 0-1",,,,,
+,,Tricep Cable Overhead Extension (preferred attachment),3,12 - 15,"2, 0-1, <0⚠️",,,,,
+,,,,,,,,,,
+,(6) Lower,Lying Hamstring Curls,4,8 - 12,"3, 2, 1, 0-1",,,,,
+,,45° Hip Extension,4,10 - 15,"3, 2, 1, 0-1",,,,,
+,,Hack Squat,4,5 - 8,"3, 2, 1, 0-1",,,,,
+,,Leg Extension,3,10 - 12,"2, 0-1, <0⚠️",,,,,
+,,Lunges,3,7 - 10,"3, 2, 0-1",,,,,
+,,Standing Calf Raise (Machine) ,5,12 - 15,"3, 2, 1, 0-1, <0⚠️",,,,,
+,,Lateral Raise,3,8 - 12,"1, 0-1, <0⚠️",,,,,
+,,,,,,,,,,
+,(7) Active Rest,"Decision rule: if sleep was poor, you feel run-down, resting HR is up, or soreness is lingering, take passive rest (easy steps only, no planned cardio). Otherwise do 20–30 min very easy aerobic work at conversational pace (≈40–60% max HR) plus 5–10 min mobility. Nutrition: hit 1.6–2.2 g/kg protein, spread across the day; hydrate; optional 30–40 g protein before bed. Sleep: aim 7–9 h; dark, cool room; screens off the last hour. Recovery guardrails: no failure work, no HIIT, no “make-up” lifting. Weekly check: if two or more red flags appear (performance dip, nagging joints, poor sleep), schedule a 1-week pivot next week (halve sets, keep loads similar), then resume normal training.",,,,,n/a,,,
