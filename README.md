@@ -4,7 +4,7 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 
 ## Current release
 
-**0.1.0 is a preview.** Local saving, workout progression, planning, recovery, history, backups, and exports are functional. Cloud account integration is implemented, but the public preview has no live account service configured. It currently saves on each device. Use a JSON backup to move your full history between devices.
+**0.1.0 is a preview.** Local saving, workout progression, planning, recovery, history, backups, and exports are functional. The published 0.1.0 preview saves on each device. The next release adds Google sign-in through the newly provisioned free account service; end-to-end verification is in progress. Use a JSON backup to move your full history between devices.
 
 - Desktop downloads: [get the preview release](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.1.0) or [view all releases](https://github.com/JCarterJohnson/PANDR-5/releases).
 - Phone or desktop browser: [open PANDR-5](https://jcarterjohnson.github.io/PANDR-5/), then install it from your browser. The Pages build is local-only.
@@ -22,7 +22,7 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 - Weekly recovery check-ins and a temporary half-set pivot after multiple flags.
 - Searchable source exercise catalog; validated import for the owner-supplied expanded dataset.
 - All-time CSV export plus lossless JSON backup/restore.
-- Optional Supabase account authentication and optimistic, per-user cloud synchronization with conflict detection.
+- Google account authentication in the upcoming account-enabled build and optimistic, per-user cloud synchronization with conflict detection.
 
 The initial strict plan adds one lateral-raise set so the selected lateral-delt target reaches 10; the source template remains preserved separately. The app does not invent RP-style volume escalation, readiness scores, or proprietary formulas.
 

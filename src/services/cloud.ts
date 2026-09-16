@@ -3,12 +3,16 @@ import { z } from 'zod';
 import type { AppData, CheckIn, Session } from '../domain/types';
 import { checkInSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
 import { loadData, loadSyncState, saveSyncedData } from './storage';
+import { PUBLIC_CLOUD } from '../data/cloud-config';
 
 let client: SupabaseClient | undefined;
 export function getCloudClient(): SupabaseClient | null {
   if (import.meta.env.VITE_ENABLE_CLOUD_SYNC === 'false') return null;
-  const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const overrideUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  const overrideKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+  const override = Boolean(overrideUrl || overrideKey);
+  const url = override ? overrideUrl : PUBLIC_CLOUD.url;
+  const key = override ? overrideKey : PUBLIC_CLOUD.publishableKey;
   if (!url && !key) return null;
   if (!url || !key) throw new Error('Account setup needs both the Supabase URL and publishable key.');
   const parsedUrl = new URL(url);
@@ -18,7 +22,7 @@ export function getCloudClient(): SupabaseClient | null {
     try { isPublic = JSON.parse(atob(key.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).role === 'anon'; } catch { isPublic = false; }
   }
   if (!isPublic) throw new Error('Use a Supabase publishable key (or legacy anon key). Secret and service-role keys cannot be used in this app.');
-  client ??= createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+  client ??= createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' } });
   return client;
 }
 

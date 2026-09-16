@@ -1,6 +1,6 @@
 name: Build desktop downloads
 
-# Tags and manual invocations build downloads. Nothing is auto-published.
+# Tags build and publish preview downloads; manual invocations retain artifacts.
 on:
   push:
     tags: ['v*']

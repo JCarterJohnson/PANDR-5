@@ -10,6 +10,8 @@ files:
   - dist/**/*
   - desktop/main.cjs
   - desktop/security.cjs
+  - desktop/preload.cjs
+  - desktop/oauth.cjs
   - package.json
   - '!node_modules/**/*'
 extraMetadata:

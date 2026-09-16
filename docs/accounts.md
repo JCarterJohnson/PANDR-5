@@ -34,20 +34,32 @@ Use this exact JSON shape. Extra fields are rejected. All exercise content must 
 
 Coefficients encode primary (1), secondary (0.5), and tertiary (0.25) roles. Multiple distinct muscles may share any role. Each muscle occurs once per exercise. IDs must be unique; an existing ID or a duplicate name/equipment pair causes the entire import to fail without replacing the catalog. `importExerciseCatalog` returns the combined old and new catalog.
 
-## Connect an account service
+## Hosted account service
 
-1. Use an owner-controlled Supabase project. No paid plan is required by this implementation; review the provider's current free limits before provisioning.
-2. Apply `supabase/schema.sql` once in the project's SQL editor. The script creates two private tables and explicit Data API grants. Do not apply it to unrelated tables or use a service key in the app.
-3. Enable email/password authentication in Supabase. The provider’s default email sender is limited and is not a public production mail service; configure an appropriate SMTP sender before offering public email confirmation and recovery. Keep it inside its free quota, or use a deliberately configured identity provider (not implemented in this preview). Set the site's URL and allowed confirmation/reset redirects to the actual deployed HTTPS app URL. Keep email confirmation enabled when distributing the app publicly.
-4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` at build time. Only an `sb_publishable_…` key or legacy JWT with role `anon` is accepted. A secret or service-role key is rejected.
-5. Build and redeploy. Without these variables, the account controls should explain that local mode is available and cloud is not configured.
-6. Verify two real test accounts before release: owner can read/write their profile; the other account sees no rows and cannot insert/update rows for the owner; a signed-out client receives no table access. Also verify password reset, email confirmation, and logout on the deployed redirect URL.
+The PANDR-5 Free organization owns the dedicated Supabase project `mhzryeqnmykkdpmabyeo` in US West. The account-enabled web app is [pandr-5.vercel.app](https://pandr-5.vercel.app/). GitHub Pages remains a separate local-only edition.
 
-The SQL is supplied but has not been applied or exercised against a live project in this workspace. Unit tests cover client isolation and conflicts with a mock API; they do not replace database RLS tests.
+Google sign-in uses only basic identity scopes: `openid`, email, and profile. No Gmail, Drive, contacts, or calendar access is requested. Supabase receives Google's OAuth callback and issues the PANDR-5 session. Google client secrets stay in the Supabase provider settings; no administrator credentials belong in this repository or the app. Public Supabase configuration lives in `src/data/cloud-config.ts`. Setting `VITE_ENABLE_CLOUD_SYNC=false` disables accounts; overriding the backend requires both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
+
+The browser uses PKCE and returns to `https://pandr-5.vercel.app/`. Desktop builds open the system browser and receive a one-use code on a random loopback port at `http://127.0.0.1:<port>/oauth/callback/<random-token>`. The desktop app that started sign-in exchanges the code using its own verifier. The callback listener expires after ten minutes and closes on success, cancellation, or app shutdown. The native bridge restricts authentication to this project's Supabase endpoint, the exact prepared callback, Google's basic identity scopes, and the trusted app main frame. Forks using a different backend must also update the native allowlist.
+
+Supabase redirect settings:
+
+- Site URL: `https://pandr-5.vercel.app/`
+- Allowed browser return: `https://pandr-5.vercel.app/`
+- Allowed native return: `http://127.0.0.1:*/oauth/callback/*`
+- Google's authorized server callback: `https://mhzryeqnmykkdpmabyeo.supabase.co/auth/v1/callback`
+
+The app does not offer email/password registration. Supabase's built-in sender is restricted to project team members; Google sign-in avoids requiring a paid email sender. Email confirmation remains enabled in the backend.
+
+### Database verification
+
+`supabase/schema.sql` was applied to the dedicated project. The live SQL Editor ran `supabase/verify-rls.sql` successfully on September 15, 2026: owner read/write, other-account read/update/insert isolation, prevention of ownership reassignment, and anonymous denial. Synthetic fixtures existed only within the rolled-back transaction. Supabase's security advisor returned no findings. Client tests additionally cover account mismatch, optimistic conflicts, unchanged-record uploads, and offline preservation.
+
+Google provider setup is saved. End-to-end public Google sign-in and native-to-web synchronization are still being verified before the account-enabled release is published; passing database tests alone does not prove those flows.
 
 ## Synchronization contract
 
-`getCloudClient()` returns a configured client or null. The UI owns sign-up, sign-in, reset, and sign-out. Before every sync, the client verifies that the current authenticated user is the requested UUID; every request filters by that UUID and the database independently enforces ownership with `auth.uid()`.
+`getCloudClient()` returns a configured client or null. The UI owns Google sign-in and local-device sign-out. Before every sync, the client verifies that the current authenticated user is the requested UUID; every request filters by that UUID and the database independently enforces ownership with `auth.uid()`.
 
 On signing in, first call `loadData(user.id)`. If absent, call `readCloudData(user.id)` before creating a starter profile. This downloads that account and atomically saves both its data and baseline. It deliberately refuses to replace an already cached profile. If the account has no cloud profile, initialize and save a fresh account profile. Never initialize an account with the signed-out profile without an explicit user import.
 
@@ -64,3 +76,6 @@ Data and baseline are committed together locally. If a new local edit arrives du
 - [Row-level security](https://supabase.com/docs/guides/database/postgres/row-level-security): owner predicates, SELECT for updates, and UPDATE WITH CHECK.
 - [API keys](https://supabase.com/docs/guides/getting-started/api-keys): publishable keys in clients; secret keys remain server-side.
 - [JavaScript update](https://supabase.com/docs/reference/javascript/update): filtered update with returned rows for optimistic conflict detection.
+
+- [Google sign-in](https://supabase.com/docs/guides/auth/social-login/auth-google): basic identity scopes and provider callback setup.
+- [Redirect allowlists](https://supabase.com/docs/guides/auth/redirect-urls): browser and native callback patterns.

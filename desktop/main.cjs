@@ -1,7 +1,8 @@
-const { app, BrowserWindow, dialog, Menu, protocol, session, shell } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, Menu, protocol, session, shell } = require('electron');
 const { readFile } = require('node:fs/promises');
 const path = require('node:path');
 const { CONTENT_SECURITY_POLICY, resolveAppFile, isAppDocument, safeExternalUrl } = require('./security.cjs');
+const { createOAuthBridge, isTrustedOAuthSender } = require('./oauth.cjs');
 
 // A standard secure scheme gives IndexedDB a stable origin across app launches.
 // Service workers are unnecessary here: the complete web build is bundled locally.
@@ -20,6 +21,31 @@ const mimeTypes = {
 };
 let mainWindow;
 let externalPromptOpen = false;
+const oauthBridge = createOAuthBridge({
+  openExternal: url => shell.openExternal(url),
+  onResult: result => {
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    const contents = mainWindow.webContents;
+    if (contents.isDestroyed() || !isAppDocument(contents.mainFrame.url)) return;
+    contents.mainFrame.send('pandr:oauth:result', result);
+    mainWindow.show();
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  },
+});
+
+function registerOAuthIPC() {
+  for (const [channel, operation] of [
+    ['pandr:oauth:prepare', () => oauthBridge.prepareOAuth()],
+    ['pandr:oauth:open', value => oauthBridge.openOAuth(value)],
+    ['pandr:oauth:cancel', () => oauthBridge.cancelOAuth()],
+  ]) {
+    ipcMain.handle(channel, (event, value) => {
+      if (!isTrustedOAuthSender(event, mainWindow?.webContents)) throw new Error('Untrusted sign-in request.');
+      return operation(value);
+    });
+  }
+}
 
 async function openExternalWithConfirmation(value) {
   const url = safeExternalUrl(value);
@@ -44,6 +70,7 @@ function createWindow() {
     title: 'PANDR-5', backgroundColor: '#ffffff', show: false,
     icon: path.join(__dirname, '../dist/icons/icon-512.png'),
     webPreferences: {
+      preload: path.join(__dirname, 'preload.cjs'),
       sandbox: true, contextIsolation: true, nodeIntegration: false,
       webSecurity: true, allowRunningInsecureContent: false, webviewTag: false,
       navigateOnDragDrop: false, spellcheck: false,
@@ -67,7 +94,11 @@ function createWindow() {
   mainWindow.webContents.on('did-fail-load', (_event, code, description) => {
     if (code !== -3) console.error(`PANDR-5 failed to load: ${description} (${code})`);
   });
-  mainWindow.on('closed', () => { mainWindow = null; });
+  mainWindow.webContents.on('render-process-gone', () => { void oauthBridge.cancelOAuth(); });
+  mainWindow.webContents.on('did-start-navigation', (_event, _url, isInPlace, isMainFrame) => {
+    if (isMainFrame && !isInPlace) void oauthBridge.cancelOAuth();
+  });
+  mainWindow.on('closed', () => { mainWindow = null; void oauthBridge.cancelOAuth(); });
   void mainWindow.loadURL('pandr://app/');
 }
 
@@ -102,6 +133,7 @@ if (!app.requestSingleInstanceLock()) {
     });
     session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
     session.defaultSession.setPermissionCheckHandler(() => false);
+    registerOAuthIPC();
     Menu.setApplicationMenu(Menu.buildFromTemplate([
       ...(process.platform === 'darwin' ? [{ role: 'appMenu' }] : []),
       { role: 'editMenu' },
@@ -116,4 +148,5 @@ if (!app.requestSingleInstanceLock()) {
     app.quit();
   });
   app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
+  app.on('before-quit', () => { void oauthBridge.cancelOAuth(); });
 }

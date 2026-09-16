@@ -6,7 +6,9 @@ GitHub Releases hosts downloadable desktop files. A public repository can use st
 
 GitHub Pages supplies an HTTPS `github.io` address and serves the small installable web app. Its deployment deliberately disables cloud login: GitHub's Pages policy says Pages should not be used for sensitive transactions such as sending passwords. Local training and export remain available. No purchased domain is needed.
 
-For a hosted mobile web app with cloud authentication, use a free static host whose policy supports the application, such as Cloudflare Pages with its `pages.dev` address, then configure the Supabase Free backend. Build command: `npm run build`; output: `dist`; public environment variables: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_ENABLE_CLOUD_SYNC=true`. Never publish service keys. Configure allowed auth redirect URLs for that actual host. No Cloudflare site has been provisioned by this repository.
+The account-enabled web app is [pandr-5.vercel.app](https://pandr-5.vercel.app/), hosted in the owner's Vercel Hobby account. Vercel builds the GitHub repository with Vite (`npm run build`, output `dist`, repository root `./`). No purchased domain is required. Hobby is intended for personal, noncommercial use and has finite quotas. The dedicated Supabase project is on the Free plan. Neither service has been upgraded to a paid plan for this project.
+
+Public client configuration is included in source. `VITE_ENABLE_CLOUD_SYNC=true` enables account controls; the Pages workflow explicitly sets it to `false`. Never publish Google client secrets or Supabase service keys. See [accounts](accounts.md) for redirect and native sign-in details.
 
 ## Public build workflows
 
@@ -34,6 +36,6 @@ Verified September 15, 2026:
 - [GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions): standard hosted runners for public repositories are free.
 - [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases): downloadable release assets.
 - [Supabase pricing](https://supabase.com/pricing): Free includes 500 MB database storage, 50,000 monthly active users, and 5 GB egress; inactivity can pause a free project after one week. Automatic managed backups are not included in Free.
-- [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/): free static hosting and build limits.
+- [Vercel Hobby](https://vercel.com/docs/plans/hobby): free personal, noncommercial hosting with usage limits.
 
 No free tier guarantees years of unattended service for an unlimited audience. Keep user exports, monitor quotas, and do not silently turn on paid upgrades.
