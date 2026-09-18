@@ -4,12 +4,13 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 
 ## Current release
 
-**0.1.0 is a preview.** Local saving, workout progression, planning, recovery, history, backups, and exports are functional. The published 0.1.0 preview saves on each device. The next release adds Google sign-in through the newly provisioned free account service; end-to-end verification is in progress. Use a JSON backup to move your full history between devices.
+**0.2.0 is a preview with Google sign-in and cloud synchronization.** Training works offline; signed-in profiles sync when connected. Local and account profiles remain separate. Use Settings to export your complete history as CSV or a lossless JSON backup.
 
-- Desktop downloads: [get the preview release](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.1.0) or [view all releases](https://github.com/JCarterJohnson/PANDR-5/releases).
-- Phone or desktop browser: [open PANDR-5](https://jcarterjohnson.github.io/PANDR-5/), then install it from your browser. The Pages build is local-only.
-- Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Review the source and download only from this repository; operating systems may display security warnings. Do not disable system security protections globally.
-- No domain purchase, subscription, analytics, advertising, or paid API is needed for local use.
+- **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
+- **Desktop downloads:** [get version 0.2.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.2.0).
+- **Local-only alternative:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
+- Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
+- Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.
 
 ## Features
 
@@ -22,7 +23,7 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 - Weekly recovery check-ins and a temporary half-set pivot after multiple flags.
 - Searchable source exercise catalog; validated import for the owner-supplied expanded dataset.
 - All-time CSV export plus lossless JSON backup/restore.
-- Google account authentication in the upcoming account-enabled build and optimistic, per-user cloud synchronization with conflict detection.
+- Google account authentication and optimistic, per-user cloud synchronization with conflict detection.
 
 The initial strict plan adds one lateral-raise set so the selected lateral-delt target reaches 10; the source template remains preserved separately. The app does not invent RP-style volume escalation, readiness scores, or proprietary formulas.
 
@@ -68,7 +69,7 @@ The expanded exercise dataset is intentionally left to the project owner. This r
 
 ## Privacy and retention
 
-Training data stays in IndexedDB on the device unless an account service is configured and the person explicitly signs in. Signed-out and account profiles are kept separately. No analytics or third-party fonts are loaded. Local data is not encrypted by the app; use device access controls. Browser storage can be cleared or evicted; keep backups. Desktop and browser installations have separate stores.
+Training data stays in IndexedDB on the device unless the person explicitly signs in. Signed-out and account profiles are kept separately. No analytics or third-party fonts are loaded. Local data is not encrypted by the app; use device access controls. Browser storage can be cleared or evicted; keep backups. Desktop and browser installations have separate stores.
 
 Free cloud tiers have finite storage, bandwidth, inactivity policies, and no guarantee of lifetime availability. The export formats and offline app are the long-term escape route. Account and database limits must be monitored before expanding a public service.
 

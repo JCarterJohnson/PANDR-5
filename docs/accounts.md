@@ -55,7 +55,7 @@ The app does not offer email/password registration. Supabase's built-in sender i
 
 `supabase/schema.sql` was applied to the dedicated project. The live SQL Editor ran `supabase/verify-rls.sql` successfully on September 15, 2026: owner read/write, other-account read/update/insert isolation, prevention of ownership reassignment, and anonymous denial. Synthetic fixtures existed only within the rolled-back transaction. Supabase's security advisor returned no findings. Client tests additionally cover account mismatch, optimistic conflicts, unchanged-record uploads, and offline preservation.
 
-Google provider setup is saved. End-to-end public Google sign-in and native-to-web synchronization are still being verified before the account-enabled release is published; passing database tests alone does not prove those flows.
+On September 17, 2026, real Google login passed in the production web app and packaged macOS ARM64 app. The native session survived a full app relaunch. A web-created unfinished workout restored on desktop with its 100 kg load, 8-rep anchor, 1 RIR, and identical 102.5 kg recommendation. Preferences synchronized in both directions; the open Settings form refreshed after a remote change. A native CSV export contained all 22 set rows, the plan, catalog contributions, settings, and the unfinished session. Temporary verification changes were cleaned up. Windows/Linux builds are validated by CI packaging, not runtime testing on those operating systems.
 
 ## Synchronization contract
 
