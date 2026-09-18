@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Account } from './Account';
 import { Download, Upload, Check, HardDrive, ShieldCheck } from 'lucide-react';
 import type { AppData, Settings as SettingsType } from './domain/types';
@@ -10,6 +10,18 @@ import { requestPersistence } from './services/storage';
 import { Button, Field, Modal, Notice, download, readFile, numberValue } from './components';
 export function Settings({data,update,client,profile,email,sync,goPlan}:{data:AppData;update:Update;client:SupabaseClient|null;profile:string;email:string;sync:()=>Promise<void>;goPlan:()=>void}) {
  const [draft,setDraft]=useState<SettingsType>(data.settings);const [message,setMessage]=useState('');const [error,setError]=useState('');const [restore,setRestore]=useState<AppData>();const [restorePreview,setRestorePreview]=useState(false);const [saving,setSaving]=useState(false);
+ const lastSavedSettings = useRef(JSON.stringify(data.settings));
+ const currentDraft = useRef(draft);
+ currentDraft.current = draft;
+ useEffect(() => {
+  const next = JSON.stringify(data.settings);
+  const previous = lastSavedSettings.current;
+  if (next === previous) return;
+  lastSavedSettings.current = next;
+  const edited = JSON.stringify(currentDraft.current);
+  if (edited === previous || edited === next) setDraft(data.settings);
+  else setError('Account preferences changed while you were editing. Review your changes before saving.');
+ }, [data.settings]);
  async function save(){setError('');if(data.activeSession){setError('Finish your active session before changing settings.');return}if(draft.increasePercent<2||draft.increasePercent>5||draft.decreasePercent<2||draft.decreasePercent>3||draft.restSeconds<0||!Number.isInteger(draft.restSeconds)||!draft.startDate){setError('Use a 2–5% increase, 2–3% decrease, a start date, and a whole rest duration of at least 0 seconds.');return}const issues=validatePlan(data.plan,data.exercises,draft.strict).filter(i=>i.severity==='error');if(issues.length){setError(`Your plan must be adjusted before enabling these settings. ${issues[0].message}`);return}setSaving(true);try{await update(d=>{if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan.days.forEach(day=>day.exercises.forEach(e=>{e.load=Math.round(e.load*factor*10000)/10000;e.increment=Math.round(e.increment*factor*10000)/10000}));d.plan.updatedAt=new Date().toISOString()}d.settings=draft;return d});setMessage('Settings saved. Historical sessions keep their original units.')}catch(e){setError((e as Error).message)}finally{setSaving(false)}}
  async function stageRestore(file:File){try{const backup=parseBackup(await readFile(file));setRestore(backup);setRestorePreview(true);setError('')}catch(e){setError((e as Error).message)}}
  return <><header className="page-heading"><div><h1>Make it yours</h1><p>Your training preferences, account, and data.</p></div></header>{message&&<Notice tone="success">{message}</Notice>}{error&&<Notice tone="error">{error}</Notice>}
