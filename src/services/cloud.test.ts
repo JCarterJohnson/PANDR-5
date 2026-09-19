@@ -40,3 +40,23 @@ describe('account cloud sync',()=>{
  it('detects a competing publication and leaves local edits intact',async()=>{const d=createInitialData();await saveData(fake.user,d);const first=await syncData(fake.user,d);const local=structuredClone(first.data);local.settings.name='Changed';await saveData(fake.user,local);fake.race=true;await expect(syncData(fake.user,local)).rejects.toThrow('cloud profile during');expect((await loadData(fake.user))?.settings.name).toBe('Changed')});
  it('retains local data during network failure',async()=>{const d=createInitialData();await saveData(fake.user,d);fake.fail=true;await expect(syncData(fake.user,d)).rejects.toThrow('Offline');expect(await loadData(fake.user)).toEqual(d)});
 });
+
+describe('cloud-only app persistence',()=>{
+ it('saves and reloads account data without writing a device profile',async()=>{
+  const {createMemoryPersistence}=await import('./memory');
+  const memory=createMemoryPersistence();const d=createInitialData();d.settings.theme='dark';
+  const result=await syncData(fake.user,d,memory);expect(await loadData(fake.user)).toBeUndefined();
+  expect(result.data.settings.theme).toBe('dark');const restored=await readCloudData(fake.user,createMemoryPersistence());expect(restored?.settings.theme).toBe('dark');expect(await loadData(fake.user)).toBeUndefined();
+ });
+ it('preserves cycles and measured check-ins across a fresh account hydration',async()=>{
+  const {createMemoryPersistence}=await import('./memory');const {startCycle}=await import('../domain/training');
+  const base=createInitialData();base.settings.startDate='2026-09-01';
+  const d=startCycle(base,'Return','2026-09-18',new Date('2026-09-18T12:00:00'));d.settings.theme='automatic';d.settings.checkInDay=0;
+  await syncData(fake.user,d,createMemoryPersistence());expect(await readCloudData(fake.user,createMemoryPersistence())).toMatchObject({cycles:d.cycles,activeCycleId:d.activeCycleId,settings:d.settings});
+ });
+ it('retains the memory baseline after a failed write so a retry can succeed',async()=>{
+  const {createMemoryPersistence}=await import('./memory');const memory=createMemoryPersistence();const first=await syncData(fake.user,createInitialData(),memory);
+  const next=structuredClone(first.data);next.settings.name='Updated';fake.fail=true;await expect(syncData(fake.user,next,memory)).rejects.toThrow('Offline');fake.fail=false;
+  expect((await syncData(fake.user,next,memory)).data.settings.name).toBe('Updated');expect(await loadData(fake.user)).toBeUndefined();
+ });
+});

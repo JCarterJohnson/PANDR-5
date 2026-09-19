@@ -1,9 +1,16 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type { AppData, CheckIn, Session } from '../domain/types';
-import { checkInSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
+import { checkInSchema, cycleSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
 import { loadData, loadSyncState, saveSyncedData } from './storage';
 import { PUBLIC_CLOUD } from '../data/cloud-config';
+
+export interface SyncPersistence {
+  loadData: typeof loadData;
+  loadSyncState: typeof loadSyncState;
+  saveSyncedData: typeof saveSyncedData;
+}
+const legacyPersistence: SyncPersistence = { loadData, loadSyncState, saveSyncedData };
 
 let client: SupabaseClient | undefined;
 export function getCloudClient(): SupabaseClient | null {
@@ -26,13 +33,13 @@ export function getCloudClient(): SupabaseClient | null {
   return client;
 }
 
-const metaSchema = z.strictObject({ schemaVersion: z.literal(1), id: idSchema, updatedAt: z.iso.datetime({ offset: true }), settings: settingsSchema, plan: planSchema, exercises: z.array(exerciseSchema).min(1).max(20_000), activeSession: sessionSchema.optional() });
+const metaSchema = z.strictObject({ schemaVersion: z.literal(1), id: idSchema, updatedAt: z.iso.datetime({ offset: true }), settings: settingsSchema, plan: planSchema, exercises: z.array(exerciseSchema).min(1).max(20_000), activeSession: sessionSchema.optional(), cycles: z.array(cycleSchema).min(1).max(1000).optional(), activeCycleId: idSchema.optional() });
 type Meta = z.infer<typeof metaSchema>;
 const recordRefSchema = z.strictObject({ kind: z.enum(['session', 'checkIn']), id: idSchema, version: z.uuid(), fingerprint: z.string().regex(/^[a-f0-9]{64}$/) });
 type RecordRef = z.infer<typeof recordRefSchema>;
 const headSchema = z.object({ user_id: z.uuid(), revision: z.uuid(), metadata: metaSchema, records: z.array(recordRefSchema).max(200_000) }).refine(h => new Set(h.records.map(r => `${r.kind}:${r.id}`)).size === h.records.length, 'Duplicate cloud record IDs');
 type Head = z.infer<typeof headSchema>;
-const metadataFields = ['settings', 'plan', 'exercises', 'activeSession'] as const;
+const metadataFields = ['settings', 'plan', 'exercises', 'activeSession', 'cycles', 'activeCycleId'] as const;
 type Field = typeof metadataFields[number];
 const baselineSchema = z.strictObject({ revision: z.uuid(), metadata: z.record(z.string(), z.string()), records: z.array(recordRefSchema).max(200_000) });
 type Baseline = z.infer<typeof baselineSchema>;
@@ -50,24 +57,24 @@ async function fingerprint(value: unknown) {
   return Array.from(new Uint8Array(bytes), n => n.toString(16).padStart(2, '0')).join('');
 }
 function metadata(d: AppData): Meta {
-  return metaSchema.parse({ schemaVersion: d.schemaVersion, id: d.id, updatedAt: d.updatedAt, settings: d.settings, plan: d.plan, exercises: d.exercises, ...(d.activeSession ? { activeSession: d.activeSession } : {}) });
+  return metaSchema.parse({ schemaVersion: d.schemaVersion, id: d.id, updatedAt: d.updatedAt, settings: d.settings, plan: d.plan, exercises: d.exercises, ...(d.cycles ? { cycles: d.cycles, activeCycleId: d.activeCycleId } : {}), ...(d.activeSession ? { activeSession: d.activeSession } : {}) });
 }
 async function makeBaseline(head: Head): Promise<Baseline> {
   return { revision: head.revision, metadata: Object.fromEntries(await Promise.all(metadataFields.map(async key => [key, await fingerprint(head.metadata[key])]))), records: head.records };
 }
 export class SyncConflictError extends Error {
-  constructor(public readonly conflicts: string[]) { super(`Sync stopped because both devices changed ${conflicts.join(', ')}. Both copies are preserved. Export a backup before resolving the conflict.`); this.name = 'SyncConflictError'; }
+  constructor(public readonly conflicts: string[]) { super(`Sync stopped because both devices changed ${conflicts.join(', ')}. The cloud copy is unchanged and your changes remain in this tab. Export a backup before resolving the conflict.`); this.name = 'SyncConflictError'; }
 }
 async function authenticated(userId: string): Promise<SupabaseClient> {
   if (!z.uuid().safeParse(userId).success) throw new Error('Invalid account ID.');
   const api = getCloudClient();
-  if (!api) throw new Error('Cloud accounts are not configured. Local logging and backups remain available.');
+  if (!api) throw new Error('Cloud accounts are not configured. Sign in through the account-enabled app to save training.');
   const { data, error } = await api.auth.getUser();
   if (error || data.user?.id !== userId) throw new Error('The signed-in account changed. Sign in again before syncing.');
   return api;
 }
 function cloudError(error: { message: string } | null, action: string) {
-  if (error) throw new Error(`${action}: ${error.message}. Local data is preserved.`);
+  if (error) throw new Error(`${action}: ${error.message}. Unsaved changes remain in this tab.`);
 }
 async function getHead(api: SupabaseClient, userId: string): Promise<Head | undefined> {
   const { data, error } = await api.from('pandr_profiles').select('user_id,revision,metadata,records').eq('user_id', userId).maybeSingle();
@@ -98,7 +105,7 @@ async function hydrate(api: SupabaseClient, head: Head, local?: AppData): Promis
       const row = data?.find(r => r.version === ref.version && r.kind === ref.kind && r.record_id === ref.id);
       if (!row) throw new Error('Cloud history is incomplete. Nothing was replaced locally; retry sync.');
       const parsed = ref.kind === 'session' ? sessionSchema.parse(row.payload) : checkInSchema.parse(row.payload);
-      if (parsed.id !== ref.id || await fingerprint(parsed) !== ref.fingerprint) throw new Error('Cloud record failed validation. Local data is preserved.');
+      if (parsed.id !== ref.id || await fingerprint(parsed) !== ref.fingerprint) throw new Error('Cloud record failed validation. Unsaved changes remain in this tab.');
       logs.set(recordKey(ref), parsed);
     }
   }
@@ -106,25 +113,25 @@ async function hydrate(api: SupabaseClient, head: Head, local?: AppData): Promis
 }
 
 /** Initial account hydration. Never call for a profile containing unsynced local edits. */
-export async function readCloudData(userId: string): Promise<AppData | undefined> {
+export async function readCloudData(userId: string, persistence: SyncPersistence = legacyPersistence): Promise<AppData | undefined> {
   const api = await authenticated(userId);
   const head = await getHead(api, userId);
   if (!head) return undefined;
-  const existing = await loadData(userId);
+  const existing = await persistence.loadData(userId);
   if (existing) throw new Error('This account already has local data. Sync it to preserve pending edits.');
   const data = await hydrate(api, head);
-  await saveSyncedData(userId, data, await makeBaseline(head));
+  await persistence.saveSyncedData(userId, data, await makeBaseline(head));
   return data;
 }
 
 const running = new Set<string>();
-export async function syncData(userId: string, input: AppData): Promise<{ data: AppData; status: string }> {
+export async function syncData(userId: string, input: AppData, persistence: SyncPersistence = legacyPersistence): Promise<{ data: AppData; status: string }> {
   if (running.has(userId)) throw new Error('This account is already syncing.');
   running.add(userId);
   try {
     const local = validateAppData(input);
     const api = await authenticated(userId);
-    const baselineInput = await loadSyncState(userId);
+    const baselineInput = await persistence.loadSyncState(userId);
     const baseline = baselineInput === undefined ? undefined : baselineSchema.parse(baselineInput);
     const remote = await getHead(api, userId);
     const mergedMeta = metadata(local);
@@ -135,7 +142,7 @@ export async function syncData(userId: string, input: AppData): Promise<{ data: 
         const localHash = await fingerprint(mergedMeta[key]);
         const remoteHash = await fingerprint(remote.metadata[key]);
         if (localHash === remoteHash) continue;
-        const baseHash = baseline?.metadata[key];
+        const baseHash = baseline ? (baseline.metadata[key] ?? await fingerprint(undefined)) : undefined;
         if (baseHash === localHash) Object.assign(mergedMeta, { [key]: remote.metadata[key] });
         else if (baseHash !== remoteHash) conflicts.push(key === 'activeSession' ? 'the current workout' : key);
       }
@@ -176,7 +183,7 @@ export async function syncData(userId: string, input: AppData): Promise<{ data: 
       if (error?.code === '23505') throw new SyncConflictError(['a newly created cloud profile']);
       cloudError(error, 'Could not create cloud profile');
     }
-    await saveSyncedData(userId, merged, await makeBaseline(next), local);
+    await persistence.saveSyncedData(userId, merged, await makeBaseline(next), local);
     return { data: merged, status: `Synced ${merged.sessions.length} workouts and ${merged.checkIns.length} recovery check-ins.` };
   } finally { running.delete(userId); }
 }

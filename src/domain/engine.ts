@@ -189,10 +189,11 @@ export function getDayIndex(startDate: string, date: string | Date = new Date())
 }
 
 export function isPivotWeek(checkIns: CheckIn[], week: number): boolean {
-  return week > 1 && checkIns.some(check => check.week === week - 1 && Number(check.performanceDip) + Number(check.jointPain) + Number(check.poorSleep) >= 2);
+  return week > 1 && checkIns.some(check => check.week === week - 1 && Number(!!(check.performanceDip || check.measuredPerformanceDip)) + Number(check.jointPain) + Number(check.poorSleep) >= 2);
 }
 
 export function recoveryAdvice(checkIn: CheckIn): string {
+  if (checkIn.jointPain) return 'Avoid exercises that provoke joint pain. Use comfortable movement only; persistent or worsening pain needs assessment before returning to painful loading.';
   if (checkIn.poorSleep || checkIn.runDown || checkIn.elevatedHr || checkIn.lingeringSoreness) return 'Passive rest today: easy steps only, with no planned cardio. Avoid failure work, HIIT, and make-up lifting.';
   return 'Active rest today: 20–30 minutes of very easy aerobic work at conversational pace (about 40–60% max heart rate), plus 5–10 minutes of mobility. Avoid failure work, HIIT, and make-up lifting.';
 }

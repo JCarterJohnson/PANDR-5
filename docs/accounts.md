@@ -1,8 +1,10 @@
-# Data, backups, and optional accounts
+# Data, backups, and account saving
 
-## Local use
+## Current persistence policy (September 18, 2026)
 
-The app works without an account. IndexedDB stores the signed-out profile under `local` and each account under its Supabase user UUID. Signing in or out changes which profile is loaded; it never moves, replaces, or uploads the signed-out profile automatically. Writes use a transaction with strict durability. Storage errors must be shown to the user; a failed save must never be presented as saved. Requesting persistent browser storage reduces eviction risk, but downloadable JSON backups remain important.
+The app offers an unsaved signed-out preview. Training is held in the tab until a signed-in cloud save succeeds. The live UI passes an explicit memory persistence adapter into `readCloudData` and `syncData`: no new workout snapshots, settings, cycles, or merge baselines are written to IndexedDB. Google/Supabase authentication credentials remain device-persisted so sign-in survives reloads.
+
+Old IndexedDB profiles remain untouched. Settings reads them only to offer backup downloads. Restoring a backup is explicit. Signed-out previews are never silently migrated into an account. Failed account writes remain in memory, display an unsaved warning, block sign-out, and trigger a leave-page warning. Retry on reconnect or export before closing.
 
 The structured backup includes all history, the current workout, the plan, catalog, settings, and recovery check-ins. Import validates schema version 1 and every nested field, ID, number, date, size limit, and plan exercise reference before replacing anything. A future version requires an explicit migration. Maximum JSON input is 50 MB; 100,000 workouts, 100,000 check-ins, and 20,000 catalog exercises are supported.
 
@@ -36,7 +38,7 @@ Coefficients encode primary (1), secondary (0.5), and tertiary (0.25) roles. Mul
 
 ## Hosted account service
 
-The PANDR-5 Free organization owns the dedicated Supabase project `mhzryeqnmykkdpmabyeo` in US West. The account-enabled web app is [pandr-5.vercel.app](https://pandr-5.vercel.app/). GitHub Pages remains a separate local-only edition.
+The PANDR-5 Free organization owns the dedicated Supabase project `mhzryeqnmykkdpmabyeo` in US West. The account-enabled web app is [pandr-5.vercel.app](https://pandr-5.vercel.app/). Earlier GitHub Pages builds used local saving; new account-disabled builds offer an unsaved preview.
 
 Google sign-in uses only basic identity scopes: `openid`, email, and profile. No Gmail, Drive, contacts, or calendar access is requested. Supabase receives Google's OAuth callback and issues the PANDR-5 session. Google client secrets stay in the Supabase provider settings; no administrator credentials belong in this repository or the app. Public Supabase configuration lives in `src/data/cloud-config.ts`. Setting `VITE_ENABLE_CLOUD_SYNC=false` disables accounts; overriding the backend requires both `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`.
 
@@ -61,13 +63,15 @@ On September 17, 2026, real Google login passed in the production web app and pa
 
 `getCloudClient()` returns a configured client or null. The UI owns Google sign-in and local-device sign-out. Before every sync, the client verifies that the current authenticated user is the requested UUID; every request filters by that UUID and the database independently enforces ownership with `auth.uid()`.
 
-On signing in, first call `loadData(user.id)`. If absent, call `readCloudData(user.id)` before creating a starter profile. This downloads that account and atomically saves both its data and baseline. It deliberately refuses to replace an already cached profile. If the account has no cloud profile, initialize and save a fresh account profile. Never initialize an account with the signed-out profile without an explicit user import.
+On signing in, load the cloud account with a fresh memory persistence adapter before initializing a starter profile. Existing local copies are offered for download separately; they are never silently uploaded. Every update runs through a serialized queue and saves to the authenticated account, including in-progress workout sets.
 
-`syncData(user.id, data)` compares local edits with the last successful sync baseline. Independent sessions/check-ins merge by ID. Edits to the same record, concurrent changes to the same metadata field (plan, settings, catalog, current workout), or an unknown baseline with different metadata stop with `SyncConflictError`. No timestamps decide which version wins. Both sides remain intact. When a conflict is reported, export the local JSON, preserve that copy, and review both versions before choosing or manually combining them; there is no destructive automatic resolution.
+`syncData(user.id, data, memoryPersistence)` compares local edits with the last successful sync baseline. Independent sessions/check-ins merge by ID. Edits to the same record, concurrent changes to the same metadata field (plan, settings, catalog, current workout, cycles, active cycle), or an unknown baseline with different metadata stop with `SyncConflictError`. No timestamps decide which version wins. Both sides remain intact. When a conflict is reported, export the local JSON, preserve that copy, and review both versions before choosing or manually combining them; there is no destructive automatic resolution.
 
 Workout and check-in revisions are immutable per-record uploads. A profile contains the metadata and a compact manifest of record IDs, version UUIDs, and SHA-256 hashes. Sync downloads only missing or changed records in batches of 100. A conditional update using the previous random profile revision atomically publishes the new manifest. A competing update returns a conflict, preserving the remote revision and local data. Records uploaded before a failed publication remain unreferenced, private versions; retrying is safe. Metadata and manifest transfer grow with history, but full historical workout payloads are not rewritten/downloaded on every sync. The current implementation has no history deletion protocol or garbage collector.
 
-Data and baseline are committed together locally. If a new local edit arrives during network sync, the service preserves the newer local data, advances only the sync baseline, and asks the user to sync again. The UI should pause editing while syncing and only replace its in-memory view after success. If a network response is lost after publication, a retry compares content hashes to recover without duplicating workouts. Never claim background sync while offline.
+Data and baseline are committed together in memory after a successful cloud publication. Edits queue sequentially and use the last published baseline. A lost response can be retried by comparing record content hashes. A reload downloads the account fresh. The legacy disk adapter remains solely for compatibility tests and earlier storage routines; the app does not use it for saving.
+
+Cycles and additional recovery fields are optional schema-1 extensions. Missing cycles are interpreted as one deterministic legacy cycle. New sessions and check-ins carry cycle IDs. Old records retain their payloads and are associated with the first cycle. Backups and all-time CSV include cycle metadata, archived plans, optional ratings, and the frozen performance evidence used by check-ins.
 
 ## References checked September 15, 2026
 

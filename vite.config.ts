@@ -36,7 +36,7 @@ export default defineConfig(({ command }) => ({
         id: './',
         name: 'PANDR-5',
         short_name: 'PANDR-5',
-        description: 'An adaptive workout plan that works offline.',
+        description: 'PANDR-5 training, workout history, and Google account saving.',
         theme_color: '#0865f5',
         background_color: '#ffffff',
         display: 'standalone',
@@ -58,7 +58,7 @@ export default defineConfig(({ command }) => ({
         clientsClaim: false,
         skipWaiting: false,
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-        // Account traffic stays network-only; workout data lives in IndexedDB.
+        // Account traffic stays network-only; workout data persists only in the account.
         runtimeCaching: [],
       },
       devOptions: { enabled: false },

@@ -1,3 +1,4 @@
+import { localDate } from './domain/training';
 import { X, ArrowRight, Info, Check } from 'lucide-react';
 import { useEffect, useRef, type ReactNode } from 'react';
 export function Button({ children, primary=false, small=false, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & {primary?:boolean;small?:boolean}) { return <button {...props} className={`button ${primary?'primary':''} ${small?'small':''} ${props.className||''}`}>{children}</button> }
@@ -12,4 +13,6 @@ export function Field({label,children,hint}:{label:string;children:ReactNode;hin
 export function download(name:string, content:string, type:string) {const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
 export async function readFile(file:File) {if(file.size>50*1024*1024)throw new Error('Choose a file smaller than 50 MB.');return file.text()}
 export function numberValue(value:string, fallback=0) {const n=Number(value);return Number.isFinite(n)?n:fallback}
-export const dateString=()=>new Date().toLocaleDateString('en-CA');
+export const dateString=localDate;
+
+export function HelpButton({label,onClick}:{label:string;onClick:()=>void}) { return <button type="button" className="icon-button help-button" aria-label={label} title={label} onClick={onClick}><Info size={19}/></button> }

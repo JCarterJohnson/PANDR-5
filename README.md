@@ -1,16 +1,24 @@
 # PANDR-5
 
-An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
+A training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
 
 ## Current release
 
-**0.3.0 adds a 372-exercise catalog, alias search, and research notes.** Google sign-in and cloud synchronization remain available. Training works offline; signed-in profiles sync when connected. Local and account profiles remain separate. Use Settings to export your complete history as CSV or a lossless JSON backup.
+**0.3.0 adds a 372-exercise catalog, alias search, and research notes.** Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup.
 
 - **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
 - **Desktop downloads:** [get version 0.3.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.3.0).
-- **Local-only alternative:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
+- **Earlier local edition:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
 - Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.
+
+## September 18 app updates
+
+- Named training cycles with archived plans and cycle-filtered history.
+- Live local-date weekly check-in scheduling, optional recovery measurements, and comparable-workout evidence.
+- Completed effective-set progress, workout navigation drawer, help links, and Light / Dark / Automatic appearance.
+- Account-only saving, visible save failures, creator support and contact links.
+- [Recovery evidence and dataset review](research/recovery/README.md).
 
 ## Features
 
@@ -69,7 +77,7 @@ The expanded library includes 346 additions and 221 aliases, plus the unchanged 
 
 ## Privacy and retention
 
-Training data stays in IndexedDB on the device unless the person explicitly signs in. Signed-out and account profiles are kept separately. No analytics or third-party fonts are loaded. Local data is not encrypted by the app; use device access controls. Browser storage can be cleared or evicted; keep backups. Desktop and browser installations have separate stores.
+New training data persists only in the signed-in Supabase account linked to Google. Signed-out preview changes disappear on reload. Account training and merge baselines stay in memory while open; only the authentication session persists on the device. Existing IndexedDB copies from older releases remain untouched and can be exported from Settings. An unsuccessful cloud save is clearly marked and triggers a leave-page warning. No analytics or third-party fonts are loaded.
 
 Free cloud tiers have finite storage, bandwidth, inactivity policies, and no guarantee of lifetime availability. The export formats and offline app are the long-term escape route. Account and database limits must be monitored before expanding a public service.
 

@@ -1,3 +1,4 @@
+import { cyclesFor, localDate, recordCycleId } from '../domain/training';
 import { z } from 'zod';
 import type { AppData, Exercise, Session } from '../domain/types';
 import { exerciseSchema, MAX_BACKUP_BYTES, parseAppData, validateAppData } from '../domain/validation';
@@ -39,10 +40,11 @@ function csvCell(value: Cell): string {
 /** A single all-time CSV with typed rows; record_json preserves complete snapshots. */
 export function exportCsv(input: AppData): string {
   const data = validateAppData(input);
-  const columns = ['record_type','record_id','profile_id','schema_version','date','started_at','completed_at','week','pivot','session_id','session_notes','plan_id','plan_name','day_id','day_name','day_kind','slot_id','exercise_id','exercise_name','equipment','source','beyond_failure_allowed','load','unit','load_mode','increment','prescribed_sets','rep_min','rep_max','target_rir','set_index','reps','actual_rir','set_completed','exercise_notes','muscle','coefficient','target_volume','recommendation_action','recommended_load','recommended_reps','recommendation_reason','anchor_index','poor_sleep','run_down','elevated_hr','lingering_soreness','performance_dip','joint_pain','notes','updated_at','record_json'] as const;
+  const columns = ['record_type','record_id','cycle_id','cycle_name','sleep_hours','fatigue','soreness','stress','measured_performance_dip','profile_id','schema_version','date','started_at','completed_at','week','pivot','session_id','session_notes','plan_id','plan_name','day_id','day_name','day_kind','slot_id','exercise_id','exercise_name','equipment','source','beyond_failure_allowed','load','unit','load_mode','increment','prescribed_sets','rep_min','rep_max','target_rir','set_index','reps','actual_rir','set_completed','exercise_notes','muscle','coefficient','target_volume','recommendation_action','recommended_load','recommended_reps','recommendation_reason','anchor_index','poor_sleep','run_down','elevated_hr','lingering_soreness','performance_dip','joint_pain','notes','updated_at','record_json'] as const;
   type Row = Partial<Record<typeof columns[number], Cell>>;
   const rows: string[] = [columns.map(csvCell).join(',')];
   const add = (row: Row, record: unknown) => rows.push(columns.map(c => csvCell({ profile_id: data.id, schema_version: data.schemaVersion, ...row, record_json: JSON.stringify(record) }[c])).join(','));
+  for (const cycle of cyclesFor(data)) add({ record_type: 'cycle', record_id: cycle.id, cycle_id: cycle.id, cycle_name: cycle.name, date: cycle.startDate }, cycle);
   add({ record_type: 'settings', record_id: data.id, unit: data.settings.unit, updated_at: data.updatedAt }, data.settings);
   add({ record_type: 'plan', record_id: data.plan.id, plan_id: data.plan.id, plan_name: data.plan.name, updated_at: data.plan.updatedAt }, data.plan);
   for (const [muscle, target] of Object.entries(data.plan.targets)) add({ record_type: 'target', plan_id: data.plan.id, muscle, target_volume: target }, { muscle, target });
@@ -57,7 +59,7 @@ export function exportCsv(input: AppData): string {
     for (const c of exercise.contributions) add({ record_type: 'catalog_contribution', ...context, muscle: c.muscle, coefficient: c.coefficient }, c);
   }
   const sessionRows = (session: Session, active = false) => {
-    const context = { session_id: session.id, date: session.date, started_at: session.startedAt, completed_at: session.completedAt, week: session.week, pivot: session.pivot, day_id: session.dayId, day_name: session.dayName, session_notes: session.notes };
+    const context = { cycle_id: recordCycleId(data, session), cycle_name: cyclesFor(data).find(c=>c.id===recordCycleId(data,session))?.name, session_id: session.id, date: session.date, started_at: session.startedAt, completed_at: session.completedAt, week: session.week, pivot: session.pivot, day_id: session.dayId, day_name: session.dayName, session_notes: session.notes };
     add({ record_type: active ? 'active_session' : 'session', record_id: session.id, ...context }, session);
     for (const e of session.exercises) {
       const rec = e.recommendation;
@@ -69,6 +71,31 @@ export function exportCsv(input: AppData): string {
   };
   data.sessions.forEach(s => sessionRows(s));
   if (data.activeSession) sessionRows(data.activeSession, true);
-  for (const c of data.checkIns) add({ record_type: 'recovery', record_id: c.id, date: c.date, week: c.week, poor_sleep: c.poorSleep, run_down: c.runDown, elevated_hr: c.elevatedHr, lingering_soreness: c.lingeringSoreness, performance_dip: c.performanceDip, joint_pain: c.jointPain, notes: c.notes }, c);
+  for (const c of data.checkIns) add({ record_type: 'recovery', record_id: c.id, cycle_id: recordCycleId(data,c), cycle_name: cyclesFor(data).find(cycle=>cycle.id===recordCycleId(data,c))?.name, sleep_hours: c.sleepHours, fatigue:c.fatigue, soreness:c.soreness, stress:c.stress, measured_performance_dip:c.measuredPerformanceDip, date: c.date, week: c.week, poor_sleep: c.poorSleep, run_down: c.runDown, elevated_hr: c.elevatedHr, lingering_soreness: c.lingeringSoreness, performance_dip: c.performanceDip, joint_pain: c.jointPain, notes: c.notes }, c);
   return '\uFEFF' + rows.join('\r\n') + '\r\n';
+}
+
+/** Restore a plan/preferences while keeping already-saved history and its cycle ownership. */
+export function restoreBackup(current: AppData, backup: AppData): AppData {
+  const previous = validateAppData(structuredClone(current));
+  const restored = validateAppData(structuredClone(backup));
+  const restoredCycles = cyclesFor(restored);
+  const previousCycles = cyclesFor(previous);
+  const selectedId = restored.activeCycleId ?? restoredCycles[0].id;
+  const cycles = new Map([...previousCycles, ...restoredCycles].map(c => [c.id, structuredClone(c)]));
+  const merged = <T extends {id:string;cycleId?:string}>(oldRecords:T[],newRecords:T[]) => [...new Map([
+    ...oldRecords.map(r=>({...r,cycleId:recordCycleId(previous,r)})),
+    ...newRecords.map(r=>({...r,cycleId:recordCycleId(restored,r)})),
+  ].map(r=>[r.id,r])).values()];
+  const today = localDate();
+  for (const cycle of cycles.values()) if (cycle.id !== selectedId && !cycle.endedAt) {
+    cycle.endedAt = today < cycle.startDate ? cycle.startDate : today;
+    cycle.plan ??= structuredClone(previous.plan);
+  }
+  return validateAppData({
+    ...restored, id:previous.id, cycles:[...cycles.values()], activeCycleId:selectedId,
+    sessions:merged(previous.sessions,restored.sessions), checkIns:merged(previous.checkIns,restored.checkIns),
+    exercises:[...new Map([...previous.exercises,...restored.exercises].map(e=>[e.id,e])).values()],
+    activeSession:restored.activeSession?{...restored.activeSession,cycleId:recordCycleId(restored,restored.activeSession)}:undefined,
+  });
 }

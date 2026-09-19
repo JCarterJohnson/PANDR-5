@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { accountFixture } from './account-fixture';
 import { readFile } from 'node:fs/promises';
 
 const custom={id:'owner-e2e',name:'Owner custom press',equipment:'Home setup',contributions:[{muscle:'chest',coefficient:0.5}],source:'My personal estimate',beyondFailureAllowed:false};
 
 test('search aliases, select, save, reload, import custom data, export and restore', async ({page},testInfo)=>{
+  await accountFixture(page);
   const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
   page.on('console',message=>{if(message.type()==='error')errors.push(message.text())});
   await page.goto('/');await expect(page).toHaveTitle(/PANDR/);
@@ -48,7 +50,7 @@ test('search aliases, select, save, reload, import custom data, export and resto
   expect(backup.exercises.find((e:any)=>e.id===custom.id)).toEqual(custom);
   await page.getByLabel('Restore a backup',{exact:true}).setInputFiles(backupPath);
   await page.getByRole('button',{name:'Back up current data and restore'}).click();
-  await expect(page.getByText('Backup restored on this device.')).toBeVisible();
+  await expect(page.getByText('Backup saved to your account.')).toBeVisible();
   await page.getByRole('button',{name:'Your plan',exact:true}).click();
   await expect(page.getByRole('button',{name:'Barbell Incline Bench Press',exact:true})).toBeVisible();
   await page.screenshot({path:testInfo.outputPath('saved-plan-desktop.png'),fullPage:true});
