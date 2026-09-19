@@ -1,0 +1,147 @@
+{
+  "version": "1.0.0",
+  "legacy": 26,
+  "added": 346,
+  "total": 372,
+  "aliases": 221,
+  "newExerciseAliases": 166,
+  "confidence": {
+    "medium": 305,
+    "high": 8,
+    "low": 59
+  },
+  "allocationConfidence": {
+    "medium": 675,
+    "high": 8,
+    "low": 137
+  },
+  "equipment": {
+    "Ab wheel": 2,
+    "Barbell": 44,
+    "Bodyweight": 58,
+    "Cable": 60,
+    "Dumbbell": 62,
+    "Kettlebell": 10,
+    "Landmine": 8,
+    "Machine": 8,
+    "Manual resistance": 3,
+    "Neck harness": 1,
+    "Other": 2,
+    "Plate-loaded machine": 19,
+    "Resistance band": 36,
+    "Roman chair": 2,
+    "Selectorized machine": 24,
+    "Smith machine": 15,
+    "Specialty bar": 15,
+    "Stability ball": 1,
+    "Wrist roller": 2
+  },
+  "muscles": {
+    "Chest (pec major)": {
+      "primary": 38,
+      "credited": 46
+    },
+    "Anterior Delts": {
+      "primary": 22,
+      "credited": 55
+    },
+    "Lateral Delts": {
+      "primary": 8,
+      "credited": 25
+    },
+    "Rear Delts": {
+      "primary": 7,
+      "credited": 40
+    },
+    "Triceps": {
+      "primary": 24,
+      "credited": 72
+    },
+    "Biceps (Brachii)": {
+      "primary": 18,
+      "credited": 75
+    },
+    "Brachialis": {
+      "primary": 7,
+      "credited": 30
+    },
+    "Brachioradial.": {
+      "primary": 5,
+      "credited": 30
+    },
+    "Lats / teres major": {
+      "primary": 43,
+      "credited": 50
+    },
+    "Mid / Low Traps & Rhomboids": {
+      "primary": 11,
+      "credited": 56
+    },
+    "Upper Traps": {
+      "primary": 7,
+      "credited": 15
+    },
+    "Quads": {
+      "primary": 46,
+      "credited": 62
+    },
+    "Hamstrings": {
+      "primary": 27,
+      "credited": 38
+    },
+    "Glute max": {
+      "primary": 31,
+      "credited": 84
+    },
+    "Glute med/min": {
+      "primary": 7,
+      "credited": 8
+    },
+    "Adductors": {
+      "primary": 5,
+      "credited": 58
+    },
+    "Gastroc.": {
+      "primary": 8,
+      "credited": 8
+    },
+    "Soleus": {
+      "primary": 4,
+      "credited": 12
+    },
+    "Erector Spinae": {
+      "primary": 3,
+      "credited": 5
+    },
+    "Abdominals": {
+      "primary": 18,
+      "credited": 18
+    },
+    "Obliques": {
+      "primary": 12,
+      "credited": 12
+    },
+    "Neck muscles": {
+      "primary": 10,
+      "credited": 10
+    },
+    "Wrist flexors": {
+      "primary": 6,
+      "credited": 6
+    },
+    "Wrist extensors": {
+      "primary": 5,
+      "credited": 5
+    }
+  },
+  "addedConfidence": {
+    "medium": 290,
+    "low": 53,
+    "high": 3
+  },
+  "addedAllocationConfidence": {
+    "medium": 637,
+    "low": 112,
+    "high": 3
+  }
+}

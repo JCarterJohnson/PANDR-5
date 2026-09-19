@@ -1,0 +1,605 @@
+{
+  "id": "pandr5-source-v1.1.1",
+  "name": "PANDR-5 \u00b7 Source template",
+  "days": [
+    {
+      "id": "push",
+      "name": "Push + NCP",
+      "kind": "training",
+      "exercises": [
+        {
+          "id": "slot-5",
+          "exerciseId": "source-5",
+          "sets": 4,
+          "repMin": 5,
+          "repMax": 8,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-6",
+          "exerciseId": "source-6",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 11,
+          "rir": [
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-7",
+          "exerciseId": "source-7",
+          "sets": 3,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            1,
+            0,
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-8",
+          "exerciseId": "source-8",
+          "sets": 2,
+          "repMin": 5,
+          "repMax": 7,
+          "rir": [
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "bodyweight"
+        },
+        {
+          "id": "slot-9",
+          "exerciseId": "source-9",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-10",
+          "exerciseId": "source-10",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-11",
+          "exerciseId": "source-11",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        }
+      ]
+    },
+    {
+      "id": "pull",
+      "name": "Pull + NCP",
+      "kind": "training",
+      "exercises": [
+        {
+          "id": "slot-13",
+          "exerciseId": "source-13",
+          "sets": 3,
+          "repMin": 6,
+          "repMax": 9,
+          "rir": [
+            3,
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-14",
+          "exerciseId": "source-14",
+          "sets": 4,
+          "repMin": 8,
+          "repMax": 11,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-15",
+          "exerciseId": "source-15",
+          "sets": 3,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-16",
+          "exerciseId": "source-16",
+          "sets": 3,
+          "repMin": 6,
+          "repMax": 9,
+          "rir": [
+            3,
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-17",
+          "exerciseId": "source-17",
+          "sets": 3,
+          "repMin": 10,
+          "repMax": 12,
+          "rir": [
+            3,
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-18",
+          "exerciseId": "source-18",
+          "sets": 3,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        }
+      ]
+    },
+    {
+      "id": "legs",
+      "name": "Legs",
+      "kind": "training",
+      "exercises": [
+        {
+          "id": "slot-20",
+          "exerciseId": "source-20",
+          "sets": 4,
+          "repMin": 8,
+          "repMax": 10,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-21",
+          "exerciseId": "source-21",
+          "sets": 4,
+          "repMin": 5,
+          "repMax": 8,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-22",
+          "exerciseId": "source-22",
+          "sets": 4,
+          "repMin": 6,
+          "repMax": 9,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-23",
+          "exerciseId": "source-23",
+          "sets": 3,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-24",
+          "exerciseId": "source-24",
+          "sets": 3,
+          "repMin": 10,
+          "repMax": 12,
+          "rir": [
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-25",
+          "exerciseId": "source-25",
+          "sets": 5,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-26",
+          "exerciseId": "source-11",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        }
+      ]
+    },
+    {
+      "id": "rest-1",
+      "name": "Active Rest",
+      "kind": "rest",
+      "exercises": []
+    },
+    {
+      "id": "upper",
+      "name": "Upper",
+      "kind": "training",
+      "exercises": [
+        {
+          "id": "slot-30",
+          "exerciseId": "source-30",
+          "sets": 4,
+          "repMin": 8,
+          "repMax": 10,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-31",
+          "exerciseId": "source-15",
+          "sets": 4,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            3,
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-32",
+          "exerciseId": "source-6",
+          "sets": 4,
+          "repMin": 6,
+          "repMax": 9,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-33",
+          "exerciseId": "source-7",
+          "sets": 3,
+          "repMin": 10,
+          "repMax": 12,
+          "rir": [
+            3,
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-34",
+          "exerciseId": "source-34",
+          "sets": 3,
+          "repMin": 10,
+          "repMax": 20,
+          "rir": [
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "bodyweight"
+        },
+        {
+          "id": "slot-35",
+          "exerciseId": "source-35",
+          "sets": 4,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            2,
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-36",
+          "exerciseId": "source-17",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-37",
+          "exerciseId": "source-18",
+          "sets": 3,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        }
+      ]
+    },
+    {
+      "id": "lower",
+      "name": "Lower",
+      "kind": "training",
+      "exercises": [
+        {
+          "id": "slot-39",
+          "exerciseId": "source-39",
+          "sets": 4,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-40",
+          "exerciseId": "source-40",
+          "sets": 4,
+          "repMin": 10,
+          "repMax": 15,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-41",
+          "exerciseId": "source-41",
+          "sets": 4,
+          "repMin": 5,
+          "repMax": 8,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-42",
+          "exerciseId": "source-24",
+          "sets": 3,
+          "repMin": 10,
+          "repMax": 12,
+          "rir": [
+            2,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-43",
+          "exerciseId": "source-43",
+          "sets": 3,
+          "repMin": 7,
+          "repMax": 10,
+          "rir": [
+            3,
+            2,
+            "0-1"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-44",
+          "exerciseId": "source-25",
+          "sets": 5,
+          "repMin": 12,
+          "repMax": 15,
+          "rir": [
+            3,
+            2,
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        },
+        {
+          "id": "slot-45",
+          "exerciseId": "source-11",
+          "sets": 3,
+          "repMin": 8,
+          "repMax": 12,
+          "rir": [
+            1,
+            "0-1",
+            "<0"
+          ],
+          "load": 0,
+          "increment": 0.5,
+          "loadMode": "external"
+        }
+      ]
+    },
+    {
+      "id": "rest-2",
+      "name": "Active Rest",
+      "kind": "rest",
+      "exercises": []
+    }
+  ],
+  "targets": {
+    "chest": 20,
+    "lats": 20,
+    "biceps": 15.0,
+    "triceps": 18.5,
+    "quads": 20,
+    "hamstrings": 19.5,
+    "glute-max": 11.75,
+    "gastrocnemius": 10,
+    "lateral-delts": 10
+  },
+  "updatedAt": "2026-09-15T00:00:00.000Z"
+}

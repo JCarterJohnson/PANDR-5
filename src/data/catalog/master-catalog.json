@@ -1,0 +1,6633 @@
+{
+  "schemaVersion": 1,
+  "exercises": [
+    {
+      "id": "source-5",
+      "name": "Bench Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C5:F5",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-6",
+      "name": "Incline Dumbbell Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C6:F6",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-7",
+      "name": "Machine Chest Flyes",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C7:F7",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-8",
+      "name": "Close-Grip Chinups (Assisted, BW, or Weighted)",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C8:F8",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-9",
+      "name": "Preacher Curls (Machine)",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C9:F9",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-10",
+      "name": "Hammer Curls",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C10:F10",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-11",
+      "name": "Lateral Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C11:F11",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-13",
+      "name": "Single-Arm Bent-Over Dumbbell Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C13:F13",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-14",
+      "name": "Lat Pulldown (Standard Bar)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C14:F14",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-15",
+      "name": "Lat Pullovers (Cable; any attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C15:F15",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-16",
+      "name": "Ez-Bar Tricep Overhead Extension",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C16:F16",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-17",
+      "name": "Tricep Cable Pushdown (preferred attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C17:F17",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-18",
+      "name": "Tricep Cable Overhead Extension (preferred attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C18:F18",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-20",
+      "name": "Seated Hamstring Curls",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C20:F20",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-21",
+      "name": "RDL (Barbell or Dumbell)",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C21:F21",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-22",
+      "name": "Leg Press",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C22:F22",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-23",
+      "name": "Dumbbell Heel-Elevated Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C23:F23",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-24",
+      "name": "Leg Extension",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C24:F24",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-25",
+      "name": "Standing Calf Raise (Machine)",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C25:F25",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-30",
+      "name": "Wide-Grip Seated Cable Rows",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C30:F30",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-34",
+      "name": "Incline/Elevated Pushups",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C34:F34",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-35",
+      "name": "Incline Curls",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C35:F35",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-39",
+      "name": "Lying Hamstring Curls",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C39:F39",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-40",
+      "name": "45° Hip Extension",
+      "equipment": "Other",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C40:F40",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-41",
+      "name": "Hack Squat",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C41:F41",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-43",
+      "name": "Lunges",
+      "equipment": "Other",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C43:F43",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-flat-bench-press",
+      "name": "Dumbbell Flat Bench Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-floor-press",
+      "name": "Dumbbell Floor Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-dumbbell-bench-press",
+      "name": "Single-Arm Dumbbell Bench Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-decline-bench-press",
+      "name": "Barbell Decline Bench Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-floor-press",
+      "name": "Barbell Floor Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-incline-bench-press",
+      "name": "Barbell Incline Bench Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, incline",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-flat-bench-press",
+      "name": "Smith Flat Bench Press",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-decline-bench-press",
+      "name": "Smith Decline Bench Press",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-incline-bench-press",
+      "name": "Smith Incline Bench Press",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, incline",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-fixed-path-chest-press",
+      "name": "Seated Fixed-Path Chest Press",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-converging-chest-press",
+      "name": "Converging Chest Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-incline-converging-chest-press",
+      "name": "Incline Converging Chest Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, incline",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-chest-press",
+      "name": "Standing Cable Chest Press",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supine-cable-bench-press",
+      "name": "Supine Cable Bench Press",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-chest-press",
+      "name": "Band Chest Press",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-swiss-bar-bench-press",
+      "name": "Swiss-Bar Bench Press",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cambered-bar-bench-press",
+      "name": "Cambered-Bar Bench Press",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-flat-fly",
+      "name": "Dumbbell Flat Fly",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-incline-fly",
+      "name": "Dumbbell Incline Fly",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-mid-height-cable-fly",
+      "name": "Standing Mid-Height Cable Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-high-to-low-cable-fly",
+      "name": "High-to-Low Cable Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-low-to-high-cable-fly",
+      "name": "Low-to-High Cable Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supine-cable-fly",
+      "name": "Supine Cable Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-cable-fly",
+      "name": "Single-Arm Cable Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-chest-fly",
+      "name": "Band Chest Fly",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-push-up",
+      "name": "Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-feet-elevated-push-up",
+      "name": "Feet-Elevated Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kneeling-push-up",
+      "name": "Kneeling Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-deficit-push-up",
+      "name": "Deficit Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-close-grip-push-up",
+      "name": "Close-Grip Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ring-push-up",
+      "name": "Ring Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-parallel-bar-dip",
+      "name": "Parallel-Bar Dip",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ring-dip",
+      "name": "Ring Dip",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-assisted-parallel-bar-dip",
+      "name": "Band-Assisted Parallel-Bar Dip",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-barbell-overhead-press",
+      "name": "Standing Barbell Overhead Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-barbell-overhead-press",
+      "name": "Seated Barbell Overhead Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-dumbbell-shoulder-press",
+      "name": "Seated Dumbbell Shoulder Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-dumbbell-shoulder-press",
+      "name": "Standing Dumbbell Shoulder Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-arnold-press",
+      "name": "Arnold Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-dumbbell-overhead-press",
+      "name": "Single-Arm Dumbbell Overhead Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-shoulder-press",
+      "name": "Smith Shoulder Press",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-machine-shoulder-press",
+      "name": "Seated Machine Shoulder Press",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-independent-lever-shoulder-press",
+      "name": "Independent-Lever Shoulder Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-cable-shoulder-press",
+      "name": "Seated Cable Shoulder Press",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-overhead-press",
+      "name": "Band Overhead Press",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-double-kettlebell-strict-press",
+      "name": "Double-Kettlebell Strict Press",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-kettlebell-strict-press",
+      "name": "Single-Kettlebell Strict Press",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pike-push-up",
+      "name": "Pike Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-wall-supported-handstand-push-up",
+      "name": "Wall-Supported Handstand Push-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-half-kneeling-single-arm-landmine-press",
+      "name": "Half-Kneeling Single-Arm Landmine Press",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-single-arm-landmine-press",
+      "name": "Standing Single-Arm Landmine Press",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-two-hand-landmine-press",
+      "name": "Two-Hand Landmine Press",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-cable-lateral-raise",
+      "name": "Single-Arm Cable Lateral Raise",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-behind-body-cable-lateral-raise",
+      "name": "Behind-Body Cable Lateral Raise",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-leaning-cable-lateral-raise",
+      "name": "Leaning Cable Lateral Raise",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-dumbbell-lateral-raise",
+      "name": "Seated Dumbbell Lateral Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-lying-dumbbell-lateral-raise",
+      "name": "Side-Lying Dumbbell Lateral Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-machine-lateral-raise",
+      "name": "Machine Lateral Raise",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-lateral-raise",
+      "name": "Band Lateral Raise",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, lateral",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-front-raise",
+      "name": "Dumbbell Front Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-front-raise",
+      "name": "Cable Front Raise",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-front-raise",
+      "name": "Barbell Front Raise",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bent-over-dumbbell-reverse-fly",
+      "name": "Bent-Over Dumbbell Reverse Fly",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-dumbbell-reverse-fly",
+      "name": "Chest-Supported Dumbbell Reverse Fly",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-reverse-fly",
+      "name": "Standing Cable Reverse Fly",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-face-pull",
+      "name": "Cable Face Pull",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-reverse-pec-deck",
+      "name": "Reverse Pec Deck",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-pull-apart",
+      "name": "Band Pull-Apart",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-face-pull",
+      "name": "Band Face Pull",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-prone-dumbbell-y-raise",
+      "name": "Prone Dumbbell Y Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-y-raise",
+      "name": "Cable Y Raise",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bent-over-barbell-row",
+      "name": "Bent-Over Barbell Row",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-underhand-barbell-row",
+      "name": "Underhand Barbell Row",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pendlay-row",
+      "name": "Pendlay Row",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-seal-row",
+      "name": "Barbell Seal Row",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-dumbbell-row",
+      "name": "Chest-Supported Dumbbell Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-two-dumbbell-bent-over-row",
+      "name": "Two-Dumbbell Bent-Over Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-dumbbell-high-row",
+      "name": "Chest-Supported Dumbbell High Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bent-over-dumbbell-high-row",
+      "name": "Bent-Over Dumbbell High Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-close-grip-seated-cable-row",
+      "name": "Close-Grip Seated Cable Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-seated-cable-row",
+      "name": "Single-Arm Seated Cable Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-single-arm-cable-row",
+      "name": "Standing Single-Arm Cable Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-cable-high-row",
+      "name": "Chest-Supported Cable High Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-cable-high-row",
+      "name": "Single-Arm Cable High Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-landmine-t-bar-row",
+      "name": "Landmine T-Bar Row",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-landmine-row",
+      "name": "Single-Arm Landmine Row",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-meadows-row",
+      "name": "Meadows Row",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-fixed-path-row",
+      "name": "Chest-Supported Fixed-Path Row",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-unilateral-seated-machine-row",
+      "name": "Unilateral Seated Machine Row",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-lever-t-bar-row",
+      "name": "Chest-Supported Lever T-Bar Row",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-independent-lever-low-row",
+      "name": "Independent-Lever Low Row",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-wide-lever-row",
+      "name": "Chest-Supported Wide Lever Row",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-bent-over-row",
+      "name": "Smith Bent-Over Row",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-band-row",
+      "name": "Seated Band Row",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-band-row",
+      "name": "Standing Band Row",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-kettlebell-row",
+      "name": "Single-Arm Kettlebell Row",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-inverted-row",
+      "name": "Inverted Row",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ring-row",
+      "name": "Ring Row",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-feet-elevated-inverted-row",
+      "name": "Feet-Elevated Inverted Row",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-wide-grip-inverted-row",
+      "name": "Wide-Grip Inverted Row",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        },
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pull-up",
+      "name": "Pull-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-neutral-grip-pull-up",
+      "name": "Neutral-Grip Pull-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-wide-grip-pull-up",
+      "name": "Wide-Grip Pull-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ring-chin-up",
+      "name": "Ring Chin-Up",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-assisted-pull-up",
+      "name": "Band-Assisted Pull-Up",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-lat-pulldown",
+      "name": "Band Lat Pulldown",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-neutral-grip-lat-pulldown",
+      "name": "Neutral-Grip Lat Pulldown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-underhand-lat-pulldown",
+      "name": "Underhand Lat Pulldown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-lat-pulldown",
+      "name": "Single-Arm Lat Pulldown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-half-kneeling-single-arm-cable-pulldown",
+      "name": "Half-Kneeling Single-Arm Cable Pulldown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-independent-lever-pulldown",
+      "name": "Independent-Lever Pulldown",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-diagonal-lever-high-row",
+      "name": "Diagonal Lever High Row",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, pull",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-machine-pullover",
+      "name": "Machine Pullover",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-pullover",
+      "name": "Dumbbell Pullover",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-straight-arm-pulldown",
+      "name": "Band Straight-Arm Pulldown",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-cable-straight-arm-pulldown",
+      "name": "Single-Arm Cable Straight-Arm Pulldown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-shrug",
+      "name": "Barbell Shrug",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-shrug",
+      "name": "Dumbbell Shrug",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-incline-dumbbell-shrug",
+      "name": "Incline Dumbbell Shrug",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-trap-bar-shrug",
+      "name": "Trap-Bar Shrug",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-shrug",
+      "name": "Smith Shrug",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-low-cable-shrug",
+      "name": "Low-Cable Shrug",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-lever-shrug",
+      "name": "Lever Shrug",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "upper-traps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-chest-supported-scapular-shrug",
+      "name": "Chest-Supported Scapular Shrug",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-scapular-row",
+      "name": "Cable Scapular Row",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-barbell-curl",
+      "name": "Standing Barbell Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-drag-curl",
+      "name": "Barbell Drag Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-curl",
+      "name": "EZ-Bar Curl",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-preacher-curl",
+      "name": "EZ-Bar Preacher Curl",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-spider-curl",
+      "name": "EZ-Bar Spider Curl",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-dumbbell-supinating-curl",
+      "name": "Standing Dumbbell Supinating Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-dumbbell-curl",
+      "name": "Seated Dumbbell Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-preacher-curl",
+      "name": "Dumbbell Preacher Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-concentration-curl",
+      "name": "Dumbbell Concentration Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-spider-curl",
+      "name": "Dumbbell Spider Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-curl",
+      "name": "Standing Cable Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-behind-body-cable-curl",
+      "name": "Behind-Body Cable Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow, curl-position",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-high-cable-curl",
+      "name": "High-Cable Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-preacher-curl",
+      "name": "Cable Preacher Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow, curl-position",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-arm-curl-machine",
+      "name": "Seated Arm-Curl Machine",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-supinated-curl",
+      "name": "Band Supinated Curl",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cross-body-hammer-curl",
+      "name": "Cross-Body Hammer Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-incline-dumbbell-hammer-curl",
+      "name": "Incline Dumbbell Hammer Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-rope-hammer-curl",
+      "name": "Rope Hammer Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-hammer-preacher-curl",
+      "name": "Cable Hammer Preacher Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-swiss-bar-hammer-curl",
+      "name": "Swiss-Bar Hammer Curl",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-hammer-curl",
+      "name": "Band Hammer Curl",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-reverse-curl",
+      "name": "Barbell Reverse Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-reverse-curl",
+      "name": "EZ-Bar Reverse Curl",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-reverse-curl",
+      "name": "Cable Reverse Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-reverse-curl",
+      "name": "Dumbbell Reverse Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-zottman-curl",
+      "name": "Zottman Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, elbow",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-close-grip-barbell-bench-press",
+      "name": "Close-Grip Barbell Bench Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-close-grip-bench-press",
+      "name": "Smith Close-Grip Bench Press",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-neutral-grip-dumbbell-floor-press",
+      "name": "Neutral-Grip Dumbbell Floor Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-lying-dumbbell-triceps-extension",
+      "name": "Lying Dumbbell Triceps Extension",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-dumbbell-overhead-triceps-extension",
+      "name": "Seated Dumbbell Overhead Triceps Extension",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-dumbbell-overhead-extension",
+      "name": "Single-Arm Dumbbell Overhead Extension",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-triceps-kickback",
+      "name": "Dumbbell Triceps Kickback",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-lying-triceps-extension",
+      "name": "EZ-Bar Lying Triceps Extension",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-ez-bar-incline-triceps-extension",
+      "name": "EZ-Bar Incline Triceps Extension",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-lying-triceps-extension",
+      "name": "Barbell Lying Triceps Extension",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-cable-pushdown",
+      "name": "Single-Arm Cable Pushdown",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-arm-overhead-cable-extension",
+      "name": "Single-Arm Overhead Cable Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cross-body-cable-triceps-extension",
+      "name": "Cross-Body Cable Triceps Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-triceps-kickback",
+      "name": "Cable Triceps Kickback",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-lying-cable-triceps-extension",
+      "name": "Lying Cable Triceps Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-triceps-extension-machine",
+      "name": "Seated Triceps Extension Machine",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-lever-dip-press",
+      "name": "Seated Lever Dip Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "chest",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, press",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-triceps-pushdown",
+      "name": "Band Triceps Pushdown",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-overhead-triceps-extension",
+      "name": "Band Overhead Triceps Extension",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bodyweight-triceps-extension",
+      "name": "Bodyweight Triceps Extension",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-suspension-triceps-extension",
+      "name": "Suspension Triceps Extension",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, triceps",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-high-bar-back-squat",
+      "name": "High-Bar Back Squat",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-front-squat",
+      "name": "Front Squat",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-low-bar-back-squat",
+      "name": "Low-Bar Back Squat",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-box-squat",
+      "name": "Barbell Box Squat",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-goblet-squat",
+      "name": "Dumbbell Goblet Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-double-dumbbell-front-squat",
+      "name": "Double-Dumbbell Front Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-double-kettlebell-front-squat",
+      "name": "Double-Kettlebell Front Squat",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kettlebell-goblet-squat",
+      "name": "Kettlebell Goblet Squat",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-safety-bar-squat",
+      "name": "Safety-Bar Squat",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-zercher-squat",
+      "name": "Zercher Squat",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-squat",
+      "name": "Smith Squat",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-heel-elevated-squat",
+      "name": "Smith Heel-Elevated Squat",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pendulum-squat",
+      "name": "Pendulum Squat",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-belt-squat",
+      "name": "Belt Squat",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-horizontal-lever-leg-press",
+      "name": "Horizontal Lever Leg Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-vertical-leg-press",
+      "name": "Vertical Leg Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-horizontal-seated-leg-press",
+      "name": "Horizontal Seated Leg Press",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-seated-leg-press",
+      "name": "Single-Leg Seated Leg Press",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-landmine-squat",
+      "name": "Landmine Squat",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-squat",
+      "name": "Band Squat",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bodyweight-squat",
+      "name": "Bodyweight Squat",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat, hip-thrust",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-assisted-sissy-squat",
+      "name": "Assisted Sissy Squat",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-split-squat",
+      "name": "Dumbbell Split Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-rear-foot-elevated-split-squat",
+      "name": "Dumbbell Rear-Foot-Elevated Split Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-reverse-lunge",
+      "name": "Dumbbell Reverse Lunge",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-walking-lunge",
+      "name": "Dumbbell Walking Lunge",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-step-up",
+      "name": "Dumbbell Step-Up",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-lateral-lunge",
+      "name": "Dumbbell Lateral Lunge",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-long-stride-rear-foot-elevated-split-squat",
+      "name": "Long-Stride Rear-Foot-Elevated Split Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-split-squat",
+      "name": "Barbell Split Squat",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-reverse-lunge",
+      "name": "Barbell Reverse Lunge",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-step-up",
+      "name": "Barbell Step-Up",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-split-squat",
+      "name": "Smith Split Squat",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-rear-foot-elevated-split-squat",
+      "name": "Smith Rear-Foot-Elevated Split Squat",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bodyweight-split-squat",
+      "name": "Bodyweight Split Squat",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pistol-squat",
+      "name": "Pistol Squat",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-skater-squat",
+      "name": "Skater Squat",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-landmine-reverse-lunge",
+      "name": "Landmine Reverse Lunge",
+      "equipment": "Landmine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, squat",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-leg-extension",
+      "name": "Single-Leg Leg Extension",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-cable-leg-extension",
+      "name": "Seated Cable Leg Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-band-leg-extension",
+      "name": "Seated Band Leg Extension",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-reverse-nordic-curl",
+      "name": "Reverse Nordic Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-good-morning",
+      "name": "Barbell Good Morning",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-stiff-leg-deadlift",
+      "name": "Barbell Stiff-Leg Deadlift",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-snatch-grip-romanian-deadlift",
+      "name": "Snatch-Grip Romanian Deadlift",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-dumbbell-romanian-deadlift",
+      "name": "Single-Leg Dumbbell Romanian Deadlift",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-b-stance-dumbbell-romanian-deadlift",
+      "name": "B-Stance Dumbbell Romanian Deadlift",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-romanian-deadlift",
+      "name": "Smith Romanian Deadlift",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-pull-through",
+      "name": "Cable Pull-Through",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-romanian-deadlift",
+      "name": "Band Romanian Deadlift",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-good-morning",
+      "name": "Band Good Morning",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-safety-bar-good-morning",
+      "name": "Safety-Bar Good Morning",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-conventional-deadlift",
+      "name": "Conventional Deadlift",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-sumo-deadlift",
+      "name": "Sumo Deadlift",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-deficit-conventional-deadlift",
+      "name": "Deficit Conventional Deadlift",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-low-handle-trap-bar-deadlift",
+      "name": "Low-Handle Trap-Bar Deadlift",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-high-handle-trap-bar-deadlift",
+      "name": "High-Handle Trap-Bar Deadlift",
+      "equipment": "Specialty bar",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kettlebell-deadlift",
+      "name": "Kettlebell Deadlift",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-single-leg-curl",
+      "name": "Standing Single-Leg Curl",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-seated-leg-curl",
+      "name": "Single-Leg Seated Leg Curl",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-lying-leg-curl",
+      "name": "Single-Leg Lying Leg Curl",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-leg-curl",
+      "name": "Standing Cable Leg Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-prone-band-leg-curl",
+      "name": "Prone Band Leg Curl",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-prone-dumbbell-leg-curl",
+      "name": "Prone Dumbbell Leg Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-nordic-hamstring-curl",
+      "name": "Nordic Hamstring Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-sliding-leg-curl",
+      "name": "Sliding Leg Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-sliding-curl",
+      "name": "Single-Leg Sliding Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-stability-ball-leg-curl",
+      "name": "Stability-Ball Leg Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-suspension-leg-curl",
+      "name": "Suspension Leg Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-glute-ham-raise",
+      "name": "Glute-Ham Raise",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-hip-thrust",
+      "name": "Barbell Hip Thrust",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-glute-bridge",
+      "name": "Barbell Glute Bridge",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-hip-thrust",
+      "name": "Dumbbell Hip Thrust",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-hip-thrust",
+      "name": "Smith Hip Thrust",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-lever-hip-thrust",
+      "name": "Lever Hip Thrust",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-hip-thrust",
+      "name": "Band Hip Thrust",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-glute-bridge",
+      "name": "Glute Bridge",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-glute-bridge",
+      "name": "Single-Leg Glute Bridge",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-hip-thrust",
+      "name": "Single-Leg Hip Thrust",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, hip-thrust, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-hip-extension",
+      "name": "Standing Cable Hip Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kneeling-cable-hip-extension",
+      "name": "Kneeling Cable Hip Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-glute-kickback-machine",
+      "name": "Standing Glute Kickback Machine",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-glute-kickback",
+      "name": "Band Glute Kickback",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-reverse-hyperextension",
+      "name": "Reverse Hyperextension",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, glute-review",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-horizontal-hip-extension",
+      "name": "Horizontal Hip Extension",
+      "equipment": "Roman chair",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, ham-curl, lumbar",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-hip-abduction",
+      "name": "Seated Hip Abduction",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-hip-abduction",
+      "name": "Standing Cable Hip Abduction",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-band-hip-abduction",
+      "name": "Standing Band Hip Abduction",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-lying-band-hip-abduction",
+      "name": "Side-Lying Band Hip Abduction",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-band-hip-abduction",
+      "name": "Seated Band Hip Abduction",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-lateral-band-walk",
+      "name": "Lateral Band Walk",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-lying-hip-abduction",
+      "name": "Side-Lying Hip Abduction",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-hip-adduction",
+      "name": "Seated Hip Adduction",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "adductors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-cable-hip-adduction",
+      "name": "Standing Cable Hip Adduction",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "adductors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-band-hip-adduction",
+      "name": "Standing Band Hip Adduction",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "adductors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-lying-hip-adduction",
+      "name": "Side-Lying Hip Adduction",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "adductors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dynamic-copenhagen-adduction",
+      "name": "Dynamic Copenhagen Adduction",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "adductors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, adduction",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-dumbbell-calf-raise",
+      "name": "Standing Dumbbell Calf Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-dumbbell-calf-raise",
+      "name": "Single-Leg Dumbbell Calf Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-standing-calf-raise",
+      "name": "Smith Standing Calf Raise",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-leg-press-calf-press",
+      "name": "Leg-Press Calf Press",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-donkey-calf-raise-machine",
+      "name": "Donkey Calf Raise Machine",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-bodyweight-calf-raise",
+      "name": "Standing Bodyweight Calf Raise",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-single-leg-bodyweight-calf-raise",
+      "name": "Single-Leg Bodyweight Calf Raise",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-calf-raise",
+      "name": "Seated Calf Raise",
+      "equipment": "Plate-loaded machine",
+      "contributions": [
+        {
+          "muscle": "soleus",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-dumbbell-calf-raise",
+      "name": "Seated Dumbbell Calf Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "soleus",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-smith-seated-calf-raise",
+      "name": "Smith Seated Calf Raise",
+      "equipment": "Smith machine",
+      "contributions": [
+        {
+          "muscle": "soleus",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-band-plantarflexion",
+      "name": "Seated Band Plantarflexion",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "soleus",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, calf",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pelvis-restrained-lumbar-extension",
+      "name": "Pelvis-Restrained Lumbar Extension",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, lumbar, lumbar-counter",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-roman-chair-spinal-extension",
+      "name": "Roman-Chair Spinal Extension",
+      "equipment": "Roman chair",
+      "contributions": [
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, lumbar, lumbar-counter",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-prone-trunk-extension",
+      "name": "Prone Trunk Extension",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, lumbar, lumbar-counter",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-floor-crunch",
+      "name": "Floor Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-reverse-crunch",
+      "name": "Reverse Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-decline-crunch",
+      "name": "Decline Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-hanging-knee-raise-with-pelvic-curl",
+      "name": "Hanging Knee Raise with Pelvic Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-captain-chair-knee-raise-with-pelvic-curl",
+      "name": "Captain-Chair Knee Raise with Pelvic Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-hanging-straight-leg-raise-with-pelvic-curl",
+      "name": "Hanging Straight-Leg Raise with Pelvic Curl",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-stability-ball-crunch",
+      "name": "Stability-Ball Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kneeling-cable-crunch",
+      "name": "Kneeling Cable Crunch",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-cable-crunch",
+      "name": "Seated Cable Crunch",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-abdominal-crunch-machine",
+      "name": "Seated Abdominal Crunch Machine",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kneeling-band-crunch",
+      "name": "Kneeling Band Crunch",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kneeling-ab-wheel-rollout",
+      "name": "Kneeling Ab-Wheel Rollout",
+      "equipment": "Ab wheel",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-standing-ab-wheel-rollout",
+      "name": "Standing Ab-Wheel Rollout",
+      "equipment": "Ab wheel",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-forearm-plank",
+      "name": "Forearm Plank",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-long-lever-plank",
+      "name": "Long-Lever Plank",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-suspension-body-saw",
+      "name": "Suspension Body Saw",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dead-bug",
+      "name": "Dead Bug",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-stability-ball-rollout",
+      "name": "Stability-Ball Rollout",
+      "equipment": "Stability ball",
+      "contributions": [
+        {
+          "muscle": "abdominals",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-trunk-rotation",
+      "name": "Cable Trunk Rotation",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-high-to-low-cable-woodchop",
+      "name": "High-to-Low Cable Woodchop",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-low-to-high-cable-lift",
+      "name": "Low-to-High Cable Lift",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-cable-side-bend",
+      "name": "Cable Side Bend",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-dumbbell-side-bend",
+      "name": "Dumbbell Side Bend",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-crunch",
+      "name": "Side Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-bicycle-crunch",
+      "name": "Bicycle Crunch",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-torso-rotation-machine",
+      "name": "Seated Torso Rotation Machine",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-pallof-press",
+      "name": "Pallof Press",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-pallof-press",
+      "name": "Band Pallof Press",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-side-plank",
+      "name": "Side Plank",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-short-lever-side-plank",
+      "name": "Short-Lever Side Plank",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "obliques",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-trunk, core-emg",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-harness-neck-extension",
+      "name": "Harness Neck Extension",
+      "equipment": "Neck harness",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-machine-neck-extension",
+      "name": "Machine Neck Extension",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-machine-neck-flexion",
+      "name": "Machine Neck Flexion",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-machine-neck-lateral-flexion",
+      "name": "Machine Neck Lateral Flexion",
+      "equipment": "Selectorized machine",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-neck-extension",
+      "name": "Band Neck Extension",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-neck-flexion",
+      "name": "Band Neck Flexion",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-neck-lateral-flexion",
+      "name": "Band Neck Lateral Flexion",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-manual-resistance-neck-flexion",
+      "name": "Manual-Resistance Neck Flexion",
+      "equipment": "Manual resistance",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-manual-resistance-neck-extension",
+      "name": "Manual-Resistance Neck Extension",
+      "equipment": "Manual resistance",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-manual-resistance-neck-lateral-flexion",
+      "name": "Manual-Resistance Neck Lateral Flexion",
+      "equipment": "Manual resistance",
+      "contributions": [
+        {
+          "muscle": "neck",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-neck, neck",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-barbell-wrist-curl",
+      "name": "Seated Barbell Wrist Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-behind-back-barbell-wrist-curl",
+      "name": "Behind-Back Barbell Wrist Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supported-dumbbell-wrist-curl",
+      "name": "Supported Dumbbell Wrist Curl",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supported-cable-wrist-curl",
+      "name": "Supported Cable Wrist Curl",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-wrist-curl",
+      "name": "Band Wrist Curl",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-seated-barbell-reverse-wrist-curl",
+      "name": "Seated Barbell Reverse Wrist Curl",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "wrist-extensors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supported-dumbbell-wrist-extension",
+      "name": "Supported Dumbbell Wrist Extension",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "wrist-extensors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-supported-cable-wrist-extension",
+      "name": "Supported Cable Wrist Extension",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "wrist-extensors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-band-wrist-extension",
+      "name": "Band Wrist Extension",
+      "equipment": "Resistance band",
+      "contributions": [
+        {
+          "muscle": "wrist-extensors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-wrist-roller-flexion-direction",
+      "name": "Wrist Roller — Flexion Direction",
+      "equipment": "Wrist roller",
+      "contributions": [
+        {
+          "muscle": "wrist-flexors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-wrist-roller-extension-direction",
+      "name": "Wrist Roller — Extension Direction",
+      "equipment": "Wrist roller",
+      "contributions": [
+        {
+          "muscle": "wrist-extensors",
+          "coefficient": 1
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-upper, wrist",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-power-clean",
+      "name": "Power Clean",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-hang-power-clean",
+      "name": "Hang Power Clean",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-clean-pull",
+      "name": "Clean Pull",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-snatch-pull",
+      "name": "Snatch Pull",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-hang-high-pull",
+      "name": "Hang High Pull",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-power-snatch",
+      "name": "Power Snatch",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-barbell-push-press",
+      "name": "Barbell Push Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 1
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-two-hand-kettlebell-swing",
+      "name": "Two-Hand Kettlebell Swing",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-one-hand-kettlebell-swing",
+      "name": "One-Hand Kettlebell Swing",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kettlebell-clean",
+      "name": "Kettlebell Clean",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "p5-kettlebell-snatch",
+      "name": "Kettlebell Snatch",
+      "equipment": "Kettlebell",
+      "contributions": [
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "quads",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "upper-traps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "PANDR-5 research catalog v1: anatomy-lower, anatomy-upper, olympic",
+      "beyondFailureAllowed": false
+    }
+  ]
+}

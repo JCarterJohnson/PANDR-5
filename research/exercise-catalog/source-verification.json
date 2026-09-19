@@ -1,0 +1,240 @@
+{
+  "checkedOn": "2026-09-18",
+  "sources": [
+    {
+      "id": "volume",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41343037/",
+      "doi": "10.1007/s40279-025-02344-w",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains"
+    },
+    {
+      "id": "emg",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29354060/",
+      "doi": "10.3389/fphys.2017.00985",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Interpreting Signal Amplitudes in Surface Electromyography Studies in Sport and Rehabilitation Sciences"
+    },
+    {
+      "id": "press",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29541130/",
+      "doi": "10.1016/j.jesf.2017.06.003",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Low-load bench press and push-up induce similar muscle hypertrophy and strength gain"
+    },
+    {
+      "id": "incline",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32922646/",
+      "doi": "10.70252/fdnb1158",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Effects of Horizontal and Incline Bench Press on Neuromuscular Adaptations in Untrained Young Men"
+    },
+    {
+      "id": "squat",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31230110/",
+      "doi": "10.1007/s00421-019-04181-y",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Effects of squat training with different depths on lower limb muscle volumes"
+    },
+    {
+      "id": "hip-thrust",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37877099/",
+      "doi": "10.3389/fphys.2023.1279170",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Hip thrust and back squat training elicit similar gluteus muscle hypertrophy and transfer similarly to the deadlift"
+    },
+    {
+      "id": "triceps",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35819335/",
+      "doi": "10.1080/17461391.2022.2100279",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Triceps brachii hypertrophy is substantially greater after elbow extension training performed in the overhead versus neutral arm position"
+    },
+    {
+      "id": "lateral",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40692697/",
+      "doi": "10.3389/fphys.2025.1611468",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Dumbbell versus cable lateral raises for lateral deltoid hypertrophy: an experimental study"
+    },
+    {
+      "id": "pull",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26446291/",
+      "doi": "10.5812/asjsm.24057",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Single vs. Multi-Joint Resistance Exercises: Effects on Muscle Strength and Hypertrophy"
+    },
+    {
+      "id": "elbow",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/7775488/",
+      "doi": "10.1016/0021-9290(94)00114-j",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Variation of muscle moment arms with elbow and forearm position"
+    },
+    {
+      "id": "neck",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9189733/",
+      "doi": "10.1007/s004210050186",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Specificity of resistance training responses in neck muscle size and strength"
+    },
+    {
+      "id": "olympic",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25689955/",
+      "doi": "10.1007/s40279-015-0314-y",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Weightlifting pulling derivatives: rationale for implementation and application"
+    },
+    {
+      "id": "lumbar",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24092889/",
+      "doi": "10.1136/bjsports-2013-092197",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "A review of the specificity of exercises designed for conditioning the lumbar extensors"
+    },
+    {
+      "id": "lumbar-counter",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22387361/",
+      "doi": "10.3233/bmr-2002-16105",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Development of lumbar extension strength: Effect of pelvic stabilization during resistance training"
+    },
+    {
+      "id": "glute-review",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40276368/",
+      "doi": "10.3389/fphys.2025.1542334",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "The impact of resistance training on gluteus maximus hypertrophy: a systematic review and meta-analysis"
+    },
+    {
+      "id": "adduction",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24377067/",
+      "doi": null,
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Perceived loading and muscle activity during hip strengthening exercises: comparison of elastic resistance and machine exercises"
+    },
+    {
+      "id": "core-emg",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32560185/",
+      "doi": "10.3390/ijerph17124306",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Core Muscle Activity During Physical Fitness Exercises: A Systematic Review"
+    },
+    {
+      "id": "calf",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38156065/",
+      "doi": "10.3389/fphys.2023.1272106",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Triceps surae muscle hypertrophy is greater after standing versus seated calf-raise training"
+    },
+    {
+      "id": "wrist",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28759532/",
+      "doi": "10.1519/jsc.0000000000002019",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Wrist Resistance Training Improves Motor Control and Strength"
+    },
+    {
+      "id": "ham-curl",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33009197/",
+      "doi": "10.1249/mss.0000000000002523",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Greater Hamstrings Muscle Hypertrophy but Similar Damage Protection after Training at Long versus Short Muscle Lengths"
+    },
+    {
+      "id": "curl-position",
+      "checkedOn": "2026-09-18",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40082069/",
+      "doi": "10.1002/ejsc.12279",
+      "status": "verified",
+      "method": "Europe PMC bibliographic identity matched PMID, title and DOI",
+      "resolvedTitle": "Comparison Between Shoulder Flexed and Extended Positions in Elbow Flexion Resistance Training on Regional Hypertrophy and Maximum Strength: Preacher versus Bayesian Cable Curls"
+    },
+    {
+      "id": "anatomy-upper",
+      "checkedOn": "2026-09-18",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
+      "doi": null,
+      "httpStatus": 200,
+      "status": "verified",
+      "method": "Live OpenStax section URL and publisher identity checked; anatomical claims reviewed separately"
+    },
+    {
+      "id": "anatomy-lower",
+      "checkedOn": "2026-09-18",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
+      "doi": null,
+      "httpStatus": 200,
+      "status": "verified",
+      "method": "Live OpenStax section URL and publisher identity checked; anatomical claims reviewed separately"
+    },
+    {
+      "id": "anatomy-trunk",
+      "checkedOn": "2026-09-18",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax",
+      "doi": null,
+      "httpStatus": 200,
+      "status": "verified",
+      "method": "Live OpenStax section URL and publisher identity checked; anatomical claims reviewed separately"
+    },
+    {
+      "id": "anatomy-neck",
+      "checkedOn": "2026-09-18",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/11-3-axial-muscles-of-the-head-neck-and-back",
+      "doi": null,
+      "httpStatus": 200,
+      "status": "verified",
+      "method": "Live OpenStax section URL and publisher identity checked; anatomical claims reviewed separately"
+    },
+    {
+      "id": "pandr-sheet",
+      "checkedOn": "2026-09-18",
+      "url": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit",
+      "doi": null,
+      "status": "verified",
+      "method": "Authenticated read-only Google Sheets API; live Guide Sheet formulas match preserved source values"
+    }
+  ],
+  "failed": 0,
+  "scope": "Bibliographic verification is not evidence that any source measured exact exercise-specific FSA values. PubMed URLs may present bot challenges; the independent Europe PMC PMID/DOI/title lookup checks their citation identity."
+}

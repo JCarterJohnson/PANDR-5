@@ -1,0 +1,67 @@
+import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
+
+const custom={id:'owner-e2e',name:'Owner custom press',equipment:'Home setup',contributions:[{muscle:'chest',coefficient:0.5}],source:'My personal estimate',beyondFailureAllowed:false};
+
+test('search aliases, select, save, reload, import custom data, export and restore', async ({page},testInfo)=>{
+  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+  page.on('console',message=>{if(message.type()==='error')errors.push(message.text())});
+  await page.goto('/');await expect(page).toHaveTitle(/PANDR/);
+  await expect(page.locator('vite-error-overlay')).toHaveCount(0);
+  await page.getByRole('button',{name:'Exercise library',exact:true}).click();
+  await expect(page.getByRole('heading',{name:'Exercise library',exact:true})).toBeVisible();
+  await page.getByRole('textbox',{name:'Search exercises'}).fill('Bayesian');
+  await expect(page.locator('.library-list details')).toHaveCount(1);
+  await page.getByText('Behind-Body Cable Curl',{exact:true}).click();
+  await expect(page.getByText('Also known as: Bayesian curl')).toBeVisible();
+  await expect(page.getByText(/Medium confidence in classification/)).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('alias-research-desktop.png'),fullPage:true});
+  await page.getByRole('textbox',{name:'Search exercises'}).fill('');
+  await page.getByLabel('Filter by muscle').selectOption('neck');
+  await expect(page.locator('.library-list details')).toHaveCount(10);
+  await page.getByLabel('Filter by muscle').selectOption('');
+  await page.getByRole('button',{name:'Your plan',exact:true}).click();
+  await page.getByRole('button',{name:'Bench Press',exact:true}).click();
+  await page.getByLabel('Find an exercise').fill('BB incline');
+  await page.getByLabel('Exercise',{exact:true}).selectOption('p5-barbell-incline-bench-press');
+  await page.getByRole('button',{name:'Apply exercise'}).click();
+  await page.getByRole('button',{name:'Save plan',exact:true}).click();
+  await expect(page.getByText('Your plan is saved. It will be used for your next session.')).toBeVisible();
+  await page.reload();await page.getByRole('button',{name:'Your plan',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Barbell Incline Bench Press',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Exercise library',exact:true}).click();
+  await page.getByLabel('Import exercise catalog').setInputFiles({name:'custom.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({schemaVersion:1,exercises:[custom]}))});
+  await expect(page.getByText(/Library saved:/)).toBeVisible();
+  await page.getByRole('textbox',{name:'Search exercises'}).fill(custom.name);
+  await page.getByText(custom.name,{exact:true}).click();
+  await expect(page.getByText(/User-supplied values. No built-in research confidence/)).toBeVisible();
+  await expect(page.locator('.library-detail')).toContainText('Secondary · 0.5');
+  await expect(page.locator('.library-detail a')).toHaveCount(0);
+  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Export current catalog'}).click();
+  const catalogDownload=await downloadPromise;const catalog=JSON.parse(await readFile((await catalogDownload.path())!,'utf8'));
+  expect(catalog.exercises).toHaveLength(373);expect(catalog.exercises.find((e:any)=>e.id===custom.id)).toEqual(custom);
+  await page.getByRole('button',{name:'Settings',exact:true}).click();
+  const backupPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download complete backup'}).click();
+  const backupDownload=await backupPromise;const backupPath=(await backupDownload.path())!;
+  const backup=JSON.parse(await readFile(backupPath,'utf8'));
+  expect(backup.plan.days[0].exercises[0].exerciseId).toBe('p5-barbell-incline-bench-press');
+  expect(backup.exercises.find((e:any)=>e.id===custom.id)).toEqual(custom);
+  await page.getByLabel('Restore a backup',{exact:true}).setInputFiles(backupPath);
+  await page.getByRole('button',{name:'Back up current data and restore'}).click();
+  await expect(page.getByText('Backup restored on this device.')).toBeVisible();
+  await page.getByRole('button',{name:'Your plan',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Barbell Incline Bench Press',exact:true})).toBeVisible();
+  await page.screenshot({path:testInfo.outputPath('saved-plan-desktop.png'),fullPage:true});
+  expect(errors).toEqual([]);
+});
+
+test('mobile library searches and new muscle filter remain usable',async({page},testInfo)=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/');
+ await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('button',{name:'Exercise library',exact:true}).click();
+ await page.getByLabel('Filter by muscle').selectOption('wrist-extensors');
+ await expect(page.locator('.library-list details')).toHaveCount(5);
+ await page.getByRole('textbox',{name:'Search exercises'}).fill('reverse wrist curl');
+ await expect(page.locator('.library-list details')).toHaveCount(2);
+ await page.screenshot({path:testInfo.outputPath('wrist-search-mobile.png'),fullPage:true});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+});

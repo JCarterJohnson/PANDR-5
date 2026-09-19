@@ -1,0 +1,78 @@
+[
+  {
+    "id": "chest",
+    "name": "Chest (pec major)"
+  },
+  {
+    "id": "anterior-delts",
+    "name": "Anterior Delts"
+  },
+  {
+    "id": "lateral-delts",
+    "name": "Lateral Delts"
+  },
+  {
+    "id": "rear-delts",
+    "name": "Rear Delts"
+  },
+  {
+    "id": "triceps",
+    "name": "Triceps"
+  },
+  {
+    "id": "biceps",
+    "name": "Biceps (Brachii)"
+  },
+  {
+    "id": "brachialis",
+    "name": "Brachialis"
+  },
+  {
+    "id": "brachioradialis",
+    "name": "Brachioradial."
+  },
+  {
+    "id": "lats",
+    "name": "Lats / teres major"
+  },
+  {
+    "id": "mid-low-traps-rhomboids",
+    "name": "Mid / Low Traps & Rhomboids"
+  },
+  {
+    "id": "upper-traps",
+    "name": "Upper Traps"
+  },
+  {
+    "id": "quads",
+    "name": "Quads"
+  },
+  {
+    "id": "hamstrings",
+    "name": "Hamstrings"
+  },
+  {
+    "id": "glute-max",
+    "name": "Glute max"
+  },
+  {
+    "id": "glute-med-min",
+    "name": "Glute med/min"
+  },
+  {
+    "id": "adductors",
+    "name": "Adductors"
+  },
+  {
+    "id": "gastrocnemius",
+    "name": "Gastroc."
+  },
+  {
+    "id": "soleus",
+    "name": "Soleus"
+  },
+  {
+    "id": "erector-spinae",
+    "name": "Erector Spinae"
+  }
+]

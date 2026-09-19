@@ -10,7 +10,7 @@ CSV includes all-time set rows (both completed and unfinished sets), session and
 
 ## Exercise catalog import
 
-Use this exact JSON shape. Extra fields are rejected. All exercise content must come from the owner's supplied source; importing does not invent or research exercises.
+Use this exact JSON shape. Extra fields are rejected. Custom exercise content retains the owner-supplied values; importing does not invent or research them. The separately bundled research catalog adds available choices without changing this format.
 
 ```json
 {
@@ -32,7 +32,7 @@ Use this exact JSON shape. Extra fields are rejected. All exercise content must 
 }
 ```
 
-Coefficients encode primary (1), secondary (0.5), and tertiary (0.25) roles. Multiple distinct muscles may share any role. Each muscle occurs once per exercise. IDs must be unique; an existing ID or a duplicate name/equipment pair causes the entire import to fail without replacing the catalog. `importExerciseCatalog` returns the combined old and new catalog.
+Coefficients encode primary (1), secondary (0.5), and tertiary (0.25) roles. Multiple distinct muscles may share any role. Each muscle occurs once per exercise. IDs must be unique; an existing ID or a duplicate name/equipment pair causes the entire import to fail without replacing the catalog. `importExerciseCatalog` returns the combined old and new saved catalog. Unselected built-ins are an overlay and do not newly restrict custom imports; saved custom records take precedence on an ID or name/equipment collision. Selecting a built-in for a plan materializes its six-field definition before saving, syncing or backing up. The library shows research only for exact matching canonical definitions. See `research/exercise-catalog/README.md` for the full compatibility contract.
 
 ## Hosted account service
 

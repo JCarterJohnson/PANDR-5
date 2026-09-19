@@ -2,6 +2,8 @@ import 'fake-indexeddb/auto';
 import { beforeEach,describe,expect,it,vi } from 'vitest';
 import { createInitialData } from '../data/seed';
 import { createSession } from '../domain/engine';
+import { catalogForPlan } from '../data/catalog';
+import { importExerciseCatalog, exportBackup, parseBackup } from './backup';
 import { saveData,loadData } from './storage';
 const fake=vi.hoisted(()=>({user:'',profiles:new Map<string,any>(),records:new Map<string,any>(),calls:[] as any[],race:false,fail:false}));
 vi.mock('@supabase/supabase-js',()=>({createClient:()=>({auth:{getUser:async()=>({data:{user:{id:fake.user}},error:null})},from:(table:string)=>{
@@ -17,6 +19,22 @@ describe('account cloud sync',()=>{
  it('stays disabled in local-only builds and rejects secret keys',()=>{vi.stubEnv('VITE_ENABLE_CLOUD_SYNC','false');expect(getCloudClient()).toBeNull();vi.stubEnv('VITE_ENABLE_CLOUD_SYNC','true');vi.stubEnv('VITE_SUPABASE_PUBLISHABLE_KEY','sb_secret_test');expect(()=>getCloudClient()).toThrow('Secret and service-role')});
  it('rejects an account ID different from the authenticated user before queries',async()=>{await expect(syncData(crypto.randomUUID(),createInitialData())).rejects.toThrow('signed-in account changed');expect(fake.calls).toHaveLength(0)});
  it('publishes complete records and restores on a fresh device',async()=>{const d=createInitialData();d.sessions=[createSession(d.plan.days[0],d.exercises,d.settings,1,false)];await saveData(fake.user,d);const result=await syncData(fake.user,d);expect(result.data.sessions).toEqual(d.sessions);expect(fake.records.size).toBe(1);const freshUser=crypto.randomUUID();const head=structuredClone(fake.profiles.get(fake.user));head.user_id=freshUser;fake.profiles.set(freshUser,head);for(const row of [...fake.records.values()])fake.records.set(crypto.randomUUID(),{...row,user_id:freshUser});fake.user=freshUser;expect((await readCloudData(freshUser))?.sessions).toEqual(d.sessions)});
+ it('synchronizes expanded and custom exercises and their plan/history references to a fresh device',async()=>{
+  const d=createInitialData();
+  const custom={id:'owner-neck',name:'Owner neck exercise',equipment:'Band',contributions:[{muscle:'neck',coefficient:0.5}],source:'User supplied',beyondFailureAllowed:false};
+  d.exercises=importExerciseCatalog(JSON.stringify({schemaVersion:1,exercises:[custom]}),d.exercises);
+  d.plan.days[0].exercises[0].exerciseId='p5-barbell-incline-bench-press';
+  d.plan.days[0].exercises[1].exerciseId=custom.id;
+  d.exercises=catalogForPlan(d.exercises,d.plan);
+  d.sessions=[createSession(d.plan.days[0],d.exercises,d.settings,1,false)];
+  await saveData(fake.user,d);const result=await syncData(fake.user,d);
+  expect(result.data.exercises).toEqual(d.exercises);expect(result.data.plan).toEqual(d.plan);
+  const freshUser=crypto.randomUUID();const head=structuredClone(fake.profiles.get(fake.user));head.user_id=freshUser;fake.profiles.set(freshUser,head);
+  for(const row of [...fake.records.values()])fake.records.set(crypto.randomUUID(),{...row,user_id:freshUser});
+  fake.user=freshUser;const restored=(await readCloudData(freshUser))!;
+  expect(restored.exercises).toEqual(d.exercises);expect(restored.plan).toEqual(d.plan);expect(restored.sessions).toEqual(d.sessions);
+  expect(parseBackup(exportBackup(restored))).toEqual(restored);
+ });
  it('does not re-upload unchanged workout payloads',async()=>{const d=createInitialData();d.sessions=[createSession(d.plan.days[0],d.exercises,d.settings,1,false)];await saveData(fake.user,d);const first=await syncData(fake.user,d);fake.calls=[];await syncData(fake.user,first.data);expect(fake.calls.filter(c=>c.table==='pandr_records'&&c.op==='insert')).toHaveLength(0)});
  it('preserves both plans on simultaneous metadata edits',async()=>{const d=createInitialData();await saveData(fake.user,d);const first=await syncData(fake.user,d);const local=structuredClone(first.data);local.plan.name='Local';fake.profiles.get(fake.user).metadata.plan.name='Remote';await saveData(fake.user,local);await expect(syncData(fake.user,local)).rejects.toThrow('both devices changed plan');expect(fake.profiles.get(fake.user).metadata.plan.name).toBe('Remote');expect((await loadData(fake.user))?.plan.name).toBe('Local')});
  it('detects a competing publication and leaves local edits intact',async()=>{const d=createInitialData();await saveData(fake.user,d);const first=await syncData(fake.user,d);const local=structuredClone(first.data);local.settings.name='Changed';await saveData(fake.user,local);fake.race=true;await expect(syncData(fake.user,local)).rejects.toThrow('cloud profile during');expect((await loadData(fake.user))?.settings.name).toBe('Changed')});

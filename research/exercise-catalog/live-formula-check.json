@@ -1,0 +1,592 @@
+{
+  "spreadsheetId": "1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk",
+  "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit",
+  "properties": {
+    "title": "PANDR-5™ Model",
+    "locale": "en_US",
+    "timeZone": "America/Los_Angeles"
+  },
+  "sheets": [
+    {
+      "properties": {
+        "sheetId": 0,
+        "title": "Guide Sheet",
+        "index": 0,
+        "sheetType": "GRID",
+        "gridProperties": {
+          "rowCount": 1000,
+          "columnCount": 26,
+          "hideGridlines": true
+        }
+      },
+      "data": [
+        {
+          "startRow": 3,
+          "startColumn": 8,
+          "rowData": [
+            {
+              "values": [
+                {
+                  "formattedValue": "Muscle Group",
+                  "userEnteredValue": {
+                    "stringValue": "Muscle Group"
+                  }
+                },
+                {
+                  "formattedValue": "Direct Sets",
+                  "userEnteredValue": {
+                    "stringValue": "Direct Sets"
+                  }
+                },
+                {
+                  "formattedValue": "Fractional Sets (≈)",
+                  "userEnteredValue": {
+                    "stringValue": "Fractional Sets (≈)"
+                  }
+                },
+                {
+                  "formattedValue": "Total Sets",
+                  "userEnteredValue": {
+                    "stringValue": "Total Sets"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Chest (pec major)",
+                  "userEnteredValue": {
+                    "stringValue": "Chest (pec major)"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D5,D6,D7,D32,D33,D34)"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J5:K5)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Anterior Delts",
+                  "userEnteredValue": {
+                    "stringValue": "Anterior Delts"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "7",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D5,D6,D32,D34)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "7",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J6:K6)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Lateral Delts",
+                  "userEnteredValue": {
+                    "stringValue": "Lateral Delts"
+                  }
+                },
+                {
+                  "formattedValue": "9",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D11,D26,D45)"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "9",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J7:K7)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Rear Delts",
+                  "userEnteredValue": {
+                    "stringValue": "Rear Delts"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D8,D14)*0.25+SUM(D13,D30)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J8:K8)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Triceps",
+                  "userEnteredValue": {
+                    "stringValue": "Triceps"
+                  }
+                },
+                {
+                  "formattedValue": "15",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D16,D17,D18,D36,D37)"
+                  }
+                },
+                {
+                  "formattedValue": "3.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D5,D6,D32,D34)*0.25"
+                  }
+                },
+                {
+                  "formattedValue": "18.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J9:K9)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Biceps (Brachii)",
+                  "userEnteredValue": {
+                    "stringValue": "Biceps (Brachii)"
+                  }
+                },
+                {
+                  "formattedValue": "7",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D9,D35)"
+                  }
+                },
+                {
+                  "formattedValue": "8",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D8,D10,D13,D14,D30)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "15",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J10:K10)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Brachialis",
+                  "userEnteredValue": {
+                    "stringValue": "Brachialis"
+                  }
+                },
+                {
+                  "formattedValue": "3",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D10)"
+                  }
+                },
+                {
+                  "formattedValue": "3.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D9,D35)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "6.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J11:K11)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Brachioradial.",
+                  "userEnteredValue": {
+                    "stringValue": "Brachioradial."
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "3.25",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D9,D35)*0.25+SUM(D10)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "3.25",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J12:K12)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Lats / teres major",
+                  "userEnteredValue": {
+                    "stringValue": "Lats / teres major"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D8,D13,D14,D15,D30,D31)"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J13:K13)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Mid / Low Traps & Rhomboids",
+                  "userEnteredValue": {
+                    "stringValue": "Mid / Low Traps & Rhomboids"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D8,D14)*0.25+SUM(D13,D30)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J14:K14)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Upper Traps",
+                  "userEnteredValue": {
+                    "stringValue": "Upper Traps"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J15:K15)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Quads",
+                  "userEnteredValue": {
+                    "stringValue": "Quads"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D22,D23,D24,D41,D42,D43)"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "20",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J16:K16)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Hamstrings",
+                  "userEnteredValue": {
+                    "stringValue": "Hamstrings"
+                  }
+                },
+                {
+                  "formattedValue": "12",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D20,D21,D39)"
+                  }
+                },
+                {
+                  "formattedValue": "7.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D22,D40,D41,D43)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "19.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J17:K17)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Glute max",
+                  "userEnteredValue": {
+                    "stringValue": "Glute max"
+                  }
+                },
+                {
+                  "formattedValue": "3",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D43)"
+                  }
+                },
+                {
+                  "formattedValue": "8.75",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D21,D22,D40,D41)*0.5+SUM(D23)*0.25"
+                  }
+                },
+                {
+                  "formattedValue": "11.75",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J18:K18)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Glute med/min",
+                  "userEnteredValue": {
+                    "stringValue": "Glute med/min"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "1.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D43)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "1.5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J19:K19)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Adductors",
+                  "userEnteredValue": {
+                    "stringValue": "Adductors"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "4.75",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D21,D22,D40,D41,D43)*0.25"
+                  }
+                },
+                {
+                  "formattedValue": "4.75",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J20:K20)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Gastroc.",
+                  "userEnteredValue": {
+                    "stringValue": "Gastroc."
+                  }
+                },
+                {
+                  "formattedValue": "10",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D25,D44)"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "10",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J21:K21)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Soleus",
+                  "userEnteredValue": {
+                    "stringValue": "Soleus"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D25,D44)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "5",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J22:K22)"
+                  }
+                }
+              ]
+            },
+            {
+              "values": [
+                {
+                  "formattedValue": "Erector Spinae",
+                  "userEnteredValue": {
+                    "stringValue": "Erector Spinae"
+                  }
+                },
+                {
+                  "formattedValue": "0",
+                  "userEnteredValue": {
+                    "formulaValue": "=0"
+                  }
+                },
+                {
+                  "formattedValue": "4",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(D21,D40)*0.5"
+                  }
+                },
+                {
+                  "formattedValue": "4",
+                  "userEnteredValue": {
+                    "formulaValue": "=SUM(J23:K23)"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

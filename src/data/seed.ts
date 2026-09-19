@@ -2,9 +2,11 @@
 // Exercise equipment labels are UI descriptors; every coefficient comes from J/K formulas.
 import type { AppData, Exercise, TrainingPlan } from '../domain/types';
 
+import { ADDITIONAL_MUSCLES } from './additional-muscles';
+
 export const SOURCE_URL = "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit";
 
-export const MUSCLES = [
+export const SOURCE_MUSCLES = [
   {
     "id": "chest",
     "name": "Chest (pec major)"
@@ -1295,6 +1297,8 @@ export const DEFAULT_PLAN: TrainingPlan = {
   },
   "updatedAt": "2026-09-15T00:00:00.000Z"
 };
+
+export const MUSCLES = [...SOURCE_MUSCLES, ...ADDITIONAL_MUSCLES];
 
 export function createInitialData(): AppData {
   const now = new Date();

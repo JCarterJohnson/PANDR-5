@@ -4,10 +4,10 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 
 ## Current release
 
-**0.2.0 is a preview with Google sign-in and cloud synchronization.** Training works offline; signed-in profiles sync when connected. Local and account profiles remain separate. Use Settings to export your complete history as CSV or a lossless JSON backup.
+**0.3.0 adds a 372-exercise catalog, alias search, and research notes.** Google sign-in and cloud synchronization remain available. Training works offline; signed-in profiles sync when connected. Local and account profiles remain separate. Use Settings to export your complete history as CSV or a lossless JSON backup.
 
 - **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
-- **Desktop downloads:** [get version 0.2.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.2.0).
+- **Desktop downloads:** [get version 0.3.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.3.0).
 - **Local-only alternative:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
 - Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.
@@ -21,7 +21,7 @@ An offline training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan
 - Full and fractional muscle credits from the original sheet’s live formulas.
 - Selected 10–20 weekly effective-set targets, integer set allocation, strict split/order checks, and a custom-mode switch.
 - Weekly recovery check-ins and a temporary half-set pivot after multiple flags.
-- Searchable source exercise catalog; validated import for the owner-supplied expanded dataset.
+- 372-exercise built-in catalog with alias search, research notes and unchanged validated custom imports.
 - All-time CSV export plus lossless JSON backup/restore.
 - Google account authentication and optimistic, per-user cloud synchronization with conflict detection.
 
@@ -65,7 +65,7 @@ Use the target operating system for a supported package build. The included GitH
 
 The captured sheet and supplied CSVs are in `source/`. `scripts/extract-source.py` reproduces the source exercise definitions and template. Changes to training logic must preserve source parity tests.
 
-The expanded exercise dataset is intentionally left to the project owner. This repository includes only movements already in the supplied model. Fractional allocations are approximate volume accounting, not exact measures of muscle stimulus.
+The expanded library includes 346 additions and 221 aliases, plus the unchanged 26 source records. It covers the original 19 muscle groups and five approved additions (abdominals, obliques, neck, wrist flexors and wrist extensors). Fractional allocations remain approximate volume accounting. See [the reproducible research record](research/exercise-catalog/README.md) and [proposed source-allocation corrections](research/exercise-catalog/legacy-review.md). Run `npm run catalog:validate`, `npm test`, `npm run test:browser`, and `npm run build` to verify changes.
 
 ## Privacy and retention
 

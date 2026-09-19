@@ -1,0 +1,511 @@
+{
+  "schemaVersion": 1,
+  "exercises": [
+    {
+      "id": "source-5",
+      "name": "Bench Press",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C5:F5",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-6",
+      "name": "Incline Dumbbell Press",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C6:F6",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-7",
+      "name": "Machine Chest Flyes",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C7:F7",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-8",
+      "name": "Close-Grip Chinups (Assisted, BW, or Weighted)",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C8:F8",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-9",
+      "name": "Preacher Curls (Machine)",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C9:F9",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-10",
+      "name": "Hammer Curls",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C10:F10",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-11",
+      "name": "Lateral Raise",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "lateral-delts",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C11:F11",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-13",
+      "name": "Single-Arm Bent-Over Dumbbell Row",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C13:F13",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-14",
+      "name": "Lat Pulldown (Standard Bar)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C14:F14",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-15",
+      "name": "Lat Pullovers (Cable; any attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C15:F15",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-16",
+      "name": "Ez-Bar Tricep Overhead Extension",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C16:F16",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-17",
+      "name": "Tricep Cable Pushdown (preferred attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C17:F17",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-18",
+      "name": "Tricep Cable Overhead Extension (preferred attachment)",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "triceps",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C18:F18",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-20",
+      "name": "Seated Hamstring Curls",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C20:F20",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-21",
+      "name": "RDL (Barbell or Dumbell)",
+      "equipment": "Barbell",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C21:F21",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-22",
+      "name": "Leg Press",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C22:F22",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-23",
+      "name": "Dumbbell Heel-Elevated Squat",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C23:F23",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-24",
+      "name": "Leg Extension",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C24:F24",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-25",
+      "name": "Standing Calf Raise (Machine)",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "gastrocnemius",
+          "coefficient": 1
+        },
+        {
+          "muscle": "soleus",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C25:F25",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-30",
+      "name": "Wide-Grip Seated Cable Rows",
+      "equipment": "Cable",
+      "contributions": [
+        {
+          "muscle": "rear-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "biceps",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "lats",
+          "coefficient": 1
+        },
+        {
+          "muscle": "mid-low-traps-rhomboids",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C30:F30",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-34",
+      "name": "Incline/Elevated Pushups",
+      "equipment": "Bodyweight",
+      "contributions": [
+        {
+          "muscle": "chest",
+          "coefficient": 1
+        },
+        {
+          "muscle": "anterior-delts",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "triceps",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C34:F34",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-35",
+      "name": "Incline Curls",
+      "equipment": "Dumbbell",
+      "contributions": [
+        {
+          "muscle": "biceps",
+          "coefficient": 1
+        },
+        {
+          "muscle": "brachialis",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "brachioradialis",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C35:F35",
+      "beyondFailureAllowed": true
+    },
+    {
+      "id": "source-39",
+      "name": "Lying Hamstring Curls",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 1
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C39:F39",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-40",
+      "name": "45° Hip Extension",
+      "equipment": "Other",
+      "contributions": [
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        },
+        {
+          "muscle": "erector-spinae",
+          "coefficient": 0.5
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C40:F40",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-41",
+      "name": "Hack Squat",
+      "equipment": "Machine",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C41:F41",
+      "beyondFailureAllowed": false
+    },
+    {
+      "id": "source-43",
+      "name": "Lunges",
+      "equipment": "Other",
+      "contributions": [
+        {
+          "muscle": "quads",
+          "coefficient": 1
+        },
+        {
+          "muscle": "hamstrings",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "glute-max",
+          "coefficient": 1
+        },
+        {
+          "muscle": "glute-med-min",
+          "coefficient": 0.5
+        },
+        {
+          "muscle": "adductors",
+          "coefficient": 0.25
+        }
+      ],
+      "source": "https://docs.google.com/spreadsheets/d/1o7sQkxG_r72CH2Dv7CJDyqhSzbeBVhoKN6BVWNjcGjk/edit#gid=0&range=C43:F43",
+      "beyondFailureAllowed": false
+    }
+  ]
+}

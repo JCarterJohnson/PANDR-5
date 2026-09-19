@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import sourceText from '../../source/live-sheet.json?raw';
 import { allocateSets, calculateVolume, createSession, getDayIndex, getWeek, isPivotWeek, makeRir, recommendProgression, recoveryAdvice, validatePlan } from './engine';
-import { createInitialData, DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES, SOURCE_TOTALS } from '../data/seed';
+import { createInitialData, DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES, SOURCE_MUSCLES, SOURCE_TOTALS } from '../data/seed';
 import type { CheckIn, ExerciseLog, Settings } from './types';
 
 const settings: Settings = { name: '', strict: true, unit: 'kg', startDate: '2026-09-15', increasePercent: 2.5, decreasePercent: 2.5, restSeconds: 120 };
@@ -15,11 +15,11 @@ function anchor(reps: number, rir: number, completed = true) {
 describe('source parity', () => {
   it('reproduces every Guide Sheet direct, fractional, and total value', () => {
     const rows = calculateVolume(DEFAULT_PLAN, DEFAULT_EXERCISES);
-    expect(rows).toHaveLength(19);
+    expect(rows).toHaveLength(24);
     for (const [muscle, totals] of Object.entries(SOURCE_TOTALS)) expect(rows.find(row => row.muscle === muscle)).toMatchObject(totals);
     const source = JSON.parse(sourceText);
     const guide = source.sheets.find((sheet: { properties: { title: string } }) => sheet.properties.title === 'Guide Sheet');
-    MUSCLES.forEach((muscle, i) => {
+    SOURCE_MUSCLES.forEach((muscle, i) => {
       const cells = guide.data[0].rowData[i + 4].values;
       expect(rows.find(row => row.muscle === muscle.id)).toMatchObject({ direct: Number(cells[9].formattedValue), fractional: Number(cells[10].formattedValue), total: Number(cells[11].formattedValue) });
     });

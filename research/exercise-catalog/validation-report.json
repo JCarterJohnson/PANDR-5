@@ -1,0 +1,114 @@
+{
+  "status": "passed",
+  "canonicalExercises": 372,
+  "aliases": 221,
+  "sources": 26,
+  "legacyRecordsPreserved": 26,
+  "nearDuplicatePairs": [
+    {
+      "a": "p5-barbell-decline-bench-press",
+      "b": "p5-barbell-incline-bench-press",
+      "similarity": 0.9259,
+      "decision": "Opposite bench angles alter shoulder excursion and regional loading; retained."
+    },
+    {
+      "a": "p5-smith-decline-bench-press",
+      "b": "p5-smith-incline-bench-press",
+      "similarity": 0.92,
+      "decision": "Opposite bench angles on a fixed path; retained."
+    },
+    {
+      "a": "p5-low-to-high-cable-fly",
+      "b": "p5-low-to-high-cable-lift",
+      "similarity": 0.8837,
+      "decision": "Shoulder adduction versus diagonal trunk rotation; different joints and targets."
+    },
+    {
+      "a": "p5-chest-supported-dumbbell-row",
+      "b": "p5-chest-supported-dumbbell-high-row",
+      "similarity": 0.918,
+      "decision": "Tucked versus flared elbows changes shoulder action and primary allocation."
+    },
+    {
+      "a": "p5-standing-cable-curl",
+      "b": "p5-standing-cable-leg-curl",
+      "similarity": 0.9048,
+      "decision": "Elbow flexion versus knee flexion; different targets."
+    },
+    {
+      "a": "p5-ez-bar-lying-triceps-extension",
+      "b": "p5-barbell-lying-triceps-extension",
+      "similarity": 0.8852,
+      "decision": "Angled semi-supinated grip versus straight-bar grip changes wrist/forearm constraints; common meaningful equipment alternatives."
+    },
+    {
+      "a": "p5-dumbbell-reverse-lunge",
+      "b": "p5-barbell-reverse-lunge",
+      "similarity": 0.8837,
+      "decision": "Independent side loads versus fixed upper-back load changes center of mass, grip and stability demand."
+    },
+    {
+      "a": "p5-seated-hip-abduction",
+      "b": "p5-seated-band-hip-abduction",
+      "similarity": 0.8889,
+      "decision": "Machine pad/pivot resistance versus elastic loop rising resistance; distinct setup and profile."
+    },
+    {
+      "a": "p5-seated-hip-abduction",
+      "b": "p5-seated-hip-adduction",
+      "similarity": 0.95,
+      "decision": "Opposite hip joint actions and targets."
+    },
+    {
+      "a": "p5-standing-cable-hip-abduction",
+      "b": "p5-standing-cable-hip-adduction",
+      "similarity": 0.9643,
+      "decision": "Opposite hip actions, opposite pulley side and different targets."
+    },
+    {
+      "a": "p5-standing-band-hip-abduction",
+      "b": "p5-standing-band-hip-adduction",
+      "similarity": 0.963,
+      "decision": "Opposite hip actions and anchor orientation."
+    },
+    {
+      "a": "p5-side-lying-band-hip-abduction",
+      "b": "p5-side-lying-hip-abduction",
+      "similarity": 0.9057,
+      "decision": "Elastic tension superimposed on gravity changes resistance profile and loading near adduction."
+    },
+    {
+      "a": "p5-side-lying-hip-abduction",
+      "b": "p5-side-lying-hip-adduction",
+      "similarity": 0.9583,
+      "decision": "Upper-leg abduction versus lower-leg adduction; different target groups."
+    },
+    {
+      "a": "p5-manual-resistance-neck-flexion",
+      "b": "p5-manual-resistance-neck-extension",
+      "similarity": 0.9032,
+      "decision": "Opposite cervical actions; broad neck ID does not imply equivalent compartments."
+    },
+    {
+      "a": "p5-manual-resistance-neck-flexion",
+      "b": "p5-manual-resistance-neck-lateral-flexion",
+      "similarity": 0.8824,
+      "decision": "Sagittal versus frontal-plane cervical action; compartment-specific setup."
+    },
+    {
+      "a": "p5-wrist-roller-flexion-direction",
+      "b": "p5-wrist-roller-extension-direction",
+      "similarity": 0.9091,
+      "decision": "Rolling direction changes working wrist action and primary group."
+    },
+    {
+      "a": "p5-two-hand-kettlebell-swing",
+      "b": "p5-one-hand-kettlebell-swing",
+      "similarity": 0.92,
+      "decision": "One-handed offset loading changes stability and grip demand; no automatic extra stabilizer credit."
+    }
+  ],
+  "errors": [],
+  "catalogSha256": "987e94b36704c0377d47a4b8312887334b04b204d6266d8240bcdc95d737187f",
+  "citationVerification": "Bibliographic IDs independently resolved by fetch-sources.py; live link audit recorded separately in source-verification.json. Offline audit checks referential integrity, not network availability."
+}
