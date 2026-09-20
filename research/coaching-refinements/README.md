@@ -25,7 +25,7 @@ Dispatch `.github/workflows/simulation.yml` with 120 accounts and 365 days. Twel
 The runner emits compressed synthetic-only evidence in logs; it does not use paid artifact storage. Retrieve the complete run log archive, then run:
 
 ```sh
-python3 research/simulation/collect.py PATH_TO_LOG_ARCHIVE RUN_URL
+python3 research/simulation/collect.py PATH_TO_LOG_ARCHIVE RUN_ID
 python3 research/simulation/compare.py
 ```
 

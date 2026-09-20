@@ -1,8 +1,15 @@
-import { calculateVolume, isPivotWeek, makeRir, validatePlan } from './engine';
-import type { CheckIn, Exercise, RecoveryDecision, Session, TrainingPlan } from './types';
+import { calculateVolume, isPivotWeek, validatePlan } from './engine';
+import type { CheckIn, Exercise, RecoveryDecision, Session, TrainingPlan, PlanExercise } from './types';
 
 export function planPrescriptionSignature(plan: TrainingPlan): string {
   return JSON.stringify({ targets: Object.entries(plan.targets).sort(([a], [b]) => a.localeCompare(b)), days: plan.days.map(d => ({ id: d.id, kind: d.kind, exercises: d.exercises.map(e => ({ id: e.id, exerciseId: e.exerciseId, sets: e.sets, rir: e.rir, repMin: e.repMin, repMax: e.repMax })) })) });
+}
+
+/** Remove intermediate work while retaining early effort targets and the exact anchor/finisher. */
+function recoveryRir(slot: PlanExercise, sets: number) {
+  const tail = slot.rir.at(-1) === '<0' ? 2 : 1;
+  if (sets < tail) return [...slot.rir]; // Invalid set/target count makes the candidate fail plan validation.
+  return [...slot.rir.slice(0, sets - tail), ...slot.rir.slice(-tail)];
 }
 
 /** Loads stay current; only set counts/RIR are adjusted. The user's base plan is retained. */
@@ -14,7 +21,7 @@ export function effectivePlan(plan: TrainingPlan, week: number, cycleId: string)
   return { ...plan, days: plan.days.map(day => ({ ...day, exercises: day.exercises.map(slot => {
     const sets = adjustment.counts[slot.id];
     if (sets === undefined || !Number.isInteger(sets) || sets < 1 || sets >= slot.sets) return slot;
-    return { ...slot, sets, rir: makeRir(sets, slot.rir.at(-1) === '<0') };
+    return { ...slot, sets, rir: recoveryRir(slot, sets) };
   }) })) };
 }
 
@@ -62,7 +69,7 @@ export function reviewRecoveryPlan(plan: TrainingPlan, exercises: Exercise[], ch
       const oldSets = slot.sets, oldRir = slot.rir;
       slot.sets += reduce ? -1 : 1;
       const original = originalSlots.get(slot.id)!;
-      slot.rir = slot.sets === original.sets ? [...original.rir] : makeRir(slot.sets, original.rir.at(-1) === '<0');
+      slot.rir = recoveryRir(original, slot.sets);
       if (!validatePlan(next, exercises, true).some(i => i.severity === 'error')) { changed.add(slot.id); accepted = true; break; }
       slot.sets = oldSets; slot.rir = oldRir;
     }

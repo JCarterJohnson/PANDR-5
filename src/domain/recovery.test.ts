@@ -23,6 +23,17 @@ describe('bounded recovery volume', () => {
     expect(d.plan).toEqual(original);
     expect(isPivotWeek([checks(1), checks(2)], 3)).toBe(true);
   });
+  it('preserves original effort targets and the exact anchor while reducing volume', () => {
+    const d=setup();
+    for(const slot of d.plan.days.flatMap(day=>day.exercises))slot.rir[slot.rir.at(-1)==='<0'?slot.rir.length-2:slot.rir.length-1]=0;
+    const reviewed=reviewRecoveryPlan(d.plan,d.exercises,[checks(1),checks(2)],[],'cycle',2,true);
+    expect(reviewed.decision.action).toBe('reduce');
+    for(const slot of effectivePlan(reviewed.plan,3,'cycle').days.flatMap(day=>day.exercises)){
+      const original=d.plan.days.flatMap(day=>day.exercises).find(s=>s.id===slot.id)!;
+      const tail=original.rir.at(-1)==='<0'?2:1;
+      expect(slot.rir).toEqual([...original.rir.slice(0,slot.sets-tail),...original.rir.slice(-tail)]);
+    }
+  });
   it('does not change the plan for sleep alone, one bad week, or custom mode', () => {
     const d = setup();
     for (const history of [[checks(1)], [1, 2, 3, 4].map(w => ({ ...checks(w), performanceDip: false }))]) {

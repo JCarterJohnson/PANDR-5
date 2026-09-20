@@ -14,4 +14,4 @@ These refinements cannot supply missing equipment, measure your bodyweight setup
 
 Update the app on every device before using the new saved fields across them. Older backups remain readable in 0.4.0; older app versions may reject new records until updated. The current web app is at https://pandr-5.vercel.app/.
 
-Local verification: 154 automated checks, 13 desktop/mobile browser flows, catalog validation and production web/PWA build. The separate isolated-account simulation report records backend verification. Desktop packages are unsigned; Windows, Linux and Intel Mac packages are built in CI, with native runtime behavior on those platforms still requiring user testing. Mobile uses the installable web app.
+Local verification: 155 automated checks, 13 desktop/mobile browser flows, catalog validation and production web/PWA build. The separate isolated-account simulation report records backend verification. Desktop packages are unsigned; Windows, Linux and Intel Mac packages are built in CI, with native runtime behavior on those platforms still requiring user testing. Mobile uses the installable web app.
