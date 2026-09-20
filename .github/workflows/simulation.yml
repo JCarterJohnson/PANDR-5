@@ -1,0 +1,58 @@
+name: One-year synthetic cohort
+on:
+  workflow_dispatch:
+    inputs:
+      count:
+        description: Synthetic accounts (120 for the full cohort)
+        default: '120'
+        required: true
+      days:
+        description: Simulated days (365 for the full year)
+        default: '365'
+        required: true
+permissions:
+  contents: read
+jobs:
+  simulate:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      SUPABASE_TELEMETRY_DISABLED: '1'
+      TZ: UTC
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - run: npm ci
+      - name: Start isolated local backend (no hosted project)
+        run: |
+          mkdir -p research/simulation/backend research/simulation/.local
+          cd research/simulation/backend
+          npx --yes supabase@2.117.0 --help
+          npx --yes supabase@2.117.0 init --help
+          npx --yes supabase@2.117.0 init
+          npx --yes supabase@2.117.0 start --help
+          npx --yes supabase@2.117.0 start > ../.local/start.log 2>&1
+          npx --yes supabase@2.117.0 status --help
+          umask 077
+          npx --yes supabase@2.117.0 status -o json > ../.local/status.json
+          cd ../../..
+          db_container=$(docker ps --format '{{.Names}}' | grep '^supabase_db_')
+          test -n "$db_container"
+          docker exec -i "$db_container" psql -U postgres -v ON_ERROR_STOP=1 < supabase/schema.sql
+          docker exec -i "$db_container" psql -U postgres -v ON_ERROR_STOP=1 < supabase/verify-rls.sql
+      - name: Run year and export synthetic-only evidence to logs
+        run: npx vitest run --config research/simulation/vitest.config.ts
+        env:
+          PANDR_SIM_BACKEND: 'true'
+          PANDR_SIM_COUNT: ${{ inputs.count }}
+          PANDR_SIM_DAYS: ${{ inputs.days }}
+          PANDR_SIM_SHARD: ${{ matrix.shard }}
+          PANDR_SIM_SHARDS: '4'
