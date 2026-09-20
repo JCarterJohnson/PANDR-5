@@ -1,0 +1,529 @@
+{
+  "runUrl": "https://github.com/JCarterJohnson/PANDR-5/actions/runs/35532952668",
+  "engineBackendParity": {
+    "matchingAccounts": 120,
+    "matchingRows": {
+      "weekly.csv": 6360,
+      "lifts.csv.gz": 214650
+    },
+    "runUrl": "https://github.com/JCarterJohnson/PANDR-5/actions/runs/35532952668"
+  },
+  "reports": [
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 0,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3380,
+        "reloads": 139,
+        "fullSetSaves": 484,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 161093608,
+        "responseBytes": 257943618,
+        "requests": 16953,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 182.1559389999893,
+        "saveP95Ms": 263.6984020000091,
+        "elapsedSeconds": 659.543
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2865
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 1,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2929,
+        "reloads": 140,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 143228621,
+        "responseBytes": 242300690,
+        "requests": 15196,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 153.3364259999944,
+        "saveP95Ms": 215.44495799997821,
+        "elapsedSeconds": 486.465
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2918
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 2,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3047,
+        "reloads": 140,
+        "fullSetSaves": 309,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 138448404,
+        "responseBytes": 228920103,
+        "requests": 15465,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 194.6191740000213,
+        "saveP95Ms": 284.96682500001043,
+        "elapsedSeconds": 640.304
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2714
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 3,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2694,
+        "reloads": 139,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 126445573,
+        "responseBytes": 216069256,
+        "requests": 13999,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 146.21937800000887,
+        "saveP95Ms": 210.92817800003104,
+        "elapsedSeconds": 433.457
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2683
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 4,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3207,
+        "reloads": 140,
+        "fullSetSaves": 415,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 148753651,
+        "responseBytes": 241820122,
+        "requests": 16157,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 184.49921199999517,
+        "saveP95Ms": 275.7222109999857,
+        "elapsedSeconds": 642.563
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2762
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 5,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2733,
+        "reloads": 139,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 129023623,
+        "responseBytes": 219797435,
+        "requests": 14201,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 174.4801720000105,
+        "saveP95Ms": 258.098966999969,
+        "elapsedSeconds": 524.072
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2722
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 6,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3245,
+        "reloads": 140,
+        "fullSetSaves": 484,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 151153407,
+        "responseBytes": 243381931,
+        "requests": 16279,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 190.83207100000072,
+        "saveP95Ms": 282.53624200000195,
+        "elapsedSeconds": 670.303
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2730
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 7,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2678,
+        "reloads": 139,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 125787665,
+        "responseBytes": 214750943,
+        "requests": 13920,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 181.75387499999488,
+        "saveP95Ms": 269.68614499999967,
+        "elapsedSeconds": 538
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2667
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 8,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3161,
+        "reloads": 140,
+        "fullSetSaves": 437,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 145559988,
+        "responseBytes": 236070123,
+        "requests": 15902,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 140.2811979999824,
+        "saveP95Ms": 211.99984899998526,
+        "elapsedSeconds": 484.303
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2695
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 9,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2755,
+        "reloads": 138,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 130690213,
+        "responseBytes": 220934288,
+        "requests": 14305,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 148.73383599999943,
+        "saveP95Ms": 227.65858000004664,
+        "elapsedSeconds": 453.023
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2744
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 10,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 3253,
+        "reloads": 140,
+        "fullSetSaves": 462,
+        "failedWritesRecovered": 2,
+        "lostResponsesRecovered": 2,
+        "conflictsDetected": 2,
+        "isolationChecks": 28,
+        "requestBytes": 150947803,
+        "responseBytes": 244042566,
+        "requests": 16340,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 184.11765800000285,
+        "saveP95Ms": 278.2697310000076,
+        "elapsedSeconds": 653.471
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2762
+      }
+    },
+    {
+      "schema": 1,
+      "backend": "real local Supabase on GitHub runner",
+      "codeCommit": "f63467cf454360f1742b3a49a1c582b435ab1d86",
+      "seedFamily": 520260000,
+      "shard": 11,
+      "shards": 12,
+      "days": 365,
+      "cohorts": [
+        "novice",
+        "intermediate",
+        "experienced",
+        "slow-response",
+        "poor-sleep",
+        "missed-sessions",
+        "long-break",
+        "coarse-equipment",
+        "noisy-RIR",
+        "conservative-effort",
+        "pain-episodes",
+        "custom-three-day"
+      ],
+      "metrics": {
+        "saves": 2710,
+        "reloads": 140,
+        "fullSetSaves": 0,
+        "failedWritesRecovered": 0,
+        "lostResponsesRecovered": 0,
+        "conflictsDetected": 0,
+        "isolationChecks": 28,
+        "requestBytes": 126682736,
+        "responseBytes": 217733316,
+        "requests": 14090,
+        "csvRoundTrips": 10,
+        "saveP50Ms": 177.23353899999347,
+        "saveP95Ms": 261.73323200001323,
+        "elapsedSeconds": 528.563
+      },
+      "database": {
+        "profiles": 10,
+        "immutableRecordVersions": 2700
+      }
+    }
+  ]
+}

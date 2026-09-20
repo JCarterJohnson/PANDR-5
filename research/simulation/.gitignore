@@ -1,3 +1,4 @@
 .local/
 backend/
 results/
+__pycache__/

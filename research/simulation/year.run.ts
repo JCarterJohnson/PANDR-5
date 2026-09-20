@@ -139,8 +139,8 @@ test('120 synthetic accounts, 365 days, real isolated account storage',async()=>
   writeFileSync(join(directory,'lifts.csv.gz'),gzipSync(csv(lifts)));
   if(backend){
     // Logs do not consume artifact storage quota. No passwords, keys, JWTs or real-user data.
-    const bundle=gzipSync(JSON.stringify({report,weekly,lifts,backups})).toString('base64');
-    console.log(`PANDR_BUNDLE_BEGIN_${shard}`);for(let i=0;i<bundle.length;i+=8000)console.log(`PANDR_BUNDLE_${shard}:${bundle.slice(i,i+8000)}`);console.log(`PANDR_BUNDLE_END_${shard}`);
+    // Emit after Vitest exits, so its reporter cannot interleave bytes into a bundle.
+    writeFileSync(join(directory,'evidence.json.gz'),gzipSync(JSON.stringify({report,weekly,lifts,backups})));
   }
 });
 

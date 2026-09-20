@@ -15,6 +15,12 @@ test.skipIf(process.env.PANDR_SIM_BACKEND==='true')('sensitivity and stationary-
     const result=await simulatePerson(index,async d=>d,{...variant,checkpoints:false});
     assumptions.push({variant:variant.name,...result.summary});
   }
+  const zeroAdaptation=[];
+  for(const index of [0,10,20,30,40,50,60,70,80,90,100,110]){
+    const result=await simulatePerson(index,async d=>d,{gainScale:0,checkpoints:false});
+    assert(result.summary.latentCapacityGainPct<=0,'Zero-growth control cannot acquire positive capacity');
+    zeroAdaptation.push(result.summary);
+  }
   const data=createInitialData();data.plan=allocateSets(data.plan,data.exercises).plan;
   const rng=random(73021),stationary:Session[]=[],weeks=200;let flags=0,sleepFlags=0;
   for(let week=1;week<=weeks;week++){
@@ -36,7 +42,7 @@ test.skipIf(process.env.PANDR_SIM_BACKEND==='true')('sensitivity and stationary-
   const stalled=[];for(let w=0;w<12;w++){const rec=recommendProgression(log,data.settings);log.load=rec.nextLoad;stalled.push(rec.nextLoad);}assert(stalled.every(x=>x===10));
   log.increment=.25;const fine=recommendProgression(log,data.settings);assert.equal(fine.action,'increase');
   log.loadMode='bodyweight';log.load=0;const bodyweight=recommendProgression(log,data.settings);assert.equal(bodyweight.action,'hold');
-  const result={assumptions,negativeControls:{stationaryWeeks:weeks-1,stationaryMeasuredFlags:flags,stationaryPlusPoorSleepPivots:sleepFlags,noise:'Independent uniformly distributed -1/0/+1 rep; unchanged true strength, load, RIR and prescription; no fatigue.',coarseEquipment:{load:10,increment:2.5,twelveWeekLoads:stalled,recommendation:coarse},fineEquipment:fine,bodyweight}};
+  const result={assumptions,zeroAdaptation,negativeControls:{stationaryWeeks:weeks-1,stationaryMeasuredFlags:flags,stationaryPlusPoorSleepPivots:sleepFlags,noise:'Independent uniformly distributed -1/0/+1 rep; unchanged true strength, load, RIR and prescription; no fatigue.',coarseEquipment:{load:10,increment:2.5,twelveWeekLoads:stalled,recommendation:coarse},fineEquipment:fine,bodyweight}};
   writeFileSync(`${directory}/probes.json`,JSON.stringify(result,null,2));
   console.log(`PROBES stationary performance flagged ${flags}/${weeks-1} unchanged-capacity weeks; paired sensitivity runs=${assumptions.length}`);
 });

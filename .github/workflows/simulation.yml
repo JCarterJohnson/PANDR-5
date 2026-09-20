@@ -49,7 +49,9 @@ jobs:
           docker exec -i "$db_container" psql -U postgres -v ON_ERROR_STOP=1 < supabase/schema.sql
           docker exec -i "$db_container" psql -U postgres -v ON_ERROR_STOP=1 < supabase/verify-rls.sql
       - name: Run year and export synthetic-only evidence to logs
-        run: npx vitest run --config research/simulation/vitest.config.ts
+        run: |
+          npx vitest run --config research/simulation/vitest.config.ts
+          python3 research/simulation/emit.py "research/simulation/results/backend-${PANDR_SIM_SHARD}/evidence.json.gz"
         env:
           PANDR_SIM_BACKEND: 'true'
           PANDR_SIM_COUNT: ${{ inputs.count }}

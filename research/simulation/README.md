@@ -24,6 +24,8 @@ Attendance normally ranges from 87–99%, with 55–75% in the missed-session co
 
 Prescribed muscle targets and normal working sets are held fixed after allocation; PANDR-5 does not silently add sets as recovery or strength changes. Pivot weeks halve sets with rounding up and pause load progression. Chronic symptoms can therefore produce repeated pivot weeks. The model cannot diagnose pain, forecast hypertrophy, or automatically resolve inadequate equipment or bodyweight exercise difficulty.
 
+Latent capacity is tracked per exercise, not through a validated model of muscle growth or transfer between lifts. FSA contributions drive the checked volume totals and a simplified fatigue input, not a physiological growth equation. Beyond-failure finishers retain the app's negative-RIR label but use a zero-RIR effort target in the response generator; assisted repetitions and eccentric fatigue are not separately modeled. These simplifications limit conclusions about the training method even when the app's rules execute correctly.
+
 ## Checks and controls
 
 - Exact account restoration and JSON/CSV session and check-in payload round trips.
@@ -34,6 +36,7 @@ Prescribed muscle targets and normal working sets are held fixed after allocatio
 - Missing anchors and pivot weeks cannot progress load; completed FSA totals match an independent sum of frozen session credits.
 - No unrequested volume increases or duplicate weekly check-ins.
 - Sixty paired engine-only sensitivity runs vary response ceilings by 0.5×/1.5× and noise by 0.5×/1.5× for one person from each cohort.
+- Twelve additional full-year controls set adaptation to zero, checking whether the app invents upward load drift when latent capacity cannot improve.
 - A 200-week stationary-strength negative control uses only random −1/0/+1 rep differences. It measures how often the current automatic performance flag fires without underlying decline. Pairing that flag with poor sleep tests the combined pivot gate.
 - Repeated cap-reaching at 10 kg with a 2.5 kg increment must expose the equipment deadlock. A 0.25 kg increment and bodyweight-only progression provide comparators.
 
@@ -63,3 +66,19 @@ PANDR_SIM_COUNT=1 PANDR_SIM_DAYS=14 TZ=UTC npx vitest run --config research/simu
 Full real-backend run: dispatch **One-year synthetic cohort** in GitHub Actions with `count=120`, `days=365`. The workflow pins Supabase CLI 2.117.0, applies `supabase/schema.sql`, runs its isolation check, and then exercises the real app saving path. All synthetic database instances disappear with the runners; final per-account backups and trajectories are preserved in compressed run-log bundles. Only fetch/extract bundles from your own trusted run because they are generated test data. `results/` and `.local/` are ignored; the final report can be committed separately.
 
 Changing assumptions changes simulated outcomes. The correct conclusion is whether the software responds coherently to those inputs and which rules need human review—not that these are the gains real users should expect.
+
+## Collect and inspect a completed run
+
+Download the run's logs with `gh api repos/JCarterJohnson/PANDR-5/actions/runs/RUN_ID/logs` into a ZIP file under `.local/`, then run:
+
+```sh
+python3 research/simulation/collect.py research/simulation/.local/run.zip RUN_ID
+python3 research/simulation/compare.py
+python3 research/simulation/report.py
+```
+
+The collector requires all twelve full-year shards, 120 unique identities and participant IDs, 53 calendar-week snapshots per person, matching database profile counts and valid backup checksums. The report generator also needs the engine-only `results/probes/probes.json` from the sensitivity run and Matplotlib 3.11.2. Its output is in `report/`; open `index.html` for the chart and overview or `REPORT.md` for the full findings. Full backups remain local under `results/verified/accounts/`. GitHub logs expire according to the repository's retention settings, so retain the collected local evidence.
+
+`compare.py` requires a full engine-only run with the same seed and assumptions. It compares all account outcome fields, weekly observations and individual exercise trajectories against the backend run, excluding random authentication identifiers and serialized-backup sizes/checksums. This checks that synchronization and restoration did not change training decisions.
+
+The 365-day run contains 52 complete weeks and one day in week 53. The response generator updates latent capacity at each week boundary and once for the final partial week. That final update is not prorated by day count; it affects the final latent-capacity summary, not subsequent working-load prescriptions, because no later session is simulated.
