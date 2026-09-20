@@ -82,3 +82,10 @@ New training data persists only in the signed-in Supabase account linked to Goog
 Free cloud tiers have finite storage, bandwidth, inactivity policies, and no guarantee of lifetime availability. The export formats and offline app are the long-term escape route. Account and database limits must be monitored before expanding a public service.
 
 No open-source license has been selected by the owner yet; no license grant is implied by public source availability.
+
+
+## Coaching refinements (0.4)
+
+The app now confirms performance trends, stores exact equipment options and measured bodyweight resistance, and adjusts normal recovery volume within the existing strict bounds. The source split, fractional credits, load-change limits and pivot gate are preserved. [Policy and research](docs/coaching-refinements.md) distinguish source rules from new conservative implementation thresholds. [Reproducible comparison](research/coaching-refinements/README.md) covers the unchanged physiology assumptions, paired controls, held-out people and isolated account checks.
+
+In Your plan, open an exercise and expand Equipment and bodyweight progression. Confirm actual load options or record a measured bodyweight setup once; update it when equipment or body mass changes. Automatic recovery volume is on by default in constrained mode and can be turned off in Settings. Train shows adjusted sets, History preserves decisions, and CSV/JSON exports include the full setup. Use the latest web/desktop version on every device before sharing new-format records across them.

@@ -1,5 +1,5 @@
-import { effectivePlan } from './recovery';
-import type { AppData, CheckIn, Session, TrainingCycle, VolumeRow } from './types';
+// Frozen 12c12b8 implementation, imports relocated only. Research comparator; never bundled in the app.
+import type { AppData, CheckIn, Session, TrainingCycle, VolumeRow } from '../../../src/domain/types';
 import { calculateVolume, getWeek, isPivotWeek } from './engine';
 
 export function localDate(now = new Date()): string {
@@ -74,53 +74,29 @@ export function completedWeeklyVolume(data: AppData, week: number): VolumeRow[] 
     }
   }
   const pivot = isPivotWeek(data.checkIns.filter(c => inActiveCycle(data, c)), week);
-  const base = data.settings.strict && data.settings.adaptiveRecovery !== false ? effectivePlan(data.plan, week, activeCycle(data).id) : data.plan;
-  const plan = pivot ? {...base, days:base.days.map(day=>({...day,exercises:day.exercises.map(e=>({...e,sets:Math.max(1,Math.ceil(e.sets/2))}))}))} : base;
+  const plan = pivot ? {...data.plan, days:data.plan.days.map(day=>({...day,exercises:day.exercises.map(e=>({...e,sets:Math.max(1,Math.ceil(e.sets/2))}))}))} : data.plan;
   return calculateVolume(plan, data.exercises).map(row => {
     const value = totals.get(row.muscle) ?? { direct: 0, fractional: 0 };
-    return { muscle: row.muscle, target: row.target === undefined ? undefined : pivot || base !== data.plan ? row.total : row.target, ...value, total: value.direct + value.fractional };
+    return { muscle: row.muscle, target: row.target === undefined ? undefined : pivot ? row.total : row.target, ...value, total: value.direct + value.fractional };
   });
 }
-/** A conservative trend check, not a diagnostic or an estimated 1RM.
- * Three comparable baseline anchors followed by two confirmed low anchors.
- * Policy thresholds are documented in docs/coaching-refinements.md.
- */
+/** A transparent comparison, not an estimated 1RM or a calibrated fatigue score. */
 export function performanceEvidence(sessions: Session[], week: number): string[] {
   const ordered = sessions.filter(s => s.completedAt && !s.pivot && s.week <= week).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
-  type Exposure = { log: Session['exercises'][number]; reps: number; rir: number; time: number; week: number };
-  const windows = new Map<string, Exposure[]>();
-  const comparable = (a: Exposure['log'], b: Exposure['log']) => a.load === b.load && a.unit === b.unit && a.loadMode === b.loadMode
-    && a.sets.length === b.sets.length && JSON.stringify(a.targetRir) === JSON.stringify(b.targetRir)
-    && a.repMin === b.repMin && a.repMax === b.repMax && JSON.stringify(a.bodyweight) === JSON.stringify(b.bodyweight);
-  for (const session of ordered) for (const log of session.exercises) {
-    const key = `${session.cycleId ?? 'legacy'}:${log.slotId}:${log.exerciseId}`;
-    const anchor = log.sets[log.targetRir.at(-1) === '<0' ? log.sets.length - 2 : log.sets.length - 1];
-    const time = Date.parse(session.startedAt);
-    if (!anchor?.completed || !Number.isFinite(anchor.reps) || !Number.isFinite(anchor.rir) || !Number.isFinite(time)) {
-      windows.delete(key); continue;
-    }
-    let window = windows.get(key) ?? [];
-    const previous = window.at(-1);
-    if (previous && (!comparable(previous.log, log) || time - previous.time > 14 * 86400000)) window = [];
-    window.push({ log, reps: anchor.reps, rir: anchor.rir, time, week: session.week });
-    windows.set(key, window.slice(-5));
-  }
   const evidence = new Map<string, string>();
-  for (const window of windows.values()) {
-    if (window.length < 5) continue;
-    const last = window[4];
-    if (last.week !== week || last.time - window[0].time > 42 * 86400000) continue;
-    const baseline = window.slice(0, 3), recent = window.slice(3);
-    const floor = Math.min(...baseline.map(e => e.reps));
-    const effort = Math.min(...baseline.map(e => e.rir));
-    const falls = window.slice(1).map((e, i) => window[i].reps - e.reps);
-    const gradual = falls.every(n => n >= 0) && falls.filter(n => n > 0).length >= 3 && window[0].reps - last.reps >= 3
-      && window.slice(1).every((e, i) => e.rir <= window[i].rir);
-    if (recent.every(e => e.reps <= floor - 2 && e.rir <= effort)) {
-      evidence.set(last.log.exerciseId, `${last.log.name}: ${recent.map(e => e.reps).join(' and ')} anchor reps on two successive comparable exposures, at least 2 below each of the prior three (${baseline.map(e => e.reps).join(', ')}), at the same or greater reported effort.`);
-    } else if (gradual) {
-      evidence.set(last.log.exerciseId, `${last.log.name}: anchor reps fell across at least three intervals in five comparable exposures (${window.map(e => e.reps).join(', ')}), losing at least 3 reps overall without an intervening rebound or easier reported effort.`);
+  const previous = new Map<string, Session['exercises'][number]>();
+  for (const session of ordered) for (const exercise of session.exercises) {
+    const key = `${exercise.slotId}:${exercise.exerciseId}`;
+    const before = previous.get(key);
+    const anchor = (e: typeof exercise) => e.sets[e.targetRir.at(-1) === '<0' ? e.sets.length - 2 : e.sets.length - 1];
+    const a = anchor(exercise), b = before && anchor(before);
+    if (session.week === week) {
+      evidence.delete(exercise.exerciseId);
+      if (before && a?.completed && b?.completed && exercise.load === before.load && exercise.unit === before.unit && exercise.loadMode === before.loadMode && exercise.sets.length === before.sets.length && JSON.stringify(exercise.targetRir) === JSON.stringify(before.targetRir) && exercise.repMin === before.repMin && exercise.repMax === before.repMax && a.reps < b.reps && a.rir <= b.rir) {
+        evidence.set(exercise.exerciseId, `${exercise.name}: ${b.reps} → ${a.reps} anchor reps at ${exercise.load} ${exercise.unit}, with equal or greater reported effort.`);
+      }
     }
+    if (a?.completed) previous.set(key, exercise);
   }
   return [...evidence.values()];
 }

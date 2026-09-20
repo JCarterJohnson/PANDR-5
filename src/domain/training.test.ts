@@ -43,7 +43,7 @@ describe('completed weekly effective sets', () => {
 describe('recovery decisions', () => {
  function exposures(){const d=setup();const a=createSession(d.plan.days[0],d.exercises,d.settings,1,false);a.startedAt='2026-09-14T12:00:00Z';a.completedAt=a.startedAt;for(const e of a.exercises){e.load=100;for(const s of e.sets){s.completed=true;s.reps=8;}}
  const b=structuredClone(a);b.id=crypto.randomUUID();b.week=2;b.startedAt='2026-09-21T12:00:00Z';b.completedAt=b.startedAt;for(const e of b.exercises.slice(0,2))e.sets.at(-1)!.reps=7;return [a,b];}
- it('corroborates declines on comparable logged anchors',()=>{expect(performanceEvidence(exposures(),2)).toHaveLength(2);});
+ it('keeps a single one-rep decline below the corroboration threshold',()=>{expect(performanceEvidence(exposures(),2)).toHaveLength(0);});
  it('excludes changed loads, incomplete anchors, easier effort and pivot workouts',()=>{const [a,b]=exposures();b.exercises[0].load=110;b.exercises[1].sets.at(-1)!.completed=false;expect(performanceEvidence([a,b],2)).toHaveLength(0);const [c,d]=exposures();d.exercises[0].sets.at(-1)!.rir=9;d.pivot=true;expect(performanceEvidence([c,d],2)).toHaveLength(0);});
  it('does not double-count subjective and measured performance',()=>{expect(isPivotWeek([check({performanceDip:true,measuredPerformanceDip:true})],2)).toBe(false);expect(isPivotWeek([check({measuredPerformanceDip:true,poorSleep:true})],2)).toBe(true);expect(isPivotWeek([check({jointPain:true,poorSleep:true})],2)).toBe(true);});
  it('gives joint pain guidance even when there are no other flags',()=>{expect(recoveryAdvice(check({jointPain:true}))).toContain('Avoid exercises that provoke joint pain');});

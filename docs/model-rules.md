@@ -30,7 +30,7 @@ The anchor must be completed with valid reps and RIR. A **0–1** target accepts
 - Below the floor at the assigned RIR: reduce difficulty **2–3%**, then restart at the floor.
 - Within the range: keep the load and build reps.
 
-The preferred increase/decrease percentages default to 2.5% and are clamped to the model ranges. Rounding chooses an equipment-supported load within the allowed range, as close as possible to the preferred change. If the available increment cannot produce a change within the allowed range, the recommendation holds and explains why; it never silently jumps beyond the range. For assisted exercises, an increase in difficulty reduces assistance, and a decrease in difficulty increases assistance. Bodyweight-only mode does not invent external weight: it suggests changing difficulty or choosing weighted/assisted mode. An unset zero external load also holds until the user enters a working load.
+The preferred increase/decrease percentages default to 2.5% and are clamped to the model ranges. Rounding chooses an equipment-supported load within the allowed range, as close as possible to the preferred change. If the available increment cannot produce a change within the allowed range, the recommendation holds and explains why; it never silently jumps beyond the range. For assisted exercises, an increase in difficulty reduces assistance, and a decrease in difficulty increases assistance. Without a recorded resistance setup, bodyweight-only mode requests calibration. With a setup it selects only confirmed options, as described below. An unset zero external load also holds until the user enters a working load.
 
 Source RIR prescriptions are preserved exactly. When the user changes a set count, `makeRir` builds a descending sequence capped at 3 RIR and ending at 0–1, optionally followed by a <0 finisher. This editing convenience does not replace the original source prescriptions.
 
@@ -47,3 +47,12 @@ Pivot sessions use **ceil(normal sets ÷ 2), with a minimum of one**, preserve t
 Week numbers start at 1, day indexes at 0. Scheduling compares local calendar dates, not elapsed 24-hour intervals, so daylight-saving transitions do not shift training days. Dates before the selected start remain at week 1/day 1. The selected start date is day 1 of the seven-day sequence, regardless of weekday.
 
 Sessions snapshot names, loads, rep ranges, RIR targets, equipment increments, and all muscle contributions. Later plan/library edits therefore do not rewrite historical set credit or prescriptions. All newly generated logs start incomplete, and the UI must explicitly record completion before an anchor can trigger progression.
+
+
+## September 2026 coaching refinement
+
+The source template, coefficients and hard bounds remain unchanged. The app now confirms automatic performance declines over five comparable exposures, supports measured bodyweight resistance and exact equipment lists, and can adjust normal set counts conservatively within the strict bounds. See [coaching-refinements.md](coaching-refinements.md) for the full policy, peer-reviewed sources, thresholds, detection delays and limits. Those extra thresholds are app policies; they are not presented as formulas already contained in the sheet.
+
+Automatic recovery volume preserves the user's saved plan as its ceiling. Two qualifying check-ins within four weeks allow up to a 10% reduction, at most one set per slot, beginning next week. Three recovered, substantially attended normal weeks permit up to 5% restoration. All normal plans still pass every strict check; pivots temporarily halve the effective prescription. Disabling recovery automation or switching to custom mode clears the active adjustment and uses the saved base plan; historical check-in decisions remain.
+
+With recorded bodyweight resistance, percentage changes apply to the resistance moved (bodyweight component plus added weight, or minus measured assistance). Confirmed equipment options may cross assisted/unassisted/added-weight modes. Without a measured setup, bodyweight work continues to request calibration; no universal coefficient is assumed. Ordinary external-load and legacy uncalibrated-assistance behavior remains percentage-based. Impossible equipment steps remain held with a visible setup requirement.

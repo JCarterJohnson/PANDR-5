@@ -1,6 +1,6 @@
-import { chooseResistanceChange } from './resistance';
-import { DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES } from '../data/seed';
-import type { CheckIn, ConstraintIssue, Exercise, ExerciseLog, PlanDay, Recommendation, Rir, Session, Settings, TrainingPlan, VolumeRow } from './types';
+// Frozen 12c12b8 implementation, imports relocated only. Research comparator; never bundled in the app.
+import { DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES } from '../../../src/data/seed';
+import type { CheckIn, ConstraintIssue, Exercise, ExerciseLog, PlanDay, Recommendation, Rir, Session, Settings, TrainingPlan, VolumeRow } from '../../../src/domain/types';
 
 const EPSILON = 1e-8;
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
@@ -89,8 +89,6 @@ export function validatePlan(plan: TrainingPlan, exercises: Exercise[], strict: 
       if (!Number.isInteger(slot.sets) || slot.sets < 1 || slot.sets > 30) error('sets', `${label}: enter 1–30 whole working sets.`);
       if (!Number.isInteger(slot.repMin) || !Number.isInteger(slot.repMax) || slot.repMin < 1 || slot.repMax < slot.repMin || slot.repMax > 100) error('rep-range', `${label}: use a whole-number rep range from 1 to 100 with the floor at or below the cap.`);
       if (!finite(slot.load) || slot.load < 0 || !finite(slot.increment) || slot.increment <= 0) error('load', `${label}: load must be nonnegative and equipment increment must be positive.`);
-      if (slot.availableLoads && (slot.availableLoads.some(n => !finite(n) || n < 0) || new Set(slot.availableLoads).size !== slot.availableLoads.length)) error('equipment-loads', `${label}: available loads must be unique nonnegative numbers.`);
-      if (slot.bodyweight && (!finite(slot.bodyweight.resistance) || slot.bodyweight.resistance <= 0 || slot.bodyweight.addedLoads.some(n => !finite(n) || n <= 0) || slot.bodyweight.assistanceLoads.some(n => !finite(n) || n <= 0 || n >= slot.bodyweight!.resistance) || (slot.loadMode === 'assistance' && slot.load >= slot.bodyweight.resistance))) error('bodyweight-resistance', `${label}: record positive bodyweight resistance and valid added/assistance loads; assistance must be smaller than the bodyweight resistance.`);
       if (slot.loadMode === 'bodyweight' && slot.load !== 0) error('bodyweight-load', `${label}: bodyweight mode has no external load; choose weighted or assisted mode to record load.`);
       if (slot.rir.length !== slot.sets) error('rir-count', `${label}: give each set an RIR target.`);
       if (slot.rir.some(rir => rir !== '0-1' && rir !== '<0' && (!finite(rir) || rir < 0 || rir > 10))) error('rir-value', `${label}: RIR targets must be 0–10, 0–1, or <0.`);
@@ -147,7 +145,27 @@ export function recommendProgression(log: ExerciseLog, settings: Settings, pivot
   const increase = anchor.reps >= log.repMax;
   const decrease = anchor.reps < log.repMin;
   if (!increase && !decrease) return hold('Anchor is within the rep range at its target RIR. Keep the load and build reps.', Math.min(log.repMax, anchor.reps + 1));
-  return chooseResistanceChange(log, settings, increase, anchorIndex);
+  if (log.loadMode === 'bodyweight') return hold(increase ? 'Bodyweight anchor reached the cap. Progress difficulty or choose weighted/assisted mode; no external load is assumed.' : 'Bodyweight anchor is below the floor. Adjust assistance or exercise difficulty; no external load is assumed.', log.repMin);
+  if (log.load === 0) return hold('Enter your working load before calculating a percentage-based change.', log.repMin);
+  const requested = increase ? settings.increasePercent : settings.decreasePercent;
+  const minPercent = 2;
+  const maxPercent = increase ? 5 : 3;
+  const percent = clamp(finite(requested) ? requested : 2.5, minPercent, maxPercent);
+  // For assisted movements, decreasing the assistance is an increase in difficulty.
+  const direction = (increase ? 1 : -1) * (log.loadMode === 'assistance' ? -1 : 1);
+  const increment = log.increment ?? 0.5;
+  if (!finite(increment) || increment <= 0) return hold('Set a positive equipment increment before calculating a load change.', log.repMin);
+  const lowLoad = log.load * (1 + (direction > 0 ? minPercent : -maxPercent) / 100);
+  const highLoad = log.load * (1 + (direction > 0 ? maxPercent : -minPercent) / 100);
+  const minStep = Math.max(0, Math.ceil((lowLoad - EPSILON) / increment));
+  const maxStep = Math.floor((highLoad + EPSILON) / increment);
+  if (minStep > maxStep) return hold(`No available ${increment} ${log.unit} equipment increment fits the model's ${minPercent}–${maxPercent}% change. Keep this load or use a smaller increment.`, log.repMin);
+  const idealLoad = log.load * (1 + direction * percent / 100);
+  const nextLoad = round(clamp(Math.round(idealLoad / increment), minStep, maxStep) * increment);
+  const actualPercent = Math.abs(nextLoad - log.load) / log.load * 100;
+  if (actualPercent < minPercent - EPSILON || actualPercent > maxPercent + EPSILON || nextLoad === log.load) return hold(`The equipment increment cannot produce a ${minPercent}–${maxPercent}% change. Keep this load or use a smaller increment.`, log.repMin);
+  const verb = log.loadMode === 'assistance' ? (increase ? 'Reduce assistance' : 'Increase assistance') : (increase ? 'Increase load' : 'Reduce load');
+  return { action: increase ? 'increase' : 'decrease', nextLoad, targetReps: log.repMin, anchorIndex, reason: `${finisher ? 'Pre-finisher anchor' : 'Anchor'} ${increase ? 'reached or exceeded the cap' : 'fell below the floor'} at its assigned RIR. ${verb} ${round(actualPercent)}% and restart at ${log.repMin} reps.` };
 }
 
 function calendarDay(date: string | Date): number {
@@ -191,7 +209,7 @@ export function createSession(planDay: PlanDay, exercises: Exercise[], settings:
     if (!exercise) throw new Error(`Exercise ${slot.exerciseId} is missing from the library.`);
     const count = pivot ? Math.max(1, Math.ceil(slot.sets / 2)) : slot.sets;
     const targetRir = slot.rir.slice(0, count);
-    return { slotId: slot.id, exerciseId: slot.exerciseId, name: exercise.name, load: slot.load, increment: slot.increment, unit: settings.unit, loadMode: slot.loadMode, ...(slot.availableLoads ? { availableLoads: [...slot.availableLoads] } : {}), ...(slot.bodyweight ? { bodyweight: structuredClone(slot.bodyweight) } : {}), repMin: slot.repMin, repMax: slot.repMax, targetRir, contributions: structuredClone(exercise.contributions), notes: '', sets: targetRir.map((rir, index) => ({ index, reps: 0, rir: rir === '<0' ? -1 : rir === '0-1' ? 1 : rir, completed: false })) };
+    return { slotId: slot.id, exerciseId: slot.exerciseId, name: exercise.name, load: slot.load, increment: slot.increment, unit: settings.unit, loadMode: slot.loadMode, repMin: slot.repMin, repMax: slot.repMax, targetRir, contributions: structuredClone(exercise.contributions), notes: '', sets: targetRir.map((rir, index) => ({ index, reps: 0, rir: rir === '<0' ? -1 : rir === '0-1' ? 1 : rir, completed: false })) };
   }) };
 }
 

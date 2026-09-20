@@ -8,7 +8,7 @@ import { simulatePerson, random } from './model';
 import type { CheckIn, Session } from '../../src/domain/types';
 
 test.skipIf(process.env.PANDR_SIM_BACKEND==='true')('sensitivity and stationary-performance negative controls',async()=>{
-  const directory='research/simulation/results/probes';mkdirSync(directory,{recursive:true});
+  const directory='research/coaching-refinements/results/probes';mkdirSync(directory,{recursive:true});
   const assumptions=[];
   // Paired subjects: the same seed/life events, altered model assumptions. No cloud claims here.
   for(const index of [0,10,20,30,40,50,60,70,80,90,100,110])for(const variant of [{name:'base',gainScale:1,noiseScale:1},{name:'half-response',gainScale:.5,noiseScale:1},{name:'higher-response',gainScale:1.5,noiseScale:1},{name:'half-noise',gainScale:1,noiseScale:.5},{name:'higher-noise',gainScale:1,noiseScale:1.5}]){

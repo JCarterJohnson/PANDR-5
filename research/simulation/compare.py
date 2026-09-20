@@ -4,7 +4,7 @@ import gzip
 import json
 from pathlib import Path
 
-root = Path(__file__).parent / 'results'
+root = Path(__file__).parent.parent / 'coaching-refinements/results'
 engine = json.loads((root / 'dry-run/summary.json').read_text())
 backend = json.loads((root / 'verified/summary.json').read_text())
 identity_fields = {'accountId', 'backupSha256', 'backupBytes', 'csvBytes'}

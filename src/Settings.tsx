@@ -1,3 +1,4 @@
+import { convertPlanLoads } from './domain/coaching';
 import { useEffect, useRef, useState } from 'react';
 import { Account } from './Account';
 import { Download, Upload, Check, Cloud, MessageCircle } from 'lucide-react';
@@ -28,7 +29,8 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
   if((hasRecords||cycle.endedAt)&&draft.startDate!==cycle.startDate){setError('Start a new cycle to reset Week 1 while keeping your history.');return}
   const issues=validatePlan(data.plan,data.exercises,draft.strict).filter(i=>i.severity==='error');if(issues.length){setError(issues[0].message);return}
   setSaving(true);try{await update(d=>{
-   if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan.days.forEach(day=>day.exercises.forEach(e=>{e.load=Math.round(e.load*factor*10000)/10000;e.increment=Math.round(e.increment*factor*10000)/10000}));d.plan.updatedAt=new Date().toISOString()}
+   if(!draft.strict||draft.adaptiveRecovery===false)delete d.plan.recovery;
+   if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan=convertPlanLoads(d.plan,factor);d.plan.updatedAt=new Date().toISOString()}
    if(d.cycles)activeCycle(d).startDate=draft.startDate;
    d.settings=draft;return d;
   });setMessage(profile==='local'?'Preview preferences applied. Sign in to save them.':'Preferences saved to your account. Historical sessions keep their original units.')}catch(e){setError((e as Error).message)}finally{setSaving(false)}
@@ -43,6 +45,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
    <Field label="Your name"><input value={draft.name} maxLength={100} onChange={e=>setDraft({...draft,name:e.target.value})}/></Field>
    <Field label="Appearance"><select value={draft.theme??'automatic'} onChange={e=>setDraft({...draft,theme:e.target.value as SettingsType['theme']})}><option value="light">Light</option><option value="dark">Dark Mode</option><option value="automatic">Automatic (device setting)</option></select></Field>
    <label className="switch-row"><div><h3>Constrained PANDR-5 mode</h3><p>Five training days, non-competing split, 10–20 effective sets for selected muscles, and the RIR staircase.</p></div><input role="switch" aria-label="Constrained PANDR-5 mode" type="checkbox" checked={draft.strict} onChange={e=>setDraft({...draft,strict:e.target.checked})}/></label>
+   <label className="switch-row"><div><h3>Automatic recovery volume</h3><p>In constrained mode, repeated recovery flags allow small set reductions within 10–20 effective sets. Three recovered, attended normal weeks allow gradual restoration. Your saved plan stays the ceiling. Turning this off restores its full set counts; qualifying pivots still apply.</p></div><input role="switch" aria-label="Automatic recovery volume" type="checkbox" checked={draft.adaptiveRecovery!==false} disabled={!draft.strict} onChange={e=>setDraft({...draft,adaptiveRecovery:e.target.checked})}/></label>
    <p>Turn this off to choose any 1–7 training days and weekly volume. Changes take effect when you save.</p>
    <div className="form-grid"><Field label="Weight unit"><select value={draft.unit} onChange={e=>setDraft({...draft,unit:e.target.value as 'kg'|'lb'})}><option value="kg">Kilograms (kg)</option><option value="lb">Pounds (lb)</option></select></Field>
     <Field label="Current cycle · Week 1 begins" hint={hasRecords||cycle.endedAt?'Start a new cycle below to reset Week 1.':'Day 1 of the plan starts on this date.'}><input type="date" disabled={hasRecords||!!cycle.endedAt} value={draft.startDate} onChange={e=>setDraft({...draft,startDate:e.target.value})}/></Field>

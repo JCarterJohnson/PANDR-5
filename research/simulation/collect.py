@@ -11,7 +11,7 @@ import sys
 import zipfile
 
 root = Path(__file__).parent
-destination = root / 'results' / 'verified'
+destination = root.parent / 'coaching-refinements/results/verified'
 destination.mkdir(parents=True, exist_ok=True)
 bundles = {}
 with zipfile.ZipFile(sys.argv[1]) as archive:

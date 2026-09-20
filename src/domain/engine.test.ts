@@ -89,7 +89,7 @@ describe('double progression', () => {
   it('explicitly holds when equipment cannot realize the allowed percentage', () => {
     const result = recommendProgression(log({ load: 10, increment: 2.5 }), settings);
     expect(result).toMatchObject({ action: 'hold', nextLoad: 10 });
-    expect(result.reason).toContain('No available');
+    expect(result).toMatchObject({ status: 'equipment-needed', requiredChange: { min: 0.2, max: 0.5 } });
     expect(recommendProgression({ ...anchor(4, 1), load: 30, increment: 1 }, settings).action).toBe('hold');
   });
   it('clamps settings to source ranges and never exceeds bounds over many load/increment pairs', () => {

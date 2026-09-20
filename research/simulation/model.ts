@@ -2,6 +2,10 @@ import assert from 'node:assert/strict';
 import { createInitialData } from '../../src/data/seed';
 import { allocateSets, calculateVolume, createSession, getWeek, isPivotWeek, recommendProgression, validatePlan } from '../../src/domain/engine';
 import { activeCycle, checkInDue, completedWeeklyVolume, inActiveCycle, materializeCycles, performanceEvidence, startCycle } from '../../src/domain/training';
+import { completeSession, recordCheckIn, trainingPlan } from '../../src/domain/coaching';
+import { workingResistance } from '../../src/domain/resistance';
+import { recommendProgression as legacyProgression } from '../coaching-refinements/baseline/engine';
+import { performanceEvidence as legacyEvidence } from '../coaching-refinements/baseline/training';
 import { validateAppData } from '../../src/domain/validation';
 import type { AppData, CheckIn, ExerciseLog } from '../../src/domain/types';
 
@@ -12,11 +16,15 @@ const clamp=(n:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,n));
 const mean=(ns:number[])=>ns.length?ns.reduce((a,b)=>a+b,0)/ns.length:0;
 export const rounded=(n:number)=>Math.round(n*10000)/10000;
 export type Save = (data:AppData,kind:string,day:number)=>Promise<AppData>;
-export type Options = { days?:number; gainScale?:number; noiseScale?:number; seedOffset?:number; checkpoints?:boolean };
+export type Options = { days?:number; gainScale?:number; noiseScale?:number; seedOffset?:number; checkpoints?:boolean; algorithm?:'baseline'|'refined'; calibratedBodyweight?:boolean };
 
 export async function simulatePerson(index:number, save:Save=async d=>d, options:Options={}) {
   const cohort=COHORTS[Math.floor(index/10)%COHORTS.length];
-  const seed=520260000+index+(options.seedOffset??0), rng=random(seed);
+  const seed=520260000+index+(options.seedOffset??0); let rng=random(seed);
+  const legacy=options.algorithm==='baseline';
+  const recommend=legacy?legacyProgression:recommendProgression;
+  const evidenceFor=legacy?legacyEvidence:performanceEvidence;
+  const stream=(tag:string)=>{let hash=seed;for(const char of tag)hash=Math.imul(hash^char.charCodeAt(0),16777619);return random(hash>>>0)};
   const normal=()=>Math.sqrt(-2*Math.log(Math.max(1e-12,rng())))*Math.cos(2*Math.PI*rng());
   const days=options.days??365, gainScale=options.gainScale??1, noiseScale=options.noiseScale??1;
   const dateAt=(d:number)=>new Date(Date.UTC(2025,0,6+d,12));
@@ -45,7 +53,7 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
   const slots=data.plan.days.flatMap(d=>d.exercises);
   const baseline=new Map<string,number>(), capacities=new Map<string,number>(), gains=new Map<string,number>();
   const rateFactors=new Map<string,number>(), fatigueSets=new Map<string,number>(), stimulus=new Map<string,number>();
-  const initialLoads=new Map<string,number>(), initialSets=new Map(slots.map(s=>[s.id,s.sets]));
+  const initialLoads=new Map<string,number>(), initialBodyweight=new Set<string>(), initialSets=new Map(slots.map(s=>[s.id,s.sets]));
   const targetSets=new Map<string,number>();
   const map=new Map(data.exercises.map(e=>[e.id,e]));
   for(const slot of slots){
@@ -58,6 +66,12 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
       if(index%3===0){slot.loadMode='assistance';slot.load=20*conversion;}
       else slot.load=0;
     }
+    if(slot.loadMode==='bodyweight'||slot.loadMode==='assistance'){
+      initialBodyweight.add(slot.id);
+      // One-time confirmed setup in this synthetic gym. 0.7 is the ORIGINAL simulator's
+      // mechanical assumption, exposed here as a measurement; it is NEVER an app default.
+      if(options.calibratedBodyweight!==false)slot.bodyweight={resistance:bodyMass*0.7*conversion,addedLoads:Array.from({length:40},(_,i)=>(i+1)*1.25*conversion),assistanceLoads:Array.from({length:24},(_,i)=>(i+1)*1.25*conversion).filter(n=>n<bodyMass*0.7*conversion)};
+    }
     initialLoads.set(slot.id,slot.load);
     const effective=slot.loadMode==='bodyweight'?bodyMass*0.7:slot.loadMode==='assistance'?bodyMass*0.7-slot.load/conversion:slot.load/conversion;
     const capacity=Math.max(5,effective)*(1+(slot.repMin+2+(slot.sets-1)*0.6)/30);
@@ -68,7 +82,7 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
   }
   const errors=validatePlan(data.plan,data.exercises,data.settings.strict).filter(x=>x.severity==='error');
   assert.deepEqual(errors,[],'Initial plan must be valid');
-  let fatigue=0, missed=0, trained=0, pivots=0, checks=0, increases=0, decreases=0, holds=0, roundingHolds=0, effortHolds=0, bodyweightHolds=0, partialAnchors=0, falsePerformanceFlags=0, measuredFlags=0;
+  let fatigue=0, missed=0, trained=0, pivots=0, checks=0, increases=0, decreases=0, holds=0, roundingHolds=0, effortHolds=0, bodyweightHolds=0, partialAnchors=0, falsePerformanceFlags=0, measuredFlags=0, bodyweightTransitions=0;
   let weekSleep=7.5, weekPain=false, weekIll=false, readiness=1, globalWeek=1;
   let weekCompleted=0, weekPotential=0, overCap=0, anchorCount=0, underFloor=0;
   const weekly:any[]=[], lifts:any[]=[], actions:Record<string,number>={};
@@ -76,6 +90,7 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
   const startingVolume=calculateVolume(data.plan,data.exercises).map(v=>({muscle:v.muscle,total:v.total}));
   data=await save(data,'initial',-1);
   for(let day=0;day<days;day++){
+    rng=stream(`life-week-${Math.floor(day/7)}`);
     globalWeek=Math.floor(day/7)+1;
     if(day%7===0){
       weekIll=globalWeek===illnessWeek;
@@ -87,7 +102,10 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
       if(cohort==='long-break'&&globalWeek===interruptionWeek+6){data=startCycle(data,'Return after six-week break',iso(day),dateAt(day));data=await save(data,'cycle',day);}
     }
     const cycle=activeCycle(data), week=getWeek(cycle.startDate,dateAt(day));
-    const planDay=data.plan.days[day%7];
+    const prescribed=legacy?data.plan:trainingPlan(data,week);
+    assert.deepEqual(validatePlan(prescribed,data.exercises,data.settings.strict).filter(i=>i.severity==='error'),[],'Every normal prescription must remain valid');
+    const planDay=prescribed.days[day%7];
+    rng=stream(`attendance-${day}`);
     const pivot=isPivotWeek(data.checkIns.filter(c=>inActiveCycle(data,c)),week);
     const onBreak=cohort==='long-break'&&globalWeek>=interruptionWeek&&globalWeek<interruptionWeek+6;
     if(planDay.kind==='training'){
@@ -100,13 +118,16 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
         data.activeSession=session;
         const detailed=options.checkpoints!==false&&index%10===0&&(globalWeek===1||globalWeek===52);
         if(detailed)data=await save(data,'session-start',day);
+        rng=stream(`day-performance-${day}`);
         const dailyNoise=normal()*0.022*noiseScale;
         for(const log of session.exercises){
+          rng=stream(`exercise-${day}-${log.slotId}`);
           const capacity=capacities.get(log.exerciseId)!;
-          const effective=log.loadMode==='bodyweight'?bodyMass*0.7:log.loadMode==='assistance'?Math.max(5,bodyMass*0.7-log.load/conversion):log.load/conversion;
+          const effective=log.bodyweight?Math.max(5,workingResistance(log)/conversion):log.loadMode==='bodyweight'?bodyMass*0.7:log.loadMode==='assistance'?Math.max(5,bodyMass*0.7-log.load/conversion):log.load/conversion;
           const rawReps=30*(capacity*(readiness+dailyNoise)/Math.max(1,effective)-1);
           const painful=weekPain&&log.contributions.some(c=>c.muscle==='chest');
           for(const set of log.sets){
+            rng=stream(`set-${day}-${log.slotId}-${set.index}`);
             const prescription=log.targetRir[set.index];
             const target=prescription==='<0'?0:prescription==='0-1'?0.5:prescription;
             const trueTarget=Math.max(0,target+effortBias+normal()*0.3*noiseScale);
@@ -122,42 +143,46 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
             }
             if(detailed){data.activeSession=structuredClone(session);data=await save(data,'set',day);}
           }
-          const rec=recommendProgression(log,data.settings,pivot);log.recommendation=rec;
+          const rec=recommend(log,data.settings,pivot);log.recommendation=rec;
           const anchor=log.sets[rec.anchorIndex];
           if(anchor?.completed){anchorCount++;if(anchor.reps>log.repMax+5)overCap++;if(anchor.reps<log.repMin)underFloor++;}
           else partialAnchors++;
           if(rec.action==='increase')increases++;else if(rec.action==='decrease')decreases++;else holds++;
-          if(rec.reason.includes('increment'))roundingHolds++;
+          if(rec.status==='equipment-needed'||(legacy&&rec.reason.includes('increment')))roundingHolds++;
+          if(rec.nextLoadMode&&rec.nextLoadMode!==log.loadMode)bodyweightTransitions++;
           if(rec.reason.includes('until the anchor'))effortHolds++;
           if(rec.reason.startsWith('Bodyweight'))bodyweightHolds++;
           actions[rec.action]=(actions[rec.action]??0)+1;
           assert(Number.isFinite(rec.nextLoad)&&rec.nextLoad>=0);
           if(pivot||!anchor?.completed)assert.equal(rec.action,'hold');
           if(rec.action!=='hold'){
-            const pct=Math.abs(rec.nextLoad-log.load)/log.load*100;
+            const before=!legacy&&log.bodyweight?workingResistance(log):log.load;
+            const after=!legacy&&log.bodyweight?workingResistance({...log,load:rec.nextLoad,loadMode:rec.nextLoadMode??log.loadMode}):rec.nextLoad;
+            const pct=Math.abs(after-before)/before*100;
             assert(pct>=2-1e-5&&pct<=(rec.action==='increase'?5:3)+1e-5);
-            assert.equal(rec.action==='increase',log.loadMode==='assistance'?rec.nextLoad<log.load:rec.nextLoad>log.load);
+            assert.equal(rec.action==='increase',!legacy&&log.bodyweight?after>before:log.loadMode==='assistance'?rec.nextLoad<log.load:rec.nextLoad>log.load);
           }
           const original=initialSets.get(log.slotId)!;
-          assert.equal(log.sets.length,pivot?Math.max(1,Math.ceil(original/2)):original);
+          const planned=planDay.exercises.find(e=>e.id===log.slotId)!.sets;
+          assert(planned<=original);
+          assert.equal(log.sets.length,pivot?Math.max(1,Math.ceil(planned/2)):planned);
         }
-        // Same completion transition as Workout.finish in Train.tsx. All decisions above use the production engine.
-        session.completedAt=new Date(dateAt(day).getTime()+70*60000).toISOString();
-        data.sessions.push(session);data.activeSession=undefined;
-        for(const slot of data.plan.days.flatMap(d=>d.exercises)){
-          const log=session.exercises.find(e=>e.slotId===slot.id);
-          if(log?.recommendation)slot.load=log.recommendation.nextLoad;
-        }
-        data.plan.updatedAt=session.completedAt;
+        const completedAt=new Date(dateAt(day).getTime()+70*60000).toISOString();
+        if(legacy){
+          session.completedAt=completedAt;data.sessions.push(session);data.activeSession=undefined;
+          for(const slot of data.plan.days.flatMap(d=>d.exercises)){const log=session.exercises.find(e=>e.slotId===slot.id);if(log?.recommendation)slot.load=log.recommendation.nextLoad;}
+          data.plan.updatedAt=completedAt;
+        }else data=completeSession(data,session,completedAt);
         data=await save(data,'session-finish',day);
       }
     }
+    rng=stream(`check-in-${day}`);
     if(checkInDue(data,dateAt(day))&&!onBreak&&rng()<checkAdherence){
-      const evidence=performanceEvidence(data.sessions.filter(s=>inActiveCycle(data,s)),week);
+      const evidence=evidenceFor(data.sessions.filter(s=>inActiveCycle(data,s)),week);
       const reportedDip=readiness<0.91&&rng()<0.85;
       const check:CheckIn={id:crypto.randomUUID(),cycleId:activeCycle(data).id,date:iso(day),week,poorSleep:weekSleep<6,performanceDip:reportedDip,jointPain:weekPain,runDown:fatigue>1.5||weekIll,elevatedHr:weekIll,lingeringSoreness:fatigue>1.5,notes:'Synthetic observation; not a human outcome.',sleepHours:rounded(weekSleep),fatigue:Math.round(clamp(1+fatigue*1.7,1,5)),soreness:Math.round(clamp(1+fatigue*1.3,1,5)),stress:weekSleep<6?4:2,measuredPerformanceDip:evidence.length>=2,performanceEvidence:evidence,assessmentVersion:'1'};
       checks++;if(check.measuredPerformanceDip){measuredFlags++;if(readiness>=0.97&&!weekIll)falsePerformanceFlags++;}
-      data.checkIns.push(check);assert.equal(checkInDue(data,dateAt(day)),false,'No second check-in in one week');
+      if(legacy)data.checkIns.push(check);else data=recordCheckIn(data,check);assert.equal(checkInDue(data,dateAt(day)),false,'No second check-in in one week');
       data=await save(data,'check-in',day);
     }
     if(day%7===6||day===days-1){
@@ -178,13 +203,13 @@ export async function simulatePerson(index:number, save:Save=async d=>d, options
       const expected=new Map<string,number>();
       for(const s of data.sessions.filter(s=>inActiveCycle(data,s)&&s.week===week))for(const e of s.exercises)for(const c of e.contributions)expected.set(c.muscle,(expected.get(c.muscle)??0)+e.sets.filter(s=>s.completed).length*c.coefficient);
       for(const row of volumes)assert(Math.abs(row.total-(expected.get(row.muscle)??0))<1e-8);
-      weekly.push({person:index,cohort,week:globalWeek,date:iso(day),cycleWeek:week,sessions:weekCompleted,scheduled:weekPotential,pivot,pain:weekPain,sleep:rounded(weekSleep),readiness:rounded(readiness),fatigue:rounded(fatigue),latentCapacityGainPct:rounded(mean([...gains.values()])*100),chestSets:expected.get('chest')??0,quadsSets:expected.get('quads')??0});
-      for(const slot of data.plan.days.flatMap(d=>d.exercises))lifts.push({person:index,cohort,week:globalWeek,slot:slot.id,exercise:slot.exerciseId,name:map.get(slot.exerciseId)!.name,mode:slot.loadMode,loadKg:rounded(slot.load/conversion),initialKg:rounded(initialLoads.get(slot.id)!/conversion),latentCapacityKg:rounded(capacities.get(slot.exerciseId)!),sets:slot.sets});
+      weekly.push({person:index,cohort,week:globalWeek,date:iso(day),cycleWeek:week,sessions:weekCompleted,scheduled:weekPotential,pivot,pain:weekPain,sleep:rounded(weekSleep),readiness:rounded(readiness),fatigue:rounded(fatigue),latentCapacityGainPct:rounded(mean([...gains.values()])*100),chestSets:expected.get('chest')??0,quadsSets:expected.get('quads')??0,normalSets:prescribed.days.flatMap(d=>d.exercises).reduce((n,s)=>n+s.sets,0),baseSets:data.plan.days.flatMap(d=>d.exercises).reduce((n,s)=>n+s.sets,0),coaching:data.checkIns.find(c=>c.week===week&&c.cycleId===cycle.id)?.coaching?.action??'none'});
+      for(const slot of data.plan.days.flatMap(d=>d.exercises))lifts.push({person:index,cohort,week:globalWeek,slot:slot.id,exercise:slot.exerciseId,name:map.get(slot.exerciseId)!.name,mode:slot.loadMode,loadKg:rounded(slot.load/conversion),initialKg:rounded(initialLoads.get(slot.id)!/conversion),latentCapacityKg:rounded(capacities.get(slot.exerciseId)!),sets:prescribed.days.flatMap(d=>d.exercises).find(e=>e.id===slot.id)!.sets,totalResistanceKg:rounded(workingResistance(slot)/conversion)});
       fatigueSets.clear();stimulus.clear();
     }
   }
   validateAppData(data);
   assert.deepEqual(calculateVolume(data.plan,data.exercises).map(v=>({muscle:v.muscle,total:v.total})),startingVolume,'Progression must not silently add weekly volume');
-  const changed=data.plan.days.flatMap(d=>d.exercises).filter(s=>s.loadMode==='external').map(s=>(s.load/initialLoads.get(s.id)!-1)*100);
-  return {data,weekly,lifts,summary:{person:index,cohort,seed,days,unit:data.settings.unit,bodyMass:rounded(bodyMass),gainCeilingPct:rounded(gainCeiling*100),adherence:rounded(adherence),trained,missed,checks,pivots,increases,decreases,holds,roundingHolds,effortHolds,bodyweightHolds,partialAnchors,measuredFlags,falsePerformanceFlags,anchorCount,overCap,underFloor,loadChangePct:rounded(mean(changed)),latentCapacityGainPct:rounded(mean([...gains.values()])*100),cycles:data.cycles!.length}};
+  const changed=data.plan.days.flatMap(d=>d.exercises).filter(s=>s.loadMode==='external'&&!initialBodyweight.has(s.id)).map(s=>(s.load/initialLoads.get(s.id)!-1)*100);
+  return {data,weekly,lifts,summary:{person:index,cohort,seed,days,algorithm:legacy?'baseline':'refined',randomStreams:'independent-v2',calibratedBodyweight:options.calibratedBodyweight!==false,bodyweightTransitions,recoveryReductions:data.checkIns.filter(c=>c.coaching?.action==='reduce').length,recoveryRestorations:data.checkIns.filter(c=>c.coaching?.action==='restore').length,recoveryMinimums:data.checkIns.filter(c=>c.coaching?.action==='minimum').length,unit:data.settings.unit,bodyMass:rounded(bodyMass),gainCeilingPct:rounded(gainCeiling*100),adherence:rounded(adherence),trained,missed,checks,pivots,increases,decreases,holds,roundingHolds,effortHolds,bodyweightHolds,partialAnchors,measuredFlags,falsePerformanceFlags,anchorCount,overCap,underFloor,loadChangePct:rounded(mean(changed)),latentCapacityGainPct:rounded(mean([...gains.values()])*100),cycles:data.cycles!.length}};
 }

@@ -31,7 +31,7 @@ test('120 synthetic accounts, 365 days, real isolated account storage',async()=>
   const shard=Number(process.env.PANDR_SIM_SHARD??0),shards=Number(process.env.PANDR_SIM_SHARDS??1);
   const count=Number(process.env.PANDR_SIM_COUNT??120),days=Number(process.env.PANDR_SIM_DAYS??365);
   assert(count>=1&&count<=120&&shards>=1&&shards<=12&&shard>=0&&shard<shards&&days>0&&days<=365);
-  const directory=join('research/simulation/results',backend?`backend-${shard}`:'dry-run');mkdirSync(directory,{recursive:true});
+  const directory=join('research/coaching-refinements/results',backend?`backend-${shard}`:'dry-run');mkdirSync(directory,{recursive:true});
   const {createClient}=await vi.importActual<typeof import('@supabase/supabase-js')>('@supabase/supabase-js');
   const config=backend?JSON.parse(readFileSync('research/simulation/.local/status.json','utf8')):{};
   if(backend){

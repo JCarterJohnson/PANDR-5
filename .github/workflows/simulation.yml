@@ -51,7 +51,7 @@ jobs:
       - name: Run year and export synthetic-only evidence to logs
         run: |
           npx vitest run --config research/simulation/vitest.config.ts
-          python3 research/simulation/emit.py "research/simulation/results/backend-${PANDR_SIM_SHARD}/evidence.json.gz"
+          python3 research/simulation/emit.py "research/coaching-refinements/results/backend-${PANDR_SIM_SHARD}/evidence.json.gz"
         env:
           PANDR_SIM_BACKEND: 'true'
           PANDR_SIM_COUNT: ${{ inputs.count }}
