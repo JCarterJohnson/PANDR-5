@@ -14,7 +14,7 @@ This creates ignored results here: 120 production-engine people-years; 480 match
 
 Both sides use the original latent-capacity, fatigue and adaptation equations. Random streams were separated by life week, attendance day, check-in day and exercise/set so prescriptions cannot change future sleep or attendance draws. A paired-input assertion verifies identical sleep, pain, schedules and attendance. The old audit’s exact numeric outcomes therefore differ from the rerun comparator; the report keeps them distinct. No coefficients in the simulated biology were fitted to the new controller. The independent seed offset is 900000.
 
-The original simulator’s bodyweight assumption (70% of simulated mass) is exposed as a known synthetic measurement to both controllers. This is a laboratory setup for these fake people, never a default or a recommendation in the app. The calibration ablation separately leaves that setup absent. The coarse-equipment cohort retains its original 2.5 kg grid; no microplates are secretly provided to it. Confirmed smaller steps are exercised in separate equipment tests.
+The original simulator’s bodyweight assumption (70% of simulated mass) is exposed as a known synthetic measurement to both controllers. This is a laboratory setup for these fake people, never a default or a recommendation in the app. The calibration ablation separately leaves that setup absent. Ordinary external lifts in the coarse-equipment cohort retain the original 2.5 kg grid. The calibrated bodyweight setups have separately declared 1.25 kg added/assistance options in both comparator arms; their results do not imply that coarse external equipment is solved. Confirmed smaller steps are exercised in separate equipment tests.
 
 The detector controls hold physiology, load, RIR and prescriptions constant for 40 independent people under ±0/1/2-rep noise. Separate abrupt and gradual deterioration cases report detection delays as well as false flags. Higher-noise failures must remain visible; no synthetic result establishes clinical accuracy or human hypertrophy outcomes.
 
@@ -30,3 +30,9 @@ python3 research/simulation/compare.py
 ```
 
 The collector validates all 12 shards, all 120 account backups, checksums and weekly coverage. The parity comparison checks every summary, week and exercise snapshot against the local production-engine run. Results go to `research/coaching-refinements/results/verified/`; prior audit evidence is kept.
+
+## Results
+
+[Read the completed report](report/REPORT.md) or open `report/report.html` for the standalone visual report. [Download the complete synthetic evidence bundle](https://github.com/JCarterJohnson/PANDR-5/releases/download/v0.4.0/PANDR-5-0.4.0-coaching-audit.zip) for all 120 restored account backups and the paired/controller-control data. No real user records or authentication credentials are included.
+
+To regenerate the report after collecting and comparing the data, use Python with matplotlib installed and run `python3 research/coaching-refinements/report.py`. The source run used Python 3.14 and matplotlib 3.11.2. Every evidence file has a SHA-256 checksum in `report/evidence-checksums.json`.

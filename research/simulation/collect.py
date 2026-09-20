@@ -30,7 +30,9 @@ with zipfile.ZipFile(sys.argv[1]) as archive:
                 # The first run's Vitest reporter occasionally split a worker's
                 # stdout chunk. Recover pure-base64 continuation lines; gzip CRC
                 # and each account's SHA-256 still verify the exact original bytes.
-                line = re.sub(r'^\d{4}-\d{2}-\d{2}T\S+\s', '', line)
+                # GitHub can prefix a newly concatenated log segment with a BOM.
+                # Preserve physical order: runner timestamps can move backwards.
+                line = re.sub(r'^\d{4}-\d{2}-\d{2}T\S+\s', '', line.lstrip('\ufeff'))
                 prefixed = re.match(rf'PANDR_BUNDLE_{shard}:([A-Za-z0-9+/=]+)', line)
                 if prefixed:
                     chunks.append(prefixed[1])

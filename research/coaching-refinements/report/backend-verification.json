@@ -1,0 +1,28 @@
+{
+  "run": "https://github.com/JCarterJohnson/PANDR-5/actions/runs/35536953930",
+  "parity": {
+    "matchingAccounts": 120,
+    "matchingRows": {
+      "weekly.csv": 6360,
+      "lifts.csv.gz": 214650
+    },
+    "runUrl": "https://github.com/JCarterJohnson/PANDR-5/actions/runs/35536953930"
+  },
+  "metrics": {
+    "saves": 35566,
+    "reloads": 1673,
+    "fullSetSaves": 2462,
+    "failedWritesRecovered": 12,
+    "lostResponsesRecovered": 12,
+    "conflictsDetected": 12,
+    "isolationChecks": 336,
+    "requestBytes": 1761841705,
+    "responseBytes": 2940731598,
+    "requests": 181794,
+    "csvRoundTrips": 120
+  },
+  "databaseVersions": 32868,
+  "codeCommits": [
+    "b40d1412586695df269cb731eec10ed46715c0d9"
+  ]
+}
