@@ -55,6 +55,9 @@ export function Support({ client, profile }: { client: SupabaseClient | null; pr
     }
   }
 
+  const count = status ? status.total.toLocaleString() : error || !client ? '—' : '…';
+  const countLabel = status ? `${count} ${status.total === 1 ? 'upvote' : 'upvotes'}` : error || !client ? 'Count unavailable' : 'Loading upvotes…';
+
   return <section className="panel support-panel" aria-labelledby="support-heading">
     <h2 id="support-heading"><Coffee size={21}/> Support PANDR-5</h2>
     <p>If the app is useful to you, leave a heart or support its development through Buy Me a Coffee.</p>
@@ -62,10 +65,12 @@ export function Support({ client, profile }: { client: SupabaseClient | null; pr
       <button type="button" className="button support-heart" aria-pressed={status?.voted ?? false}
         aria-label={status?.voted ? 'Remove your upvote for PANDR-5' : 'Upvote PANDR-5'}
         disabled={!client || !signedIn || !status || busy} onClick={() => void toggle()}>
-        <Heart size={20} fill={status?.voted ? 'currentColor' : 'none'} aria-hidden="true"/>
+        <span className={`support-heart-mark${count.length > 3 ? ' support-heart-mark--stacked' : ''}`}>
+          <Heart size={40} strokeWidth={1.5} fill={status?.voted ? 'currentColor' : 'none'} aria-hidden="true"/>
+          <span className="support-count" role="status" aria-label={countLabel}>{count}</span>
+        </span>
         {busy ? 'Saving…' : status?.voted ? 'Upvoted' : 'Upvote'}
       </button>
-      <span className="muted support-count" role="status">{status ? `${status.total.toLocaleString()} ${status.total === 1 ? 'upvote' : 'upvotes'}` : error || !client ? 'Count unavailable' : 'Loading upvotes…'}</span>
       <a className="button" href="https://buymeacoffee.com/iamjohncaru" target="_blank" rel="noreferrer">Buy Me a Coffee</a>
     </div>
     <p className="support-note">{!client ? 'Upvotes are available in the online app.' : signedIn ? 'One heart per account, saved across devices. Tap again to remove it.' : 'Sign in with Google in the Account section above to leave a heart.'}</p>
