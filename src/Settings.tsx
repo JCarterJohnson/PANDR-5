@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Account } from './Account';
-import { Download, Upload, Check, Cloud, Coffee, MessageCircle } from 'lucide-react';
+import { Download, Upload, Check, Cloud, MessageCircle } from 'lucide-react';
+import { Support } from './Support';
 import type { AppData, Settings as SettingsType } from './domain/types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Update } from './Train';
@@ -63,7 +64,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
     <div className="data-actions"><Button onClick={()=>download('pandr-5-all-time.csv',exportCsv(data),'text/csv;charset=utf-8')}><Download size={17}/> Full all-time CSV</Button><Button onClick={()=>download(`pandr-5-backup-${localDate()}.json`,exportBackup(data),'application/json')}><Download size={17}/> Download complete backup</Button><label className="button"><Upload size={17}/> Restore a backup<input aria-label="Restore a backup" hidden type="file" accept=".json,application/json" disabled={!!data.activeSession} onChange={e=>{const file=e.target.files?.[0];if(file)void stageRestore(file);e.target.value=''}}/></label></div>
     {legacy.length>0&&<Notice><strong>History from the previous app is still available.</strong><p>These old copies have not been deleted or changed. Download one before restoring it into your signed-in account.</p>{legacy.map(({label,data:old})=><Button key={label} small onClick={()=>download(`pandr-5-${label.toLowerCase().replaceAll(' ','-')}.json`,exportBackup(old),'application/json')}>{label} · {old.sessions.length} sessions</Button>)}</Notice>}
    </section>
-   <section className="panel"><h2><Coffee size={21}/> Support PANDR-5</h2><p>If the app is useful to you, you can support its development through Buy Me a Coffee.</p><a className="button" href="https://buymeacoffee.com/iamjohncaru" target="_blank" rel="noreferrer">Buy Me a Coffee</a></section>
+   <Support key={profile} client={client} profile={profile}/>
    <section className="panel"><h2><MessageCircle size={21}/> Feedback & contact</h2><p>Send ideas, bug reports, or questions to Carter, or join the conversation on r/PANDR5.</p><div className="data-actions"><a className="button" href="https://www.instagram.com/cj.fitguy/" target="_blank" rel="noreferrer">Instagram · @cj.fitguy</a><a className="button" href="https://www.reddit.com/user/iamjohncarterofmars/" target="_blank" rel="noreferrer">Reddit · u/iamjohncarterofmars</a><a className="button" href="https://www.reddit.com/r/PANDR5/" target="_blank" rel="noreferrer">Join r/PANDR5</a></div></section>
    <section className="panel"><h2>TDEE calculator</h2><p>Another project by Carter for estimating daily calorie needs and planning macros, with the formulas and research explained on the site.</p><a className="button" href="https://www.thetdee.com/" target="_blank" rel="noreferrer">Open TDEE calculator</a></section>
    <section className="panel"><h2>Install PANDR-5</h2><p><strong>Desktop:</strong> <a href="https://github.com/JCarterJohnson/PANDR-5/releases" target="_blank" rel="noreferrer">download a desktop build</a>, or use your browser’s Install app / Add to Dock option.</p><p><strong>Phone or tablet:</strong> open the hosted app and choose Add to Home Screen from your browser.</p><small>Account saving needs an internet connection, including in the installed app.</small></section>

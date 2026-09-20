@@ -34,5 +34,9 @@ dialog{background:var(--canvas)}
 .workout-focus .main-content{margin-left:0;max-width:none;padding-top:28px}
 .workout-focus .workout-navigation{display:inline-flex;margin-bottom:24px}
 .workout-focus .mobile-close{display:inline-flex;position:absolute;right:8px;top:8px}
+.support-panel .data-actions{align-items:center}
+.support-heart[aria-pressed=true]{color:var(--blue);border-color:var(--blue);background:var(--light-blue)}
+.support-panel .support-note{font-size:12px;margin-top:14px}
+.support-count{font-variant-numeric:tabular-nums}
 .workout-focus .nav-shade{display:block;position:fixed;inset:0;background:#061a3a60;z-index:19;border:0}
 @media(max-width:760px){.workout-focus .workout-navigation{display:none}.workout-focus .main-content{padding-top:24px}.cycle-list .data-line{flex-wrap:wrap}.section-head>.actions{flex-wrap:wrap}}

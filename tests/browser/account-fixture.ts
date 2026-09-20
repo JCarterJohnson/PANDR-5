@@ -14,6 +14,7 @@ export async function accountFixture(page: Page) {
   if(url.pathname==='/auth/v1/user'){await route.fulfill({json:user});return;}
   if(url.pathname==='/auth/v1/logout'){await page.evaluate(()=>sessionStorage.setItem('fixture-signed-out','true'));await route.fulfill({status:204});return;}
   if(fail){await route.fulfill({status:400,json:{message:'Test network unavailable'}});return;}
+  if(url.pathname==='/rest/v1/rpc/pandr_support_status'){await route.fulfill({json:[{total:0,voted:false}]});return;}
   if(url.pathname==='/rest/v1/pandr_profiles'){
    if(method==='GET'){await route.fulfill({json:head});return;}
    const input=req.postDataJSON();
