@@ -1,3 +1,4 @@
+import { assessmentEstimate } from '../domain/strength';
 import { cyclesFor, localDate, recordCycleId } from '../domain/training';
 import { z } from 'zod';
 import type { AppData, Exercise, Session } from '../domain/types';
@@ -40,10 +41,12 @@ function csvCell(value: Cell): string {
 /** A single all-time CSV with typed rows; record_json preserves complete snapshots. */
 export function exportCsv(input: AppData): string {
   const data = validateAppData(input);
-  const columns = ['record_type','record_id','cycle_id','cycle_name','sleep_hours','fatigue','soreness','stress','measured_performance_dip','profile_id','schema_version','date','started_at','completed_at','week','pivot','session_id','session_notes','plan_id','plan_name','day_id','day_name','day_kind','slot_id','exercise_id','exercise_name','equipment','source','beyond_failure_allowed','load','unit','load_mode','increment','bodyweight_resistance','available_loads','added_loads','assistance_loads','recommended_load_mode','resistance_change_percent','recovery_action','recovery_effective_week','normal_sets_before','normal_sets_after','prescribed_sets','rep_min','rep_max','target_rir','set_index','reps','actual_rir','set_completed','exercise_notes','muscle','coefficient','target_volume','recommendation_action','recommended_load','recommended_reps','recommendation_reason','anchor_index','poor_sleep','run_down','elevated_hr','lingering_soreness','performance_dip','joint_pain','notes','updated_at','record_json'] as const;
+  const columns = ['assessment_id','assessment_method','assessment_curve','estimated_1rm_kg','assessment_setup','prescribed_load','prescribed_load_mode','assessment_bypassed','record_type','record_id','cycle_id','cycle_name','sleep_hours','fatigue','soreness','stress','measured_performance_dip','profile_id','schema_version','date','started_at','completed_at','week','pivot','session_id','session_notes','plan_id','plan_name','day_id','day_name','day_kind','slot_id','exercise_id','exercise_name','equipment','source','beyond_failure_allowed','load','unit','load_mode','increment','bodyweight_resistance','available_loads','added_loads','assistance_loads','recommended_load_mode','resistance_change_percent','recovery_action','recovery_effective_week','normal_sets_before','normal_sets_after','prescribed_sets','rep_min','rep_max','target_rir','set_index','reps','actual_rir','set_completed','exercise_notes','muscle','coefficient','target_volume','recommendation_action','recommended_load','recommended_reps','recommendation_reason','anchor_index','poor_sleep','run_down','elevated_hr','lingering_soreness','performance_dip','joint_pain','notes','updated_at','record_json'] as const;
   type Row = Partial<Record<typeof columns[number], Cell>>;
   const rows: string[] = [columns.map(csvCell).join(',')];
   const add = (row: Row, record: unknown) => rows.push(columns.map(c => csvCell({ profile_id: data.id, schema_version: data.schemaVersion, ...row, record_json: JSON.stringify(record) }[c])).join(','));
+  for (const a of data.strength?.assessments ?? []) add({record_type:'strength_assessment',record_id:a.id,exercise_id:a.exerciseId,exercise_name:a.name,date:a.date,completed_at:a.completedAt,load:a.load,unit:a.unit,load_mode:a.loadMode,reps:a.reps,actual_rir:0,assessment_method:a.method,assessment_curve:a.curve,estimated_1rm_kg:assessmentEstimate(a),assessment_setup:a.setup,bodyweight_resistance:a.bodyweight?.resistance},a);
+  if(data.strength) add({record_type:'strength_state',record_id:data.id},data.strength);
   for (const cycle of cyclesFor(data)) add({ record_type: 'cycle', record_id: cycle.id, cycle_id: cycle.id, cycle_name: cycle.name, date: cycle.startDate }, cycle);
   add({ record_type: 'settings', record_id: data.id, unit: data.settings.unit, updated_at: data.updatedAt }, data.settings);
   add({ record_type: 'plan', record_id: data.plan.id, plan_id: data.plan.id, plan_name: data.plan.name, updated_at: data.plan.updatedAt }, data.plan);
@@ -59,11 +62,11 @@ export function exportCsv(input: AppData): string {
     for (const c of exercise.contributions) add({ record_type: 'catalog_contribution', ...context, muscle: c.muscle, coefficient: c.coefficient }, c);
   }
   const sessionRows = (session: Session, active = false) => {
-    const context = { cycle_id: recordCycleId(data, session), cycle_name: cyclesFor(data).find(c=>c.id===recordCycleId(data,session))?.name, session_id: session.id, date: session.date, started_at: session.startedAt, completed_at: session.completedAt, week: session.week, pivot: session.pivot, day_id: session.dayId, day_name: session.dayName, session_notes: session.notes };
+    const context = { assessment_bypassed: session.assessmentBypassed, cycle_id: recordCycleId(data, session), cycle_name: cyclesFor(data).find(c=>c.id===recordCycleId(data,session))?.name, session_id: session.id, date: session.date, started_at: session.startedAt, completed_at: session.completedAt, week: session.week, pivot: session.pivot, day_id: session.dayId, day_name: session.dayName, session_notes: session.notes };
     add({ record_type: active ? 'active_session' : 'session', record_id: session.id, ...context }, session);
     for (const e of session.exercises) {
       const rec = e.recommendation;
-      const exerciseContext = { ...context, slot_id: e.slotId, exercise_id: e.exerciseId, exercise_name: e.name, load: e.load, unit: e.unit, load_mode: e.loadMode, increment: e.increment, bodyweight_resistance:e.bodyweight?.resistance, available_loads:e.availableLoads?JSON.stringify(e.availableLoads):undefined, added_loads:e.bodyweight?JSON.stringify(e.bodyweight.addedLoads):undefined, assistance_loads:e.bodyweight?JSON.stringify(e.bodyweight.assistanceLoads):undefined, recommended_load_mode:rec?.nextLoadMode, resistance_change_percent:rec?.resistanceChangePercent, rep_min: e.repMin, rep_max: e.repMax, target_rir: JSON.stringify(e.targetRir), exercise_notes: e.notes, recommendation_action: rec?.action, recommended_load: rec?.nextLoad, recommended_reps: rec?.targetReps, recommendation_reason: rec?.reason, anchor_index: rec?.anchorIndex };
+      const exerciseContext = { ...context, assessment_id:e.strengthAssessmentId,prescribed_load:e.prescribedLoad,prescribed_load_mode:e.prescribedLoadMode, slot_id: e.slotId, exercise_id: e.exerciseId, exercise_name: e.name, load: e.load, unit: e.unit, load_mode: e.loadMode, increment: e.increment, bodyweight_resistance:e.bodyweight?.resistance, available_loads:e.availableLoads?JSON.stringify(e.availableLoads):undefined, added_loads:e.bodyweight?JSON.stringify(e.bodyweight.addedLoads):undefined, assistance_loads:e.bodyweight?JSON.stringify(e.bodyweight.assistanceLoads):undefined, recommended_load_mode:rec?.nextLoadMode, resistance_change_percent:rec?.resistanceChangePercent, rep_min: e.repMin, rep_max: e.repMax, target_rir: JSON.stringify(e.targetRir), exercise_notes: e.notes, recommendation_action: rec?.action, recommended_load: rec?.nextLoad, recommended_reps: rec?.targetReps, recommendation_reason: rec?.reason, anchor_index: rec?.anchorIndex };
       add({ record_type: active ? 'active_exercise' : 'session_exercise', ...exerciseContext }, e);
       for (const c of e.contributions) add({ record_type: 'session_contribution', ...exerciseContext, muscle: c.muscle, coefficient: c.coefficient }, c);
       for (const set of e.sets) add({ record_type: active ? 'active_set' : 'set', ...exerciseContext, set_index: set.index, reps: set.reps, actual_rir: set.rir, set_completed: set.completed }, set);
@@ -94,6 +97,11 @@ export function restoreBackup(current: AppData, backup: AppData): AppData {
   }
   return validateAppData({
     ...restored, id:previous.id, cycles:[...cycles.values()], activeCycleId:selectedId,
+    strength: previous.strength || restored.strength ? {
+      ...restored.strength,
+      onboardingCompletedAt:restored.strength?.onboardingCompletedAt ?? previous.strength?.onboardingCompletedAt,
+      assessments:[...new Map([...(previous.strength?.assessments??[]),...(restored.strength?.assessments??[])].map(a=>[a.id,a])).values()],
+    } : undefined,
     sessions:merged(previous.sessions,restored.sessions), checkIns:merged(previous.checkIns,restored.checkIns),
     exercises:[...new Map([...previous.exercises,...restored.exercises].map(e=>[e.id,e])).values()],
     activeSession:restored.activeSession?{...restored.activeSession,cycleId:recordCycleId(restored,restored.activeSession)}:undefined,

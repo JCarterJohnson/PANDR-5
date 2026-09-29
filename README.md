@@ -2,12 +2,16 @@
 
 A training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
 
-## Current release
+## Version 0.5.0
 
-**0.4.0 adds confirmed performance trends, equipment/bodyweight progression setup, and bounded recovery-volume adjustments.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
+Mandatory strength assessment, exercise-specific starting loads, 14-day reassessment, prescribed-load locking and complete assessment export are implemented. See [assessment design and verification](docs/strength-assessment.md).
+
+## Public app and downloads
+
+**0.5.0 adds mandatory strength assessment and exercise-specific starting loads, while preserving the existing progression and recovery rules.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
 
 - **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
-- **Desktop downloads:** [get version 0.4.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.4.0).
+- **Desktop downloads:** [get version 0.5.0](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.5.0).
 - **Earlier local edition:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
 - Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.
@@ -92,3 +96,7 @@ In Your plan, open an exercise and expand Equipment and bodyweight progression. 
 
 
 Desktop release builds upload directly to a draft GitHub release, without duplicating the installers in Actions artifact storage. Push a version tag or dispatch `desktop.yml` with the matching `release_tag`. After all three platform jobs and the account audit pass, publish the draft. Standard public runners are used; no larger paid runners are configured. Existing downloads remain available.
+
+## Strength assessment
+
+New accounts complete a resumable exercise-specific assessment before the first training cycle. The measured baseline determines each initial rep/RIR load; existing PANDR-5 progression owns later workouts. New or 14-day-stale movements require reassessment in constrained mode. Custom mode permits later bypass and load overrides. Assessment history is account-saved and included in all-time CSV and backups. See [the protocol and algorithm](docs/strength-assessment.md).

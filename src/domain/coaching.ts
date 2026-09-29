@@ -11,6 +11,7 @@ export function trainingPlan(data: AppData, week: number): TrainingPlan {
 export function completeSession(data: AppData, session: Session, completedAt: string): AppData {
   if (data.sessions.some(s => s.id === session.id)) return data;
   if (session.exercises.some(e => e.unit !== data.settings.unit)) throw new Error('The account unit changed during this workout. Restore the workout unit before finishing.');
+  if (data.settings.strict && session.exercises.some(e => e.prescribedLoad !== undefined && (e.load !== e.prescribedLoad || e.loadMode !== e.prescribedLoadMode))) throw new Error('Constrained mode requires the prescribed working load. Switch to custom mode before overriding it.');
   const final = { ...structuredClone(session), completedAt };
   final.exercises.forEach(e => { e.recommendation = recommendProgression(e, data.settings, session.pivot); });
   const plan = { ...data.plan, updatedAt: completedAt, days: data.plan.days.map(day => ({ ...day, exercises: day.exercises.map(slot => {

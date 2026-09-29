@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { accountFixture } from './account-fixture';
+import { accountFixture, trainingReadyData } from './account-fixture';
 import { mkdir } from 'node:fs/promises';
 const evidence='/tmp/pandr-5-qa';
 
@@ -19,7 +19,7 @@ test('unsaved preview, explanations, account jump, themes and creator links', as
 });
 
 test('account workout saving, collapsed navigation, accurate volume and cycle archive',async({page})=>{
- const account=await accountFixture(page);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');
+ const account=await accountFixture(page,trainingReadyData());const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');
  await page.getByRole('button',{name:'Start session',exact:true}).click();await expect(page.locator('.app-shell')).toHaveClass(/workout-focus/);
  await expect.poll(()=>page.locator('.sidebar').evaluate(el=>el.getBoundingClientRect().right)).toBeLessThanOrEqual(0);
  await page.getByLabel('Set 1 reps',{exact:true}).fill('8');await page.getByRole('button',{name:'Log set 1',exact:true}).click();await expect(page.getByRole('button',{name:'Unlog set 1',exact:true})).toBeVisible();
@@ -54,7 +54,7 @@ test('failed cloud writes stay unsaved until retried; sign-out never exposes acc
 });
 
 test('mobile workout and dark settings fit the viewport',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.emulateMedia({colorScheme:'dark'});await accountFixture(page);await page.goto('/');await page.getByRole('button',{name:'Start session',exact:true}).click();await page.getByLabel('Set 1 reps',{exact:true}).fill('8');await page.getByRole('button',{name:'Log set 1',exact:true}).click();
+ await page.setViewportSize({width:390,height:844});await page.emulateMedia({colorScheme:'dark'});await accountFixture(page,trainingReadyData());await page.goto('/');await page.getByRole('button',{name:'Start session',exact:true}).click();await page.getByLabel('Set 1 reps',{exact:true}).fill('8');await page.getByRole('button',{name:'Log set 1',exact:true}).click();
  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await mkdir(evidence,{recursive:true});await page.screenshot({path:`${evidence}/workout-mobile.png`,fullPage:true});
  await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'Settings',exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${evidence}/settings-mobile.png`,fullPage:true});
 });

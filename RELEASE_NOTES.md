@@ -1,3 +1,15 @@
+# 0.5.0 — Exercise-specific strength assessment
+
+- Required, resumable first assessment before a new account starts training, in both modes.
+- True 1RM or standardized 2–15-rep failure test; same equipment/setup, measured bodyweight/assistance, exercise-specific baseline conversion.
+- Exact baseline initializes each movement's first rep/RIR prescription in program order. Existing anchor progression owns all later loads.
+- New movements and 14-day gaps prompt reassessment; later bypass is available only in custom mode.
+- Constrained load locking with explicit custom-mode override, including mid-workout unlocking.
+- Historical observations, in-progress assessments and prescription provenance saved to the account and retained in backup/CSV exports.
+- Population-curve uncertainty, unsupported target ranges and unavailable equipment are made explicit.
+
+The prior published app does not understand the new strength metadata. Use version 0.5.0 or newer on devices accessing an account with assessments. On the public web app, reload and choose Update app when prompted. Desktop users should install the updated download.
+
 # PANDR-5 0.4.0 preview
 
 Coaching refinements within the existing PANDR-5 constraints:

@@ -44,3 +44,11 @@ dialog{background:var(--canvas)}
 .support-heart-mark--stacked .support-count{grid-area:2/1;transform:none;margin-top:2px}
 .workout-focus .nav-shade{display:block;position:fixed;inset:0;background:#061a3a60;z-index:19;border:0}
 @media(max-width:760px){.workout-focus .workout-navigation{display:none}.workout-focus .main-content{padding-top:24px}.cycle-list .data-line{flex-wrap:wrap}.section-head>.actions{flex-wrap:wrap}}
+
+.strength-estimates { display: grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 12px; margin: 20px 0; }
+.strength-estimates > div { padding: 14px; border: 1px solid var(--line); border-radius: 10px; }
+.strength-estimates small, .strength-estimates strong { display: block; }
+.assessment-rest { display: flex; align-items: center; gap: 8px; margin: 24px 0; }
+
+.assessment-panel h3 { margin-top: 22px; }
+@media(max-width:760px) { .assessment-panel .form-grid { grid-template-columns: 1fr; } }

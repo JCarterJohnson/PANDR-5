@@ -60,3 +60,16 @@ describe('cloud-only app persistence',()=>{
   expect((await syncData(fake.user,next,memory)).data.settings.name).toBe('Updated');expect(await loadData(fake.user)).toBeUndefined();
  });
 });
+
+it('persists strength drafts, observations and onboarding state through fresh account hydration',async()=>{
+ const {createMemoryPersistence}=await import('./memory');const {beginAssessment,recordAssessment}=await import('../domain/strength');
+ const now=new Date('2026-09-01T12:00:00');let d=createInitialData();d=beginAssessment(d,d.plan.days[0],now);
+ const item=d.strength!.active!.items[0];d=recordAssessment(d,0,{...item,load:80,reps:8,setup:'Rack A, full ROM',confirmed:true},now);
+ await syncData(fake.user,d,createMemoryPersistence());const restored=await readCloudData(fake.user,createMemoryPersistence());expect(restored?.strength).toEqual(d.strength);
+});
+it('detects concurrent strength edits without discarding either devices observations',async()=>{
+ const {createMemoryPersistence}=await import('./memory');const memory=createMemoryPersistence();const d=createInitialData();d.strength={assessments:[]};
+ await syncData(fake.user,d,memory);const local=structuredClone(d);local.strength!.onboardingCompletedAt='2026-09-02T12:00:00Z';
+ fake.profiles.get(fake.user).metadata.strength.onboardingCompletedAt='2026-09-03T12:00:00Z';
+ await expect(syncData(fake.user,local,memory)).rejects.toThrow('strength');expect(local.strength!.onboardingCompletedAt).toBe('2026-09-02T12:00:00Z');
+});

@@ -1,14 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { accountFixture } from './account-fixture';
+import { accountFixture, trainingReadyData } from './account-fixture';
 import { readFile } from 'node:fs/promises';
 
 const chin='Close-Grip Chinups (Assisted, BW, or Weighted)';
 test('confirmed bodyweight setup progresses, saves modes and exports complete resistance data',async({page},info)=>{
- const account=await accountFixture(page);await page.goto('/');
+ const account=await accountFixture(page,trainingReadyData());await page.goto('/');
  await page.getByRole('button',{name:'Your plan',exact:true}).click();
  await page.getByRole('button',{name:chin,exact:true}).click();
- await page.getByText('Equipment and bodyweight progression',{exact:true}).click();
- await page.getByLabel('Set up bodyweight resistance').check();
+ await expect(page.getByLabel('Set up bodyweight resistance')).toBeChecked();
  await page.getByLabel('Bodyweight resistance (kg)',{exact:true}).fill('80');
  await page.getByLabel('Available added loads (kg)',{exact:true}).fill('2.5, 5');
  await page.getByLabel('Available measured assistance (kg)',{exact:true}).fill('2, 4');
@@ -36,7 +35,7 @@ test('exact equipment lists survive reload and stay usable on a phone',async({pa
  await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();
  await page.getByRole('button',{name:'Bench Press',exact:true}).click();await page.getByText('Equipment and bodyweight progression',{exact:true}).click();await page.getByLabel('Use an exact list of available loads').check();
  await page.getByLabel('Available working loads (kg)',{exact:true}).fill('10, 10.25, 12.5');
- await page.getByLabel('Working load',{exact:true}).fill('10');await page.screenshot({path:info.outputPath('equipment-mobile.png'),fullPage:true});
+ await expect(page.getByLabel('Working load',{exact:true})).toBeDisabled();await page.screenshot({path:info.outputPath('equipment-mobile.png'),fullPage:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.getByRole('button',{name:'Apply exercise'}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[0].availableLoads).toEqual([10,10.25,12.5]);

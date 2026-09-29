@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import type { AppData, CheckIn, Session } from '../domain/types';
-import { checkInSchema, cycleSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
+import { strengthSchema, checkInSchema, cycleSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
 import { loadData, loadSyncState, saveSyncedData } from './storage';
 import { PUBLIC_CLOUD } from '../data/cloud-config';
 
@@ -33,13 +33,13 @@ export function getCloudClient(): SupabaseClient | null {
   return client;
 }
 
-const metaSchema = z.strictObject({ schemaVersion: z.literal(1), id: idSchema, updatedAt: z.iso.datetime({ offset: true }), settings: settingsSchema, plan: planSchema, exercises: z.array(exerciseSchema).min(1).max(20_000), activeSession: sessionSchema.optional(), cycles: z.array(cycleSchema).min(1).max(1000).optional(), activeCycleId: idSchema.optional() });
+const metaSchema = z.strictObject({ strength: strengthSchema.optional(), schemaVersion: z.literal(1), id: idSchema, updatedAt: z.iso.datetime({ offset: true }), settings: settingsSchema, plan: planSchema, exercises: z.array(exerciseSchema).min(1).max(20_000), activeSession: sessionSchema.optional(), cycles: z.array(cycleSchema).min(1).max(1000).optional(), activeCycleId: idSchema.optional() });
 type Meta = z.infer<typeof metaSchema>;
 const recordRefSchema = z.strictObject({ kind: z.enum(['session', 'checkIn']), id: idSchema, version: z.uuid(), fingerprint: z.string().regex(/^[a-f0-9]{64}$/) });
 type RecordRef = z.infer<typeof recordRefSchema>;
 const headSchema = z.object({ user_id: z.uuid(), revision: z.uuid(), metadata: metaSchema, records: z.array(recordRefSchema).max(200_000) }).refine(h => new Set(h.records.map(r => `${r.kind}:${r.id}`)).size === h.records.length, 'Duplicate cloud record IDs');
 type Head = z.infer<typeof headSchema>;
-const metadataFields = ['settings', 'plan', 'exercises', 'activeSession', 'cycles', 'activeCycleId'] as const;
+const metadataFields = ['strength', 'settings', 'plan', 'exercises', 'activeSession', 'cycles', 'activeCycleId'] as const;
 type Field = typeof metadataFields[number];
 const baselineSchema = z.strictObject({ revision: z.uuid(), metadata: z.record(z.string(), z.string()), records: z.array(recordRefSchema).max(200_000) });
 type Baseline = z.infer<typeof baselineSchema>;
@@ -57,7 +57,7 @@ async function fingerprint(value: unknown) {
   return Array.from(new Uint8Array(bytes), n => n.toString(16).padStart(2, '0')).join('');
 }
 function metadata(d: AppData): Meta {
-  return metaSchema.parse({ schemaVersion: d.schemaVersion, id: d.id, updatedAt: d.updatedAt, settings: d.settings, plan: d.plan, exercises: d.exercises, ...(d.cycles ? { cycles: d.cycles, activeCycleId: d.activeCycleId } : {}), ...(d.activeSession ? { activeSession: d.activeSession } : {}) });
+  return metaSchema.parse({ ...(d.strength ? {strength:d.strength} : {}), schemaVersion: d.schemaVersion, id: d.id, updatedAt: d.updatedAt, settings: d.settings, plan: d.plan, exercises: d.exercises, ...(d.cycles ? { cycles: d.cycles, activeCycleId: d.activeCycleId } : {}), ...(d.activeSession ? { activeSession: d.activeSession } : {}) });
 }
 async function makeBaseline(head: Head): Promise<Baseline> {
   return { revision: head.revision, metadata: Object.fromEntries(await Promise.all(metadataFields.map(async key => [key, await fingerprint(head.metadata[key])]))), records: head.records };
