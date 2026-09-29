@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Check, ArrowRight, Clock3 } from 'lucide-react';
+import { Check, ArrowRight, Clock3, X } from 'lucide-react';
 import type { AppData, StrengthDraft } from './domain/types';
 import type { Update } from './Train';
-import { assessmentEstimate, finishAssessment, fractionAt, fromKg, prescribedSlot, recordAssessment } from './domain/strength';
+import { assessmentEstimate, finishAssessment, fractionAt, fromKg, prescribedSlot, recordAssessment, pauseAssessment } from './domain/strength';
 import { EquipmentSetup } from './EquipmentSetup';
 import { Button, Field, Notice } from './components';
 
@@ -23,7 +23,7 @@ export function StrengthAssessment({data,update}:{data:AppData;update:Update}) {
  async function select(i:number){setBusy(true);if(await saveDraft()){setIndex(i);setDraft(structuredClone(active.items[i]));setError('')}setBusy(false)}
  async function record(){setBusy(true);try{await update(d=>recordAssessment(d,index,draft));setNow(Date.now());setRestUntil(Date.now()+300000);setError('')}catch(e){setError((e as Error).message)}finally{setBusy(false)}}
  const remaining=Math.max(0,Math.ceil((restUntil-now)/1000));
- return <><header className="page-heading"><div><h1>Strength assessment</h1><p>{active.initial?'Initial baseline · required in every mode':'Exercise reassessment'} · {completed} of {active.items.length} exercises tested</p></div><Button disabled={busy||completed!==active.items.length} primary onClick={async()=>{setBusy(true);try{await update(d=>finishAssessment(d));}catch(e){setError((e as Error).message);setBusy(false)}}}>Finish assessment <Check size={18}/></Button></header>
+ return <><header className="page-heading"><div><h1>Strength assessment</h1><p>{active.initial?'Initial baseline · required in every mode':'Exercise reassessment'} · {completed} of {active.items.length} exercises tested</p></div><div className="actions"><Button disabled={busy} onClick={async()=>{setBusy(true);try{if(await saveDraft())await update(d=>pauseAssessment(d));}catch(e){setError((e as Error).message)}finally{setBusy(false)}}}><X size={18}/> Save and exit</Button><Button disabled={busy||completed===0} primary onClick={async()=>{setBusy(true);try{if(await saveDraft())await update(d=>finishAssessment(d));else setBusy(false);}catch(e){setError((e as Error).message);setBusy(false)}}}>Finish assessment <Check size={18}/></Button></div></header>
  <div className="session-progress"><i style={{width:`${completed/active.items.length*100}%`}}/></div>
  <Notice><strong>This visit is for assessment.</strong><p>Warm up before each exercise. Use the same equipment, range of motion, tempo and load convention you will use in training. Prefer a load allowing 3–10 clean reps to momentary failure; 2–15 are accepted. Stop for pain or technique breakdown, and do not count forced reps.</p><p>Rest 3–5 minutes after warm-ups or attempts and longer if needed. Use safeties or a competent spotter where needed. A true 1RM is an option for experienced lifters with a safe setup. Stop testing when fatigue changes performance; save your place and resume on another visit. These tests do not count toward training volume.</p></Notice>
  {error&&<Notice tone="error">{error}</Notice>}
@@ -36,6 +36,6 @@ export function StrengthAssessment({data,update}:{data:AppData;update:Update}) {
  <div className="actions"><Button disabled={busy} onClick={()=>void saveDraft()}>Save assessment progress</Button><Button primary disabled={busy||!draft.confirmed} onClick={()=>void record()}>Save test result <Check size={17}/></Button></div></>}
  <div className="assessment-rest"><Clock3 size={18}/><span>{remaining?`Rest guide: ${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`:'Rest until fully recovered before testing.'}</span></div>
  <div className="actions"><Button disabled={busy||index===0} onClick={()=>void select(index-1)}>Previous</Button><Button disabled={busy||index===active.items.length-1} onClick={()=>void select(index+1)}>Next exercise <ArrowRight size={17}/></Button></div>
- <p className="muted">Saved results and saved progress resume from your account. Finishing the initial assessment schedules the first workout for the following day. You can review equipment in Your plan if no available load fits the estimate.</p>
+ <p className="muted">Saved results and saved progress resume from your account. Save and exit whenever you need a break. You can start a workout once every exercise in that workout has a current baseline, without testing the rest of the program first. You can review equipment in Your plan if no available load fits the estimate.</p>
  </section></div></>;
 }

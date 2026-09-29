@@ -21,4 +21,4 @@ export interface ConstraintIssue { code: string; message: string; severity: 'err
 
 export interface StrengthAssessment { id: string; exerciseId: string; name: string; date: string; completedAt: string; method: 'failure' | '1rm'; reps: number; load: number; loadMode: PlanExercise['loadMode']; unit: Settings['unit']; bodyweight?: BodyweightResistance; setup: string; curve: 'general' | 'bench' | 'leg-press'; version: 1 }
 export interface StrengthDraft { exerciseId: string; slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup'; method: 'failure' | '1rm'; reps: number; load: number; loadMode: PlanExercise['loadMode']; unit: Settings['unit']; setup: string; confirmed: boolean; resultId?: string }
-export interface StrengthState { onboardingCompletedAt?: string; assessments: StrengthAssessment[]; active?: { id: string; initial: boolean; startedAt: string; dayId: string; items: StrengthDraft[] } }
+export interface StrengthState { onboardingStartedAt?: string; onboardingCompletedAt?: string; assessments: StrengthAssessment[]; active?: { paused?: boolean; id: string; initial: boolean; startedAt: string; dayId: string; items: StrengthDraft[] } }

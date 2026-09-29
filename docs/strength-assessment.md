@@ -4,13 +4,13 @@ The assessment is the authoritative starting point for an exact exercise. It ini
 
 ## Assessment flow
 
-- A new account without completed training history must finish an initial assessment in both constrained and custom mode. It covers unique exercises in first-occurrence program order. Duplicate slots share a movement baseline but retain their own rep prescriptions and subsequent progression.
-- The initial assessment is resumable across visits. An entire program can require too many maximal efforts for a reliable single visit; users are instructed to stop when fatigue affects performance. The first cycle starts the day after completion, or its later previously scheduled start date.
-- After onboarding, opening a workout checks its exercises for a missing baseline, a switch between external and measured bodyweight resistance, or at least 14 local calendar days since a completed set or assessment. Empty/unlogged sessions do not reset the timer. History across all cycles counts.
+- A new account without completed training history must assess each exercise before its first workout in both constrained and custom mode. The gate checks only the selected workout, preserving its exercise order. Duplicate slots share a movement baseline but retain their own rep prescriptions and subsequent progression.
+- The initial assessment is resumable across visits. An entire program can require too many maximal efforts for a reliable single visit; users are instructed to stop when fatigue affects performance. Save and exit preserves unfinished entries and returns to the main training screen. A workout can begin the same day once all of its exercises are assessed; other days remain gated. The configured cycle start date still applies.
+- Opening any workout checks its exercises for a missing baseline, a switch between external and measured bodyweight resistance, or at least 14 local calendar days since a completed set or assessment. Empty/unlogged sessions do not reset the timer. History across all cycles counts.
 - Custom mode may explicitly bypass a later assessment for that workout. The bypass is saved with the workout. Constrained mode cannot bypass it. A manual reassessment is also available, including after a setup change.
 - Existing accounts with genuine completed workout history are not relabeled as new accounts. Their exercises still require a measured baseline before constrained training if they lack one.
 - An unfinished workout at least 14 days old cannot accept new sets. Its existing sets can be saved without loss, or the user can discard it, before starting reassessment.
-- Assessment occupies the normal workout screen and uses its navigation/layout. Assessment observations are separate from sessions, volume, check-ins and recovery evidence.
+- Assessment occupies the normal workout screen and uses its navigation/layout. A paused assessment can coexist with a workout; assessment recording cannot occur while that workout is active. Assessment observations are separate from sessions, volume, check-ins and recovery evidence.
 
 ## Standardization
 
@@ -47,7 +47,7 @@ Constrained mode locks workout and plan load editing; the domain completion boun
 
 ## Persistence and compatibility
 
-Optional version-1 strength data preserves old backups. Observations are append-only in normal use and survive exercise removal, cycles, backup restore and export. The existing account metadata store saves assessments and in-progress assessment drafts with compare-and-swap conflict detection; competing edits fail visibly rather than overwrite another device. No database migration, permission change or new public data is required. The metadata table's existing 16 MiB server limit still applies.
+Optional version-1 strength data preserves old backups. Version 0.5.1 adds the onboarding-start marker and paused drafts; update all devices before using these saved fields. The marker keeps untested movements mandatory after the first partially onboarded workout. Observations are append-only in normal use and survive exercise removal, cycles, backup restore and export. The existing account metadata store saves assessments and in-progress assessment drafts with compare-and-swap conflict detection; competing edits fail visibly rather than overwrite another device. No database migration, permission change or new public data is required. The metadata table's existing 16 MiB server limit still applies.
 
 CSV contains separate strength-assessment rows (method, curve, setup, original load/unit, reps, estimated maximum in kg), full strength-state snapshots, workout source assessment IDs, original prescribed loads, actual loads and bypass decisions. JSON backups retain complete resumable state. Restoring an older backup merges assessment observations rather than deleting newer history.
 

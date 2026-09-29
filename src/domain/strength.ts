@@ -30,7 +30,7 @@ export const rirValue = (rir: Rir) => rir === '<0' ? 0 : rir === '0-1' ? .5 : ri
 export const toKg = (value: number, unit: 'kg' | 'lb') => unit === 'kg' ? value : value / 2.2046226218;
 export const fromKg = (value: number, unit: 'kg' | 'lb') => unit === 'kg' ? value : value * 2.2046226218;
 const state = (data: AppData): StrengthState => data.strength ?? { assessments: [] };
-export const needsOnboarding = (data: AppData) => !state(data).onboardingCompletedAt && !data.sessions.some(s => s.completedAt && s.exercises.some(e => e.sets.some(r => r.completed)));
+export const needsOnboarding = (data: AppData) => !state(data).onboardingCompletedAt && (!!state(data).onboardingStartedAt || !!state(data).active?.initial || !data.sessions.some(s => s.completedAt && s.exercises.some(e => e.sets.some(r => r.completed))));
 export function latestAssessment(data: AppData, exerciseId: string): StrengthAssessment | undefined {
   return [...state(data).assessments].reverse().filter(a => a.exerciseId === exerciseId).sort((a,b) => Date.parse(b.completedAt)-Date.parse(a.completedAt)).at(0);
 }
@@ -39,7 +39,7 @@ function compatible(a: { bodyweight?: {resistance: number}; loadMode: string }, 
 }
 export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup' }[] {
   const initial = needsOnboarding(data);
-  const slots = initial ? data.plan.days.filter(d => d.kind === 'training').flatMap(d => d.exercises) : day.exercises;
+  const slots = day.exercises;
   return slots.filter((slot,index)=>slots.findIndex(s=>s.exerciseId===slot.exerciseId)===index).flatMap<{slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup'}>(slot => {
     const baseline = latestAssessment(data, slot.exerciseId);
     if (!baseline) return [{slot, reason: initial ? 'initial' as const : 'new' as const}];
@@ -105,14 +105,20 @@ export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise 
 }
 export function beginAssessment(data: AppData, day: PlanDay, now = new Date(), force = false): AppData {
   if (data.activeSession) throw new Error('Finish the current workout first.');
-  if (state(data).active) return data;
   const due = force && !needsOnboarding(data) ? [...new Map(day.exercises.map(slot => [slot.exerciseId,slot])).values()].map(slot => ({slot,reason:'setup' as const})) : assessmentDue(data,day,now);
-  if (!due.length) throw new Error('No exercises require assessment.');
+  if (!due.length && !state(data).active) throw new Error('No exercises require assessment.');
   const next = structuredClone(data);
-  next.strength = {...state(next), active:{id:crypto.randomUUID(),initial:needsOnboarding(data),startedAt:now.toISOString(),dayId:day.id,items:due.map(({slot,reason}) => ({exerciseId:slot.exerciseId,slot:structuredClone(slot),reason,method:'failure',reps:0,load:slot.load,loadMode:slot.loadMode,unit:data.settings.unit,setup:'',confirmed:false}))}};
+  const prior = state(next).active;
+  const initial = needsOnboarding(data);
+  const items = due.map(({slot,reason}) => {
+    const draft = prior?.items.find(i => i.exerciseId === slot.exerciseId && !i.resultId);
+    return draft ?? {exerciseId:slot.exerciseId,slot:structuredClone(slot),reason,method:'failure' as const,reps:0,load:slot.load,loadMode:slot.loadMode,unit:data.settings.unit,setup:'',confirmed:false};
+  });
+  next.strength = {...state(next), ...(initial ? {onboardingStartedAt:state(next).onboardingStartedAt ?? now.toISOString()} : {}), active:{id:crypto.randomUUID(),initial,paused:false,startedAt:prior?.startedAt ?? now.toISOString(),dayId:day.id,items:[...items,...(prior?.items.filter(i=>!items.some(item=>item.exerciseId===i.exerciseId)) ?? [])]}};
   return next;
 }
 export function recordAssessment(data: AppData, index: number, draft: StrengthDraft, now = new Date()): AppData {
+  if (data.activeSession) throw new Error('Finish the current workout before recording an assessment.');
   const active = state(data).active;
   if (!active || active.items[index]?.exerciseId !== draft.exerciseId) throw new Error('This assessment is no longer active.');
   if (active.items[index].resultId) return data;
@@ -139,50 +145,46 @@ export function recordAssessment(data: AppData, index: number, draft: StrengthDr
   next.strength!.active!.items[index] = {...draft,resultId:result.id};
   return next;
 }
+export function pauseAssessment(data: AppData): AppData {
+  const next = structuredClone(data);
+  if (next.strength?.active) next.strength.active.paused = true;
+  return next;
+}
 export function finishAssessment(data: AppData, now = new Date()): AppData {
   const current = state(data).active;
-  if (!current || current.items.some(i => !i.resultId)) throw new Error('Complete every listed exercise before finishing the assessment.');
-  const next = structuredClone(data);
-  if(current.initial) {
-    const missing = next.plan.days.flatMap(day=>day.exercises).filter((slot,i,all)=>all.findIndex(s=>s.exerciseId===slot.exerciseId)===i && !latestAssessment(next,slot.exerciseId));
-    if(missing.length) {
-      next.strength!.active!.items.push(...missing.map(slot=>({exerciseId:slot.exerciseId,slot:structuredClone(slot),reason:'initial' as const,method:'failure' as const,reps:0,load:slot.load,loadMode:slot.loadMode,unit:next.settings.unit,setup:'',confirmed:false})));
-      return next;
-    }
-  }
-  // Validate all needed prescriptions before unlocking training.
-  next.plan.days.forEach(day => day.exercises.forEach((slot,i) => {
-    if (current.items.some(item => item.exerciseId === slot.exerciseId)) day.exercises[i] = prescribedSlot(next,slot);
-  }));
+  if (!current || !current.items.some(i => i.resultId)) throw new Error('Save at least one test result before finishing the assessment.');
+  const next = pauseAssessment(data);
+  // A visit may end with untested movements. They remain saved for another visit.
   if (current.initial) {
-    next.strength!.onboardingCompletedAt = now.toISOString();
-    // Assessment is not a training day. Begin the first cycle after recovery overnight.
-    if (!next.sessions.length) {
-      materializeCycles(next);
-      const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
-      const start = localDate(tomorrow) > next.settings.startDate ? localDate(tomorrow) : next.settings.startDate;
-      next.settings.startDate = start; activeCycle(next).startDate = start;
-    }
+    next.strength!.onboardingStartedAt ??= current.startedAt;
+    const missing = next.plan.days.filter(d=>d.kind==='training').flatMap(d=>d.exercises).some(slot=>!estimatedCapacity(next,slot));
+    if (!missing) next.strength!.onboardingCompletedAt = now.toISOString();
   }
-  next.plan.updatedAt = now.toISOString();
-  delete next.strength!.active;
+  if (current.items.every(i=>i.resultId)) delete next.strength!.active;
   return next;
 }
 export function startTraining(data: AppData, day: PlanDay, bypass = false, now = new Date()): AppData {
   if (data.activeSession) throw new Error('A workout is already active.');
-  if (needsOnboarding(data) || state(data).active) throw new Error('Complete the initial strength assessment before training.');
+  const initial = needsOnboarding(data);
+  if (initial && day.exercises.some(slot=>!estimatedCapacity(data,slot))) throw new Error('Complete the initial strength assessment for every exercise in this workout before training.');
   const cycle = activeCycle(data);
   if (cycle.endedAt || localDate(now) < cycle.startDate) throw new Error('Your training cycle is not active today.');
   if (assessmentDue(data,day,now).length && (data.settings.strict || !bypass)) throw new Error('Complete the required assessment, or explicitly bypass it in custom mode.');
   const week = getWeek(cycle.startDate,now);
   if (data.settings.strict && data.sessions.some(s => inActiveCycle(data,s) && s.week === week && s.dayId === day.id)) throw new Error('This session is already completed this week.');
   const prescribed = {...day,exercises:day.exercises.map(slot => {
-    if (!data.settings.strict) return slot;
+    const baseline = latestAssessment(data,slot.exerciseId);
+    const trained = baseline && data.sessions.some(s=>s.completedAt && Date.parse(s.completedAt)>Date.parse(baseline.completedAt) && s.exercises.some(e=>e.exerciseId===slot.exerciseId && e.sets.some(r=>r.completed)));
+    if (!data.settings.strict && (!baseline || trained || (bypass && assessmentDue(data,day,now).some(d=>d.slot.exerciseId===slot.exerciseId)))) return slot;
     return prescribedSlot(data,slot);
   })};
   const session = createSession(prescribed,data.exercises,data.settings,week,isPivotWeek(data.checkIns.filter(c => inActiveCycle(data,c)),week));
   session.date=localDate(now); session.startedAt=now.toISOString(); session.assessmentBypassed = bypass && assessmentDue(data,day,now).length > 0;
-  const next = structuredClone(data); materializeCycles(next); session.cycleId=activeCycle(next).id;
+  const next = pauseAssessment(data); materializeCycles(next); session.cycleId=activeCycle(next).id;
+  if (initial) {
+    next.strength = {...state(next),onboardingStartedAt:state(next).onboardingStartedAt ?? now.toISOString()};
+    if (next.plan.days.filter(d=>d.kind==='training').every(d=>d.exercises.every(slot=>!!estimatedCapacity(next,slot)))) next.strength.onboardingCompletedAt = now.toISOString();
+  }
   session.exercises.forEach(e => { e.strengthAssessmentId=latestAssessment(data,e.exerciseId)?.id; e.prescribedLoad=e.load; e.prescribedLoadMode=e.loadMode; });
   next.activeSession=session;
   return next;

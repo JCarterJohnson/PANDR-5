@@ -1,3 +1,12 @@
+# 0.5.1 — Assess at your own pace
+
+- Save and exit assessments with a visible X control; unfinished entries and completed tests remain saved when you return.
+- Unlock each workout as soon as all of that day’s exercises have current baselines. Other days no longer block it, and there is no automatic overnight delay.
+- Keep untested exercises mandatory in both modes, including after the first workout. Existing whole-program assessment drafts remain usable.
+- Preserve the exact baseline-to-first-workout calculation and subsequent PANDR-5 progression.
+
+Update the web app and install desktop version 0.5.1 on every device before using paused assessment data. Older versions do not understand these new saved fields.
+
 # 0.5.0 — Exercise-specific strength assessment
 
 - Required, resumable first assessment before a new account starts training, in both modes.

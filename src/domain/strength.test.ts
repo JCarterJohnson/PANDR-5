@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createInitialData } from '../data/seed';
-import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, fractionAt, needsOnboarding, prescribedSlot, recordAssessment, selectLoad, startTraining, suggestedReps } from './strength';
+import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, fractionAt, needsOnboarding, prescribedSlot, recordAssessment, selectLoad, startTraining, suggestedReps, pauseAssessment } from './strength';
 import { completeSession, convertPlanLoads } from './coaching';
 import { completedWeeklyVolume } from './training';
 import { exportBackup, exportCsv, parseBackup, restoreBackup } from '../services/backup';
@@ -23,9 +23,9 @@ describe('exercise-specific strength baseline',()=>{
   expect(fractionAt(10,'bench')).toBeLessThan(fractionAt(10,'leg-press'));
   expect(()=>fractionAt(31,'general')).toThrow();expect(()=>fractionAt(NaN,'general')).toThrow();
  });
- it('keeps assessment separate from volume and starts the new cycle the following day',()=>{
-  const d=assessed();expect(d.sessions).toHaveLength(0);expect(d.settings.startDate).toBe('2026-09-02');expect(completedWeeklyVolume(d,1).every(r=>r.total===0)).toBe(true);
-  expect(()=>startTraining(d,d.plan.days[0],false,now)).toThrow('not active');
+ it('keeps assessment separate from volume and permits same-day training',()=>{
+  const d=assessed();expect(d.sessions).toHaveLength(0);expect(d.settings.startDate).toBe('2026-09-01');expect(completedWeeklyVolume(d,1).every(r=>r.total===0)).toBe(true);
+  expect(startTraining(d,d.plan.days[0],false,now).activeSession).toBeTruthy();
   expect(firstWorkout(d).activeSession!.exercises[0].load).toBeGreaterThan(0);
  });
  it('rejects unconfirmed, painful/invalid, zero-load and out-of-range test records',()=>{
@@ -87,7 +87,7 @@ describe('exercise-specific strength baseline',()=>{
  });
  it('validates assessment structures at import boundaries',()=>{
   const d=assessed();const invalid=structuredClone(d);invalid.strength!.assessments[0].reps=0;expect(()=>validateAppData(invalid)).toThrow();
-  const unfinished=beginAssessment(d,d.plan.days[0],new Date('2026-09-15T12:00:00'));expect(()=>finishAssessment(unfinished)).toThrow('every listed');
+  const unfinished=beginAssessment(d,d.plan.days[0],new Date('2026-09-15T12:00:00'));expect(()=>finishAssessment(unfinished)).toThrow('at least one');
  });
 });
 
@@ -112,4 +112,55 @@ it('orders imported observations by instant rather than timezone spelling',()=>{
  const d=assessed();const a=d.strength!.assessments[0];a.completedAt='2026-09-01T12:00:00Z';
  d.strength!.assessments.push({...a,id:'later-observation',load:100,completedAt:'2026-09-01T06:00:00-07:00'});
  expect(estimatedCapacity(d,d.plan.days[0].exercises[0])!.source).toBe('later-observation');
+});
+
+for (const strict of [false,true]) it(`unlocks only assessed days and retains initial gating after training (strict=${strict})`,()=>{
+ let d=base();d.settings.strict=strict;
+ const other=createInitialData().plan.days[1];
+ d.plan.days.push({...other,exercises:[{...other.exercises[0],sets:3,rir:[2,1,'0-1'],loadMode:'external',increment:.5}]});
+ d=beginAssessment(d,d.plan.days[0],now);
+ expect(d.strength!.active!.items).toHaveLength(1);
+ d=recordAssessment(d,0,{...d.strength!.active!.items[0],load:80,reps:8,confirmed:true,setup:'Rack A'},now);
+ d=pauseAssessment(d);const observation=d.strength!.assessments[0];
+ expect(assessmentDue(d,d.plan.days[0],now)).toEqual([]);
+ expect(()=>startTraining(d,d.plan.days[1],true,now)).toThrow('initial strength');
+ d=startTraining(d,d.plan.days[0],false,now);
+ expect(d.activeSession!.exercises[0].load).toBe(prescribedSlot(d,d.plan.days[0].exercises[0]).load);
+ expect(()=>validateAppData(d)).not.toThrow();
+ d.activeSession!.exercises[0].sets[0]={index:0,reps:8,rir:2,completed:true};
+ d=completeSession(d,d.activeSession!,'2026-09-01T13:00:00Z');
+ expect(needsOnboarding(d)).toBe(true);
+ expect(()=>startTraining(d,d.plan.days[1],true,now)).toThrow('initial strength');
+ d=beginAssessment(d,d.plan.days[1],now);
+ expect(d.strength!.active!.items[0].exerciseId).toBe(other.exercises[0].exerciseId);
+ expect(d.strength!.assessments[0]).toEqual(observation);
+});
+it('pauses and finishes a partially completed legacy whole-program assessment without losing drafts',()=>{
+ let d=base();const slot=d.plan.days[0].exercises[0];
+ const other=createInitialData().plan.days[1].exercises[0];
+ d.plan.days.push({id:'later-day',name:'Later',kind:'training',exercises:[{...other,loadMode:'external'}]});
+ d=beginAssessment(d,d.plan.days[0],now);
+ d.strength!.active!.items.push({...d.strength!.active!.items[0],slot:other,exerciseId:other.exerciseId,load:45,setup:'Saved partial draft'});
+ delete d.strength!.onboardingStartedAt;
+ d=recordAssessment(d,0,{...d.strength!.active!.items[0],load:80,reps:8,confirmed:true,setup:'Rack A'},now);
+ d=finishAssessment(d,now);
+ expect(d.strength!.active!.paused).toBe(true);
+ expect(d.strength!.active!.items[1].setup).toBe('Saved partial draft');
+ expect(parseBackup(exportBackup(d))).toEqual(d);
+ expect(startTraining(d,d.plan.days[0],false,now).activeSession!.exercises[0].exerciseId).toBe(slot.exerciseId);
+ expect(()=>startTraining(d,d.plan.days[1],true,now)).toThrow('initial strength');
+});
+
+it('retains partial onboarding when restoring an older backup with workout history',()=>{
+ let d=base();d=beginAssessment(d,d.plan.days[0],now);
+ const restored=base();const session=firstWorkout().activeSession!;session.exercises[0].sets[0]={index:0,reps:8,rir:2,completed:true};session.completedAt='2026-09-02T13:00:00Z';delete session.cycleId;restored.sessions=[session];
+ const merged=restoreBackup(d,restored);
+ expect(merged.strength!.onboardingStartedAt).toBe(d.strength!.onboardingStartedAt);
+ expect(needsOnboarding(merged)).toBe(true);
+ expect(()=>startTraining(merged,merged.plan.days[0],true,new Date('2026-09-02T14:00:00Z'))).toThrow('initial strength');
+});
+it('rejects test recording while a workout is active',()=>{
+ let d=base();d=beginAssessment(d,d.plan.days[0],now);const draft={...d.strength!.active!.items[0],load:80,reps:8,confirmed:true,setup:'Rack A'};
+ d=recordAssessment(d,0,draft,now);d=startTraining(d,d.plan.days[0],false,now);
+ expect(()=>recordAssessment(d,0,draft,now)).toThrow('current workout');
 });

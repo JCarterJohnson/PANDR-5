@@ -99,6 +99,7 @@ export function restoreBackup(current: AppData, backup: AppData): AppData {
     ...restored, id:previous.id, cycles:[...cycles.values()], activeCycleId:selectedId,
     strength: previous.strength || restored.strength ? {
       ...restored.strength,
+      onboardingStartedAt:restored.strength?.onboardingStartedAt ?? previous.strength?.onboardingStartedAt,
       onboardingCompletedAt:restored.strength?.onboardingCompletedAt ?? previous.strength?.onboardingCompletedAt,
       assessments:[...new Map([...(previous.strength?.assessments??[]),...(restored.strength?.assessments??[])].map(a=>[a.id,a])).values()],
     } : undefined,
