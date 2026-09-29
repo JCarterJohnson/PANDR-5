@@ -1,3 +1,8 @@
+# 0.5.2 — One assessment prompt
+
+- Saved assessments show only Resume assessment; the duplicate Begin prompt stays hidden, including after reloading.
+- Includes the save-and-exit and per-workout assessment changes below.
+
 # 0.5.1 — Assess at your own pace
 
 - Save and exit assessments with a visible X control; unfinished entries and completed tests remain saved when you return.

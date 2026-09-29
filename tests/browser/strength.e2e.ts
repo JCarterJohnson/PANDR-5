@@ -55,7 +55,10 @@ test('save and exit preserves drafts, unlocks one day, and keeps the next day ma
  await page.getByRole('button',{name:'Save and exit'}).click();
  await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await expect.poll(()=>account.getHead().metadata.strength.active.paused).toBe(true);
+ await expect(page.getByRole('button',{name:'Begin initial assessment'})).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'Resume assessment'})).toHaveCount(1);
  await page.reload();await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Begin initial assessment'})).toHaveCount(0);
  await page.getByRole('button',{name:'Resume assessment'}).click();await expect(page.getByLabel('Test load (kg)')).toHaveValue('80');await expect(page.getByLabel('Exact setup')).toHaveValue('Rack A');
  await page.getByRole('checkbox',{name:/next clean rep was impossible/}).check();await page.getByRole('button',{name:'Save test result'}).click();
  await page.getByRole('button',{name:'Save and exit'}).click();
