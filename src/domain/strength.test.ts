@@ -6,7 +6,7 @@ import { completedWeeklyVolume } from './training';
 import { exportBackup, exportCsv, parseBackup, restoreBackup } from '../services/backup';
 import { validateAppData } from './validation';
 const now=new Date('2026-09-01T12:00:00');
-function base() {const d=createInitialData();d.settings.startDate='2026-09-01';d.plan.days=[{...d.plan.days[0],exercises:[{...d.plan.days[0].exercises[0],sets:3,rir:[2,1,'0-1'],repMin:8,repMax:12,increment:.5}]}];return d;}
+function base() {const d=createInitialData();d.settings.startDate='2026-09-01';d.plan.days=[{...d.plan.days[0],exercises:[{...d.plan.days[0].exercises[0],sets:3,rir:[2,1,'0-1'],repMin:8,repMax:12,increment:.5,availableLoads:undefined}]}];return d;}
 function assessed() {let d=base();d=beginAssessment(d,d.plan.days[0],now);d=recordAssessment(d,0,{...d.strength!.active!.items[0],load:80,reps:8,confirmed:true,setup:'Rack A, flat bench, full ROM, total bar weight'},now);return finishAssessment(d,now);}
 function firstWorkout(d=assessed()) {return startTraining(d,d.plan.days[0],false,new Date('2026-09-02T12:00:00'));}
 describe('exercise-specific strength baseline',()=>{

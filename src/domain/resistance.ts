@@ -1,4 +1,5 @@
 import type { ExerciseLog, Recommendation, Settings } from './types';
+import { defaultLoadIncrement } from './equipment';
 
 const EPSILON = 1e-8;
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
@@ -23,6 +24,7 @@ export function chooseResistanceChange(log: ExerciseLog, settings: Settings, inc
   const ideal = current * (1 + direction * percent / 100);
   type Candidate = { load: number; mode: ExerciseLog['loadMode']; resistance: number };
   let candidates: Candidate[] = [];
+  let adjacent: Candidate | undefined;
   if (log.bodyweight) {
     const base = log.bodyweight.resistance;
     candidates = [
@@ -33,8 +35,10 @@ export function chooseResistanceChange(log: ExerciseLog, settings: Settings, inc
   } else if (log.availableLoads) {
     candidates = log.availableLoads.map(load => ({ load, mode: log.loadMode, resistance: load }));
   } else {
-    const increment = log.increment ?? 0.5;
+    const increment = log.increment ?? defaultLoadIncrement(log.unit);
     if (!Number.isFinite(increment) || increment <= 0) return hold('Set a positive equipment increment before calculating a load change.');
+    const adjacentLoad = round((direction>0?Math.floor((current+EPSILON)/increment)+1:Math.ceil((current-EPSILON)/increment)-1)*increment);
+    if(adjacentLoad>0)adjacent={load:adjacentLoad,mode:log.loadMode,resistance:adjacentLoad};
     const first = Math.max(0, Math.ceil((low - EPSILON) / increment));
     const last = Math.floor((high + EPSILON) / increment);
     if (first <= last) {
@@ -46,7 +50,11 @@ export function chooseResistanceChange(log: ExerciseLog, settings: Settings, inc
     .sort((a, b) => Math.abs(a.resistance - ideal) - Math.abs(b.resistance - ideal) || Math.abs(a.resistance - current) - Math.abs(b.resistance - current));
   const next = valid[0];
   const requiredChange = { min: round(current * minimum / 100), max: round(current * maximum / 100) };
-  if (!next) return hold(`Equipment adjustment needed: the next ${increase ? 'increase' : 'decrease'} requires a ${requiredChange.min}–${requiredChange.max} ${log.unit} change${log.bodyweight ? ' in total resistance' : ''}. No confirmed load or equipment increment fits. Keep this load for now; add an available microload or configure another measured resistance option. The ${minimum}–${maximum}% limit stays in place.`, { status: 'equipment-needed', requiredChange });
+  if (!next) {
+    const nearest = candidates.filter(c=>Number.isFinite(c.resistance) && c.resistance>0 && (c.resistance-current)*direction>EPSILON).sort((a,b)=>Math.abs(a.resistance-current)-Math.abs(b.resistance-current))[0]??adjacent;
+    const step = nearest ? `The nearest available step is ${round(Math.abs(nearest.resistance-current))} ${log.unit} (${round(Math.abs(nearest.resistance-current)/current*100)}%). ` : '';
+    return hold(`Equipment adjustment needed: the next ${increase ? 'increase' : 'decrease'} requires a ${requiredChange.min}–${requiredChange.max} ${log.unit} change${log.bodyweight ? ' in total resistance' : ''}. ${step}No confirmed load or equipment increment fits. Keep this load and confirm different load options only if you have them. Repeated successes do not override the ${minimum}–${maximum}% per-jump limit.`, { status: 'equipment-needed', requiredChange });
+  }
   const actualPercent = Math.abs(next.resistance - current) / current * 100;
   if (actualPercent < minimum - EPSILON || actualPercent > maximum + EPSILON) return hold('The available equipment increment falls outside the permitted change.', { status: 'equipment-needed', requiredChange });
   const label = next.mode === 'bodyweight' ? 'unassisted bodyweight' : `${next.load} ${log.unit} ${next.mode === 'assistance' ? 'assistance' : log.bodyweight ? 'added load' : 'external load'}`;

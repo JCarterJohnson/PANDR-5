@@ -223,3 +223,50 @@ export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict =
   if (missed.length) issues.push({ code: 'target-approximation', severity: 'warning', message: `Some targets were not matched with whole sets and the ${maxSetsPerExercise}-set limit per exercise. Planned / target: ${missed.map(row => `${MUSCLES.find(m => m.id === row.muscle)?.name ?? row.muscle} ${row.total}/${row.target}`).join(', ')}. Adjust targets, exercise coverage, or the automatic set limit. Retained exercises keep at least one set.` });
   return { plan: next, issues };
 }
+
+/** Scale only selected days; reconcile selected muscle goals against the complete week.
+ * Whole sets are apportioned to a rounded day budget rather than rounded independently.
+ * A preview always starts from its input plan, so dragging does not compound rounding.
+ */
+export function scaleTrainingDays(plan: TrainingPlan, exercises: Exercise[], dayIds: string[], percent: number): { plan: TrainingPlan; issues: ConstraintIssue[] } {
+  const next = structuredClone(plan);
+  const selected = new Set(dayIds);
+  const issues: ConstraintIssue[] = [];
+  if (!finite(percent) || percent <= 0 || percent > 200 || !selected.size || [...selected].some(id=>!plan.days.some(day=>day.id===id && day.kind==='training' && day.exercises.length))) {
+    return {plan:next,issues:[{code:'scaling-input',severity:'error',message:'Select one or more training days and a volume percentage above 0 and at most 200.'}]};
+  }
+  if (percent === 100) return {plan:next,issues};
+  const catalog = new Map(exercises.map(e=>[e.id,e]));
+  const affected = new Set<string>();
+  let changed = false;
+  for (const day of next.days.filter(day=>selected.has(day.id))) {
+    if (day.exercises.some(s=>!catalog.has(s.exerciseId) || !Number.isInteger(s.sets) || s.sets<1 || s.sets>30)) return {plan:structuredClone(plan),issues:[{code:'scaling-plan',severity:'error',message:'Correct the selected days’ exercise definitions and whole set counts before scaling.'}]};
+    const desired = day.exercises.map(s=>s.sets*percent/100);
+    const requested = desired.reduce((sum,n)=>sum+n,0);
+    const budget = clamp(Math.round(requested),day.exercises.length,day.exercises.length*30);
+    const counts = desired.map(n=>clamp(Math.floor(n),1,30));
+    let total = counts.reduce((sum,n)=>sum+n,0);
+    while (total!==budget) {
+      const direction = total<budget ? 1 : -1;
+      let winner = -1, best = Infinity;
+      counts.forEach((n,i)=>{
+        if(n+direction<1 || n+direction>30)return;
+        const cost = (n+direction-desired[i]!)**2-(n-desired[i]!)**2;
+        if(cost<best-EPSILON){best=cost;winner=i;}
+      });
+      if(winner<0)break;
+      counts[winner]!+=direction;total+=direction;
+    }
+    if (Math.abs(total-requested)>EPSILON) issues.push({code:'scaling-rounded',severity:'warning',message:`${day.name}: ${round(requested)} requested working sets rounds to ${total}. Retained exercises keep 1–30 whole sets.`});
+    day.exercises.forEach((slot,i)=>{
+      for(const c of catalog.get(slot.exerciseId)!.contributions)affected.add(c.muscle);
+      if (slot.sets===counts[i])return;
+      slot.sets=counts[i]!;slot.rir=makeRir(slot.sets,slot.rir.at(-1)==='<0');changed=true;
+    });
+  }
+  for(const row of calculateVolume(next,exercises))if(affected.has(row.muscle) && next.targets[row.muscle]!==undefined && next.targets[row.muscle]!==row.total){next.targets[row.muscle]=row.total;changed=true;}
+  if(changed){
+    delete next.recovery;next.updatedAt=new Date().toISOString();
+  }
+  return {plan:next,issues};
+}

@@ -1,3 +1,11 @@
+# 0.5.4 — Scale days and use standard equipment
+
+- Scale one or more training days together from the day’s exercise panel. A reference-muscle weekly-set input computes the percentage, while a slider previews proportional exercise sets and all affected weekly muscle credits.
+- Apportion whole sets to each day’s rounded total, retain exercises and loads, and reconcile existing selected muscle targets against the complete week. Applying a preview changes the draft; Save plan commits it.
+- New plans, added exercises, and exercise replacements use standard equipment defaults. Barbell defaults assume a 45 lb bar and paired 5/10/25/45 lb plates (10 lb total steps). Other equipment starts at 5 lb steps, expressed in the account’s unit.
+- Equipment presets let users explicitly choose 2.5 lb or 1 lb plates, or retain their exact lists and increments. Existing account equipment settings and all history remain unchanged until edited.
+- Keep all rep/RIR gates and 2–5% increase / 2–3% reduction limits. Equipment holds show the nearest physical step and its percentage; repeated successes do not authorize an out-of-range jump.
+
 # 0.5.3 — Balanced weekly set allocation
 
 - Fit whole sets to selected weekly targets, then balance each muscle across its training days and spread work across exercises.

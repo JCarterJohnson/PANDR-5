@@ -33,7 +33,9 @@ test('confirmed bodyweight setup progresses, saves modes and exports complete re
 test('exact equipment lists survive reload and stay usable on a phone',async({page},info)=>{
  await page.setViewportSize({width:390,height:844});const account=await accountFixture(page);await page.goto('/');
  await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();
- await page.getByRole('button',{name:'Bench Press',exact:true}).click();await page.getByText('Equipment and bodyweight progression',{exact:true}).click();await page.getByLabel('Use an exact list of available loads').check();
+ await page.getByRole('button',{name:'Bench Press',exact:true}).click();
+ if(!await page.getByLabel('Use an exact list of available loads').isVisible())await page.getByText('Equipment and bodyweight progression',{exact:true}).click();
+ await page.getByLabel('Use an exact list of available loads').check();
  await page.getByLabel('Available working loads (kg)',{exact:true}).fill('10, 10.25, 12.5');
  await expect(page.getByLabel('Working load',{exact:true})).toBeDisabled();await page.screenshot({path:info.outputPath('equipment-mobile.png'),fullPage:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);

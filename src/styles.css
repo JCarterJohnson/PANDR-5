@@ -52,3 +52,5 @@ dialog{background:var(--canvas)}
 
 .assessment-panel h3 { margin-top: 22px; }
 @media(max-width:760px) { .assessment-panel .form-grid { grid-template-columns: 1fr; } }
+
+.volume-slider{width:100%;accent-color:var(--blue);margin:4px 0 22px;padding:0}.volume-preview-title{margin-top:22px}.volume-day-choices{margin:12px 0}.volume-day-choices .check-row{padding:10px 0}
