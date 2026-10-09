@@ -44,7 +44,7 @@ export function trainingReadyData(): AppData {
   const exercise=d.exercises.find(e=>e.id===slot.exerciseId)!;
   const bodyweight=/Chinups/i.test(exercise.name)?{resistance:80,addedLoads:[2.5,5],assistanceLoads:[2,4]}:undefined;
   if(bodyweight)d.plan.days.forEach(day=>day.exercises.forEach(s=>{if(s.exerciseId===slot.exerciseId){s.bodyweight=bodyweight;s.loadMode='bodyweight';s.load=0}}));
-  return {id:crypto.randomUUID(),exerciseId:slot.exerciseId,name:exercise.name,date:localDate(prior),completedAt:prior.toISOString(),method:'failure' as const,reps:Math.min(15,slot.repMin+Math.max(...slot.rir.map(rirValue))),load:bodyweight?0:80,loadMode:bodyweight?'bodyweight' as const:'external' as const,unit:d.settings.unit,bodyweight,setup:'Same recorded equipment and full range of motion',curve:curveFor(exercise),version:1 as const};
+  return {id:crypto.randomUUID(),exerciseId:slot.exerciseId,name:exercise.name,date:localDate(prior),completedAt:prior.toISOString(),method:'failure' as const,reps:Math.min(15,Math.ceil(slot.repMin+Math.max(...slot.rir.map(rirValue)))),load:bodyweight?0:80,loadMode:bodyweight?'bodyweight' as const:'external' as const,unit:d.settings.unit,bodyweight,setup:'Same recorded equipment and full range of motion',curve:curveFor(exercise),version:1 as const};
  })};
  return d;
 }

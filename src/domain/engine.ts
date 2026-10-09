@@ -1,4 +1,5 @@
 import { chooseResistanceChange } from './resistance';
+import { fitSetCounts } from './allocation';
 import { DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES } from '../data/seed';
 import type { CheckIn, ConstraintIssue, Exercise, ExerciseLog, PlanDay, Recommendation, Rir, Session, Settings, TrainingPlan, VolumeRow } from './types';
 
@@ -196,64 +197,29 @@ export function createSession(planDay: PlanDay, exercises: Exercise[], settings:
 }
 
 /** Bounded integer search. Exact targets are preferences; strict weekly bounds stay hard. */
-export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict = true): { plan: TrainingPlan; issues: ConstraintIssue[] } {
+export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict = true, maxSetsPerExercise = 6): { plan: TrainingPlan; issues: ConstraintIssue[] } {
   const next = structuredClone(plan);
+  if (!Number.isInteger(maxSetsPerExercise) || maxSetsPerExercise < 1 || maxSetsPerExercise > 30) return { plan: next, issues: [{ code: 'allocation-limit', severity: 'error', message: 'Use a whole automatic set limit between 1 and 30 per exercise.' }] };
+  if (Object.values(next.targets).some(target => !finite(target) || target < 0 || target > 300)) return { plan: next, issues: [{ code: 'allocation-target', severity: 'error', message: 'Use finite weekly targets from 0 to 300 effective sets.' }] };
   const structural = validatePlan(next, exercises, strict).filter(issue => !['volume-bounds', 'frequency'].includes(issue.code));
   if (structural.some(issue => issue.severity === 'error')) return { plan: next, issues: structural };
+  if (!Object.keys(next.targets).length) return { plan: next, issues: structural };
   const catalog = new Map(exercises.map(exercise => [exercise.id, exercise]));
   const slots = next.days.filter(day => day.kind === 'training').flatMap(day => day.exercises);
   const targets = Object.entries(next.targets);
   const matrix = slots.map(slot => targets.map(([muscle]) => (catalog.get(slot.exerciseId)?.contributions ?? []).filter(c => c.muscle === muscle).reduce((sum, c) => sum + c.coefficient, 0)));
-  const original = slots.map(slot => slot.sets);
-  const counts = [...original];
-  const objective = (candidate: number[]) => {
-    let bounds = 0;
-    let distance = 0;
-    targets.forEach(([, target], i) => {
-      const volume = candidate.reduce((sum, sets, j) => sum + sets * matrix[j]![i]!, 0);
-      if (strict) bounds += Math.max(0, 10 - volume) ** 2 + Math.max(0, volume - 20) ** 2;
-      distance += (volume - target) ** 2;
-    });
-    return bounds * 1e6 + distance + candidate.reduce((sum, sets, i) => sum + Math.abs(sets - original[i]!), 0) * 0.00001;
-  };
-  let score = objective(counts);
-  for (let iteration = 0; iteration < 500; iteration++) {
-    let best = score;
-    let winner: number[] | undefined;
-    for (let i = 0; i < counts.length; i++) {
-      if (!matrix[i]!.some(Boolean)) continue;
-      for (const delta of [-1, 1]) {
-        if (counts[i]! + delta < 1 || counts[i]! + delta > 30) continue;
-        const candidate = [...counts];
-        candidate[i]! += delta;
-        const value = objective(candidate);
-        if (value < best - EPSILON) { best = value; winner = candidate; }
-      }
-    }
-    // A coupled swap can improve two muscles when neither single move helps.
-    if (!winner) for (let i = 0; i < counts.length; i++) for (let j = i + 1; j < counts.length; j++) {
-      if (!matrix[i]!.some(Boolean) || !matrix[j]!.some(Boolean)) continue;
-      for (const di of [-1, 1]) for (const dj of [-1, 1]) {
-        if (counts[i]! + di < 1 || counts[i]! + di > 30 || counts[j]! + dj < 1 || counts[j]! + dj > 30) continue;
-        const candidate = [...counts]; candidate[i]! += di; candidate[j]! += dj;
-        const value = objective(candidate);
-        if (value < best - EPSILON) { best = value; winner = candidate; }
-      }
-    }
-    if (!winner) break;
-    counts.splice(0, counts.length, ...winner);
-    score = best;
-  }
+  const days = next.days.flatMap((day, i) => day.kind === 'training' ? day.exercises.map(() => i) : []);
+  const counts = fitSetCounts(matrix, days, targets.map(([, target]) => target), slots.map(slot => slot.sets), strict, maxSetsPerExercise);
+  let changed = false;
   slots.forEach((slot, i) => {
-    if (slot.sets !== counts[i]) { slot.sets = counts[i]!; slot.rir = makeRir(slot.sets, slot.rir.at(-1) === '<0'); }
+    if (slot.sets !== counts[i]) { changed = true; slot.sets = counts[i]!; slot.rir = makeRir(slot.sets, slot.rir.at(-1) === '<0'); }
   });
-  next.updatedAt = new Date().toISOString();
+  if (changed) { next.updatedAt = new Date().toISOString(); delete next.recovery; }
   const issues = validatePlan(next, exercises, strict);
   if (issues.some(issue => issue.severity === 'error')) {
-    issues.unshift({ code: 'allocation-infeasible', severity: 'error', message: 'No valid set allocation was found for this exercise selection. Change exercises, training-day coverage, or selected targets before activating strict mode.' });
-  } else {
-    const missed = calculateVolume(next, exercises).filter(row => row.target !== undefined && Math.abs(row.total - row.target) > EPSILON);
-    if (missed.length) issues.push({ code: 'target-approximation', severity: 'warning', message: `Whole sets cannot match every requested target in this allocation. ${strict ? 'All selected muscles remain within 10–20: ' : 'Planned / target: '}${missed.map(row => `${row.muscle} ${row.total}/${row.target}`).join(', ')}.` });
+    issues.unshift({ code: 'allocation-infeasible', severity: 'error', message: `No constrained allocation was found within the ${maxSetsPerExercise}-set limit per exercise. Change exercises, coverage, targets, or the automatic set limit; custom mode allows lower weekly volume.` });
   }
+  const missed = calculateVolume(next, exercises).filter(row => row.target !== undefined && Math.abs(row.total - row.target) > EPSILON);
+  if (missed.length) issues.push({ code: 'target-approximation', severity: 'warning', message: `Some targets were not matched with whole sets and the ${maxSetsPerExercise}-set limit per exercise. Planned / target: ${missed.map(row => `${MUSCLES.find(m => m.id === row.muscle)?.name ?? row.muscle} ${row.total}/${row.target}`).join(', ')}. Adjust targets, exercise coverage, or the automatic set limit. Retained exercises keep at least one set.` });
   return { plan: next, issues };
 }

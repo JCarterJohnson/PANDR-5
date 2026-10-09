@@ -1,3 +1,12 @@
+# 0.5.3 — Balanced weekly set allocation
+
+- Fit whole sets to selected weekly targets, then balance each muscle across its training days and spread work across exercises.
+- Add an automatic set limit per exercise (starts at 6, editable from 1–30). Unattainable targets show their actual planned / target totals rather than silently creating very large prescriptions.
+- Preserve lower custom-mode targets when selecting muscles. Keep unrelated exercises, exercise choices, loads, and order; regenerate RIR only when a set count changes.
+- Existing saved plans, workouts, assessments, and archived cycles stay intact. No account migration or reset. Apply the new allocator explicitly in Your plan, review, then save.
+
+The automatic limit is an app allocation preference, not a clinical safety threshold. Custom mode continues to allow weekly targets below the constrained framework’s 10-set minimum.
+
 # 0.5.2 — One assessment prompt
 
 - Saved assessments show only Resume assessment; the duplicate Begin prompt stays hidden, including after reloading.
