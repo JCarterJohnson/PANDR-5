@@ -1,3 +1,9 @@
+# 0.5.5 — Equipment-specific dumbbell defaults
+
+- Separate freeweight barbell, dumbbell rack and machine/cable defaults. New dumbbell prescriptions use per-dumbbell loads in 2.5 lb steps from 5 through 50 lb, then 5 lb steps through 200 lb.
+- Add a dumbbell rack preset and keep its exact load list editable for different rack inventories or cutoffs. Machines and cables retain a configurable 5 lb default, without inheriting barbell plate assumptions.
+- Preserve existing account equipment, history, and all progression percentage and rep/RIR rules.
+
 # 0.5.4 — Scale days and use standard equipment
 
 - Scale one or more training days together from the day’s exercise panel. A reference-muscle weekly-set input computes the percentage, while a slider previews proportional exercise sets and all affected weekly muscle credits.

@@ -2,9 +2,9 @@
 
 A training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
 
-## Version 0.5.4
+## Version 0.5.5
 
-Scale training days together with a reference-muscle set goal or percentage slider, then review the affected weekly totals. Standard equipment defaults replace assumed microplates; smaller plates remain optional. Weekly set allocation balances muscle volume across days, uses an editable automatic limit per exercise, and displays unmatched targets. Existing account data and saved plans are preserved. See [model rules](docs/model-rules.md) and [release notes](RELEASE_NOTES.md). Strength assessment and progression remain available; see [assessment design and verification](docs/strength-assessment.md).
+Scale training days together with a reference-muscle set goal or percentage slider, then review the affected weekly totals. Equipment defaults distinguish paired barbell plates, dumbbell racks (2.5 lb steps through 50 lb, then 5 lb), and configurable 5 lb machine/cable increments; optional microplates and exact inventories remain available. Weekly set allocation balances muscle volume across days, uses an editable automatic limit per exercise, and displays unmatched targets. Existing account data and saved plans are preserved. See [model rules](docs/model-rules.md) and [release notes](RELEASE_NOTES.md). Strength assessment and progression remain available; see [assessment design and verification](docs/strength-assessment.md).
 
 ## Public app and downloads
 

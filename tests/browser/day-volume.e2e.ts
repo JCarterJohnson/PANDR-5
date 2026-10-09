@@ -40,3 +40,27 @@ test('standard and optional small-plate presets remain selectable without changi
   await page.getByRole('button',{name:'Bench Press',exact:true}).click();await page.getByLabel('Equipment preset').selectOption('barbell-standard');
   await expect(page.getByLabel('Smallest load increment')).toHaveValue('4.535924');
 });
+
+test('dumbbell rack defaults and custom inventory persist on a phone',async({page})=>{
+  const account=await accountFixture(page);await page.setViewportSize({width:390,height:844});await page.goto('/');
+  const openExercise=async()=>{
+    await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();
+    await page.getByRole('button',{name:'Incline Dumbbell Press',exact:true}).click();
+  };
+  await openExercise();
+  await expect(page.getByLabel('Smallest load increment')).toHaveValue('1.133981');
+  const list=page.getByLabel('Available working loads (kg)',{exact:true});
+  const pounds=(await list.inputValue()).split(',').map(n=>Math.round(Number(n)*2.2046226218*100)/100);
+  expect(pounds).toEqual(expect.arrayContaining([47.5,50,55]));expect(pounds).not.toContain(52.5);
+  await page.getByLabel('Equipment preset').selectOption('five-pound');
+  await expect(page.getByLabel('Smallest load increment')).toHaveValue('2.267962');
+  await expect(list).toHaveCount(0);
+  await page.getByLabel('Equipment preset').selectOption('dumbbell-rack');
+  await expect(page.getByLabel('Smallest load increment')).toHaveValue('1.133981');
+  await list.fill('20, 21.25, 22.5');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.getByRole('button',{name:'Apply exercise',exact:true}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
+  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[1].availableLoads).toEqual([20,21.25,22.5]);
+  await page.reload();await openExercise();await expect(list).toHaveValue('20, 21.25, 22.5');
+  expect(account.getHead().metadata.settings.increasePercent).toBe(2.5);
+});
