@@ -8,7 +8,7 @@ import type { Update } from './Train';
 export type RegisterBeforeLeave = (save:()=>Promise<boolean>)=>()=>void;
 const signature=(plan:TrainingPlan)=>JSON.stringify({...plan,updatedAt:undefined});
 
-export function usePlanAutosave(data:AppData,draft:TrainingPlan,setDraft:(plan:TrainingPlan)=>void,update:Update,registerBeforeLeave:RegisterBeforeLeave,onError:(message:string)=>void) {
+export function usePlanAutosave(data:AppData,draft:TrainingPlan,setDraft:(plan:TrainingPlan)=>void,update:Update,registerBeforeLeave:RegisterBeforeLeave,onError:(message:string)=>void,savedToAccount:boolean) {
   const committed=useRef(signature(data.plan));
   const latest=useRef(draft);latest.current=draft;
   const running=useRef<Promise<boolean>|undefined>(undefined);
@@ -28,7 +28,7 @@ export function usePlanAutosave(data:AppData,draft:TrainingPlan,setDraft:(plan:T
     const task=(async()=>{
       try {
         await update(d=>({...d,exercises:catalogForPlan(d.exercises,snapshot),plan:{...snapshot,updatedAt:new Date().toISOString()}}));
-        committed.current=signature(snapshot);setSaved(true);return true;
+        committed.current=signature(snapshot);setSaved(true);onError('');return true;
       } catch(e){setFailed(true);onError((e as Error).message);return false}
       finally{running.current=undefined;setSaving(false)}
     })();
@@ -36,6 +36,11 @@ export function usePlanAutosave(data:AppData,draft:TrainingPlan,setDraft:(plan:T
   };
 
   useLayoutEffect(()=>registerBeforeLeave(()=>saveLatest.current()),[registerBeforeLeave]);
+  // The shared cloud retry can acknowledge this same draft too. Do not retain
+  // a false unsaved warning after that account-level retry succeeds.
+  useEffect(()=>{
+    if(failed&&savedToAccount&&signature(data.plan)===value){committed.current=value;setFailed(false);setSaved(true);onError('')}
+  },[failed,savedToAccount,data.plan,value,onError]);
   useEffect(()=>{
     if(!dirty||!canSave)return;
     setSaved(false);setFailed(false);

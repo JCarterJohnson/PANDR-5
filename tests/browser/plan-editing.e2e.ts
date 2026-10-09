@@ -120,7 +120,7 @@ test('automatic plan saves report failures and retain edits until retry succeeds
   expect(account.getHead().metadata.plan.days[0].name).toBe(d.plan.days[0]!.name);
   await page.locator('.plan-save-status').scrollIntoViewIfNeeded();await page.screenshot({path:info.outputPath('plan-save-status-mobile.png')});
   account.setFailure(false);await page.getByRole('button',{name:'Retry plan save',exact:true}).click();
-  await expect(page.locator('.plan-save-status')).toContainText('All plan changes saved');
+  await expect(page.locator('.plan-save-status')).toContainText('All plan changes saved');await expect(page.getByText(/Test network unavailable/)).toHaveCount(0);
   await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'History',exact:true}).click();await expect(page.getByRole('heading',{name:'Your training, over time',exact:true})).toBeVisible();
   await page.reload();await goPlan(page,true);await expect(page.getByLabel('Day name',{exact:true})).toHaveValue('My push day');
 });
@@ -168,4 +168,15 @@ test('a strict-mode target outside the framework can switch to custom mode witho
   await expect.poll(()=>account.getHead()?.metadata.settings.strict).toBe(false);
   expect(account.getHead().metadata.plan.targets.quads).toBe(8);
   await page.reload();await goPlan(page);await expect(page.getByLabel('Quads target',{exact:true})).toHaveValue('8');
+});
+
+test('the shared account retry clears the plan warning after saving its pending edit',async({page})=>{
+  const d=createInitialData();d.settings.strict=false;
+  const account=await accountFixture(page,d);await page.goto('/');await goPlan(page);
+  account.setFailure(true);await page.getByLabel('Day name',{exact:true}).fill('Retried push day');
+  await expect(page.locator('.plan-save-status')).toContainText('Plan changes not saved');
+  account.setFailure(false);await page.getByRole('button',{name:'Retry saving',exact:true}).click();
+  await expect(page.locator('.plan-save-status')).toContainText('All plan changes saved');await expect(page.getByText(/Test network unavailable/)).toHaveCount(0);
+  expect(account.getHead().metadata.plan.days[0].name).toBe('Retried push day');
+  await page.reload();await goPlan(page);await expect(page.getByLabel('Day name',{exact:true})).toHaveValue('Retried push day');
 });
