@@ -110,6 +110,14 @@ describe('constraints and allocation', () => {
     expect(validatePlan(DEFAULT_PLAN, DEFAULT_EXERCISES, true)).toEqual([expect.objectContaining({ code: 'volume-bounds', severity: 'error' })]);
     expect(validatePlan(DEFAULT_PLAN, DEFAULT_EXERCISES, false)).toEqual([expect.objectContaining({ code: 'volume-bounds', severity: 'warning' })]);
   });
+
+  it('rejects unsavable target values and blank day names in custom mode too',()=>{
+    const plan=structuredClone(DEFAULT_PLAN);plan.targets.quads=-1;plan.days[0]!.name='';
+    expect(validatePlan(plan,DEFAULT_EXERCISES,false)).toEqual(expect.arrayContaining([
+      expect.objectContaining({code:'target-value',severity:'error'}),
+      expect.objectContaining({code:'day-name',severity:'error'}),
+    ]));
+  });
   it('allocates one extra lateral set without altering source data or exercise order', () => {
     const result = allocateSets(DEFAULT_PLAN, DEFAULT_EXERCISES);
     expect(result.issues).toEqual([]);

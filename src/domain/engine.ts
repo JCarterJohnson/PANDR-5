@@ -65,6 +65,7 @@ export function validatePlan(plan: TrainingPlan, exercises: Exercise[], strict: 
   const dayIds = new Set<string>();
   const slotIds = new Set<string>();
   for (const [dayIndex, day] of plan.days.entries()) {
+    if (!day.name.trim() || day.name.length > 300) error('day-name', `Day ${dayIndex+1}: enter a name of 1–300 characters.`);
     let previousBlock = -1;
     if (dayIds.has(day.id)) error('duplicate-day', 'Each training day must have a unique identifier.');
     dayIds.add(day.id);
@@ -114,6 +115,7 @@ export function validatePlan(plan: TrainingPlan, exercises: Exercise[], strict: 
   }
   const totals = new Map(calculateVolume(plan, exercises).map(row => [row.muscle, row.total]));
   for (const [muscle, target] of Object.entries(plan.targets)) {
+    if (!finite(target) || target < 0 || target > 1000) { error('target-value', `${MUSCLES.find(m=>m.id===muscle)?.name??muscle}: enter a weekly target from 0 to 1000 effective sets.`); continue; }
     if (!finite(target) || target < 10 || target > 20) method('target-bounds', `${muscle}: selected weekly targets must be between 10 and 20 effective sets.`);
     const volume = totals.get(muscle) ?? 0;
     if (volume < 10 - EPSILON || volume > 20 + EPSILON) method('volume-bounds', `${muscle}: ${round(volume)} effective sets; the required weekly range is 10–20.`);

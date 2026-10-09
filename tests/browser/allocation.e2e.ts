@@ -45,9 +45,7 @@ test('mobile targets reconcile across days, show shortfalls and save without res
   await page.getByLabel('Quads target').fill('8');await page.getByLabel('Hamstrings target').fill('8');
   await page.getByRole('button',{name:'Adjust exercise sets to targets'}).click();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  // Adjusting the draft cannot save to the account until Save plan is chosen.
-  expect(account.getHead().metadata.plan.days[2].exercises[2].sets).toBe(11);
-  await page.getByRole('button',{name:'Save plan',exact:false}).click();
+  // Applied allocation saves automatically; history remains intact.
   await expect.poll(()=>account.getHead().metadata.plan.days[2].exercises[2].sets).toBe(4);
   expect(account.getHead().metadata.cycles).toEqual(archived);
   expect(account.getHead().metadata.strength).toEqual(strength);

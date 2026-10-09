@@ -19,6 +19,16 @@ function partialAssessment() {
 }
 
 describe('assessment queue follows the live plan',()=>{
+  it('groups later exercises with their first primary muscle group while preserving order within groups',()=>{
+    let d=createInitialData();d.settings.strict=false;
+    const names=['Bench Press','Incline Curls','Wide-Grip Seated Cable Rows','Seated Hamstring Curls','Incline Dumbbell Press','Lying Hamstring Curls','Leg Extension','Standing Calf Raise (Machine)'];
+    const slots=names.map((name,i)=>({...d.plan.days[0]!.exercises[0]!,id:`group-${i}`,exerciseId:d.exercises.find(e=>e.name===name)!.id}));
+    d.plan.days=[{...d.plan.days[0]!,exercises:slots.slice(0,4)},{...d.plan.days[2]!,exercises:slots.slice(4)}];
+    d=beginAssessment(d,d.plan.days[0]!,now);d=beginAssessment(d,d.plan.days[1]!,now);
+    const next=reconcileAssessment(d,undefined,now);
+    expect(next.strength!.active!.items.map(i=>i.slot.id)).toEqual(['group-0','group-4','group-1','group-2','group-3','group-5','group-6','group-7']);
+    expect(reconcileAssessment(next,undefined,now)).toEqual(next);
+  });
   it('replaces removed movements, follows order and preserves observations and unchanged drafts',()=>{
     const d=partialAssessment(),old=structuredClone(d.plan),before=structuredClone(d);
     const leg=d.plan.days[1]!;const press=leg.exercises[1]!;

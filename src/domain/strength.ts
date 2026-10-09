@@ -2,6 +2,7 @@ import type { AppData, Exercise, PlanDay, PlanExercise, Rir, Session, StrengthAs
 import { createSession, getWeek, isPivotWeek } from './engine';
 import { activeCycle, inActiveCycle, localDate, materializeCycles } from './training';
 import { workingResistance } from './resistance';
+import { assessmentGroup } from './assessment-order';
 
 export type Curve = 'general' | 'bench' | 'leg-press';
 // Nuzzo et al., Sports Medicine 2024, Figs 2–4. Mean reps at 95…45% 1RM.
@@ -60,7 +61,13 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
   const active=state(data).active;
   if(!active)return data;
   const days=data.plan.days.filter(day=>day.kind==='training');
-  const entries=days.flatMap(day=>day.exercises.map(slot=>({day,slot})));
+  const catalog=new Map(data.exercises.map(e=>[e.id,e]));
+  const programEntries=days.flatMap(day=>day.exercises.map(slot=>({day,slot})));
+  const groups=new Map<string,number>();
+  for(const {slot} of programEntries){const group=assessmentGroup(catalog.get(slot.exerciseId));if(!groups.has(group))groups.set(group,groups.size)}
+  // Stable sorting keeps program order inside each primary-muscle group. Group
+  // order comes from the full plan, even when this visit tests only some days.
+  const entries=[...programEntries].sort((a,b)=>groups.get(assessmentGroup(catalog.get(a.slot.exerciseId)))!-groups.get(assessmentGroup(catalog.get(b.slot.exerciseId)))!);
   const due=new Map(days.flatMap(day=>assessmentDue(data,day,now)).map(item=>[item.slot.exerciseId,item]));
   const prior=new Map(active.items.map(item=>[item.exerciseId,item]));
   const wanted=new Set<string>();

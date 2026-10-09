@@ -1,3 +1,11 @@
+# 0.5.7 — Automatic plan saves and grouped assessments
+
+- Valid applied plan changes save automatically after editing pauses. Applying an exercise no longer requires remembering a separate Save plan action. Leaving Your plan first waits for the account save, including while an assessment is open; manual Save plan saves immediately.
+- Keep invalid or failed edits in the editor with visible save status, plan checks, and retry. Constrained framework deviations can switch to custom mode and save the same edits directly from the checks. Preview mode still requires sign-in for account persistence. Preserve active-workout locks and constrained validation.
+- Group assessment movements by primary muscle, ordered by each group's first appearance across the full program. Preserve program order within each group, de-duplicate repeated movements, and keep later upper-body work beside earlier work. Quads, hamstrings, glutes, adductors, and calves share the Legs group. Show group labels on exercise cards.
+- Keep completed baselines and saved partial assessment inputs through plan edits, regrouping, save/reload, and separate assessment visits. No account reset, history deletion, or data migration.
+- Stop displaying the saving overlay after a failed account write, so retry controls remain usable.
+
 # 0.5.6 — Exercise editing and live assessments
 
 - Replace up/down exercise-order arrows with one three-line drag handle. Support mouse and touch dragging, edge scrolling, cancellation and Up/Down keyboard moves.
