@@ -1,0 +1,40 @@
+import { test, expect } from '@playwright/test';
+import { accountFixture, trainingReadyData } from './account-fixture';
+import { FEEDBACK_URL } from '../../src/data/feedback';
+import pkg from '../../package.json' with {type:'json'};
+const {version}=pkg;
+
+for (const phone of [false,true]) test(`update history and feedback preserve drafts on ${phone?'phone':'desktop'}`, async({page})=>{
+ if(phone) await page.setViewportSize({width:390,height:844});
+ await page.emulateMedia({colorScheme:phone?'dark':'light'});
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ const account=await accountFixture(page,trainingReadyData());await page.goto('/');
+ await expect(page).toHaveTitle(/PANDR/);
+ if(phone)await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+ await page.getByRole('button',{name:'Settings',exact:true}).click();
+ await expect(page.getByText(`App version ${version}`,{exact:true})).toBeVisible();
+ const saved=JSON.stringify(account.getHead());
+ await page.getByLabel('Rest timer (seconds)').fill('61');
+ await page.getByRole('button',{name:'Update log',exact:true}).click();
+ const log=page.getByRole('dialog',{name:'Update log',exact:true});await expect(log).toBeVisible();
+ await expect(log).toContainText(`Your installed version is ${version}`);
+ await expect(log).toContainText('Installed version');
+ await log.getByText('Quiet saving and deliberate dragging',{exact:true}).click();
+ await expect(log.getByText('Plan autosaves no longer shift your screen or put a saving popup over the editor.',{exact:true})).toBeVisible();
+ expect(await log.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);
+ await page.screenshot({path:`/tmp/pandr-update-log-${phone?'phone':'desktop'}.png`,animations:'disabled'});
+ await page.keyboard.press('Escape');await expect(log).toHaveCount(0);
+ await expect(page.getByLabel('Rest timer (seconds)')).toHaveValue('61');
+ expect(JSON.stringify(account.getHead())).toBe(saved);
+ const feedback=page.getByRole('link',{name:'Report a bug or request a feature',exact:true});
+ await expect(feedback).toHaveAttribute('href',FEEDBACK_URL);await expect(feedback).toHaveAttribute('target','_blank');
+ await feedback.scrollIntoViewIfNeeded();await expect(feedback).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.screenshot({path:`/tmp/pandr-feedback-settings-${phone?'phone':'desktop'}.png`,animations:'disabled'});
+ // Exercise the link without creating a real response or relying on Google's availability in CI.
+ await page.context().route('https://docs.google.com/forms/**',route=>route.fulfill({contentType:'text/html',body:'<h1>Feedback form destination</h1>'}));
+ const popupPromise=page.waitForEvent('popup');await feedback.click();const popup=await popupPromise;
+ await expect(popup.getByRole('heading',{name:'Feedback form destination'})).toBeVisible();expect(popup.url()).toBe(FEEDBACK_URL);await popup.close();
+ await expect(page.getByLabel('Rest timer (seconds)')).toHaveValue('61');expect(JSON.stringify(account.getHead())).toBe(saved);
+ expect(errors).toEqual([]);
+});

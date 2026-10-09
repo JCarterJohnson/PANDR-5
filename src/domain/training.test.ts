@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createInitialData } from '../data/seed';
 import { createSession, getWeek, isPivotWeek, recoveryAdvice } from './engine';
 import { activeCycle, checkInDue, completedWeeklyVolume, cyclesFor, endCycle, inActiveCycle, materializeCycles, performanceEvidence, recoveryTrend, scheduledCheckInDay, startCycle } from './training';
+import { beginAssessment, recordAssessment, pauseAssessment, finishAssessment } from './strength';
 import { validateAppData } from './validation';
 import { exportBackup, exportCsv, parseBackup } from '../services/backup';
 import type { CheckIn } from './types';
@@ -53,3 +54,16 @@ describe('recovery decisions', () => {
 
 it('a repeated cycle-start save does not create a second cycle',()=>{const id=crypto.randomUUID();const first=startCycle(setup(),'Return','2026-09-18',now,id);const retry=startCycle(first,'Return','2026-09-18',now,id);expect(retry.cycles).toHaveLength(2);expect(retry.activeCycleId).toBe(id);});
 it('uses the reduced prescription as the completion target during a pivot week',()=>{const d=setup();d.checkIns=[check({poorSleep:true,jointPain:true})];const full=completedWeeklyVolume(d,1).find(r=>r.muscle==='chest')!;const pivot=completedWeeklyVolume(d,2).find(r=>r.muscle==='chest')!;expect(pivot.total).toBe(0);expect(pivot.target).toBeLessThan(full.target!);expect(pivot.target).toBeGreaterThan(0);});
+
+for(const paused of [false,true]) it(`keeps ${paused?'paused':'open'} assessment results and unfinished inputs across an ended and future cycle`,()=>{
+ let d=setup();d.settings.strict=false;d.plan.days=[{...d.plan.days[0],exercises:d.plan.days[0].exercises.slice(0,2)}];
+ d=beginAssessment(d,d.plan.days[0],now);d=recordAssessment(d,0,{...d.strength!.active!.items[0],load:80,reps:8,setup:'Rack A',confirmed:true},now);
+ Object.assign(d.strength!.active!.items[1],{load:35,reps:7,setup:'Saved unfinished entry'});if(paused)d=pauseAssessment(d);
+ const strength=structuredClone(d.strength),plan=structuredClone(d.plan),ended=endCycle(d,now);
+ expect(ended.strength).toEqual(strength);expect(ended.plan).toEqual(plan);expect(d.cycles).toBeUndefined();
+ const future=startCycle(ended,'Return','2026-09-21',now);expect(future.strength).toEqual(strength);expect(future.sessions).toEqual(d.sessions);validateAppData(future);
+ const resumed=beginAssessment(future,future.plan.days[0],now);expect(resumed.strength!.assessments).toEqual(strength!.assessments);
+ const index=resumed.strength!.active!.items.findIndex(i=>!i.resultId);expect(resumed.strength!.active!.items[index].setup).toBe('Saved unfinished entry');
+ const tested=recordAssessment(resumed,index,{...resumed.strength!.active!.items[index],confirmed:true},now);
+ expect(finishAssessment(tested,now).strength!.assessments).toHaveLength(2);
+});

@@ -73,3 +73,16 @@ it('detects concurrent strength edits without discarding either devices observat
  fake.profiles.get(fake.user).metadata.strength.onboardingCompletedAt='2026-09-03T12:00:00Z';
  await expect(syncData(fake.user,local,memory)).rejects.toThrow('strength');expect(local.strength!.onboardingCompletedAt).toBe('2026-09-02T12:00:00Z');
 });
+
+it('editing a name and cycles with an assessment never writes another account',async()=>{
+ const {createMemoryPersistence}=await import('./memory');const {beginAssessment,recordAssessment}=await import('../domain/strength');const {endCycle,startCycle}=await import('../domain/training');
+ const now=new Date('2026-09-18T12:00:00'),owner=fake.user,other=crypto.randomUUID(),ownerMemory=createMemoryPersistence(),otherMemory=createMemoryPersistence();
+ let a=createInitialData();a.settings.startDate='2026-09-14';a=beginAssessment(a,a.plan.days[0],now);a=recordAssessment(a,0,{...a.strength!.active!.items[0],load:80,reps:8,setup:'Owner station',confirmed:true},now);
+ await syncData(owner,a,ownerMemory);fake.user=other;const b=createInitialData();b.settings.name='Other person';b.plan.name='Other plan';b.sessions=[createSession(b.plan.days[0],b.exercises,b.settings,1,false)];await syncData(other,b,otherMemory);
+ const untouched=JSON.stringify(fake.profiles.get(other)),records=JSON.stringify([...fake.records.values()].filter(r=>r.user_id===other));
+ fake.user=owner;fake.calls=[];a.settings.name='New owner name';a=startCycle(endCycle(a,now),'Return','2026-09-21',now);await syncData(owner,a,ownerMemory);
+ expect(JSON.stringify(fake.profiles.get(other))).toBe(untouched);expect(JSON.stringify([...fake.records.values()].filter(r=>r.user_id===other))).toBe(records);
+ expect(fake.calls.every(c=>c.filters.some((f:any)=>f[0]==='user_id'&&f[1]===owner)||c.op==='insert')).toBe(true);
+ expect((await readCloudData(owner,createMemoryPersistence()))!.strength).toEqual(a.strength);
+ fake.calls=[];await expect(readCloudData(other,createMemoryPersistence())).rejects.toThrow('signed-in account changed');expect(fake.calls).toHaveLength(0);
+});

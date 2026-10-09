@@ -35,8 +35,8 @@ function Application(){
  {page==='history'&&<History data={data}/>}
  {page==='library'&&<Library data={data} update={update}/>}
  {page==='method'&&<Method/>}
- {page==='settings'&&<Settings key={profile} data={data} update={update} client={client} profile={profile} email={email} sync={sync} signOut={signOut} pending={pending} goMethod={section=>go('method',section)} goHistory={()=>go('history')} goPlan={()=>go('plan')}/>}
- </fieldset></main>{page!=='plan'&&(busy||(pending&&!status.startsWith('Not saved')))&&<div className="busy-indicator" role="status"><LoaderCircle size={17} className="spinning"/> Saving to your account…</div>}</div>
+ {page==='settings'&&<Settings key={profile} registerBeforeLeave={registerBeforeLeave} data={data} update={update} client={client} profile={profile} email={email} sync={sync} signOut={signOut} pending={pending} goMethod={section=>go('method',section)} goHistory={()=>go('history')} goPlan={()=>go('plan')}/>}
+ </fieldset></main>{!['plan','settings'].includes(page)&&(busy||(pending&&!status.startsWith('Not saved')))&&<div className="busy-indicator" role="status"><LoaderCircle size={17} className="spinning"/> Saving to your account…</div>}</div>
 }
 class AppBoundary extends Component<{children:ReactNode},{error:string}> {state={error:''};static getDerivedStateFromError(error:Error){return {error:error.message}}componentDidCatch(error:Error,info:ErrorInfo){console.error(error,info)}render(){return this.state.error?<main className="loading-screen"><h1>PANDR-5 couldn’t open.</h1><Notice tone="error">{this.state.error}</Notice><p>Your saved data has not been deleted.</p><Button onClick={()=>location.reload()}>Try again</Button></main>:this.props.children}}
 export default function App(){return <AppBoundary><Application/></AppBoundary>}

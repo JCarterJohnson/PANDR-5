@@ -25,7 +25,7 @@ export function materializeCycles(data: AppData): void {
 }
 export function startCycle(data: AppData, name: string, startDate: string, now = new Date(), cycleId = crypto.randomUUID()): AppData {
   if (data.cycles?.some(c => c.id === cycleId)) return data;
-  if (data.activeSession || data.strength?.active) throw new Error('Finish or discard the current workout before starting a cycle.');
+  if (data.activeSession) throw new Error('Finish or discard the current workout before starting a cycle.');
   const next = structuredClone(data);
   materializeCycles(next);
   const old = activeCycle(next);
@@ -39,7 +39,7 @@ export function startCycle(data: AppData, name: string, startDate: string, now =
   return next;
 }
 export function endCycle(data: AppData, now = new Date()): AppData {
-  if (data.activeSession || data.strength?.active) throw new Error('Finish or discard the current workout before ending this cycle.');
+  if (data.activeSession) throw new Error('Finish or discard the current workout before ending this cycle.');
   const next = structuredClone(data);
   materializeCycles(next);
   const cycle = activeCycle(next);

@@ -86,6 +86,8 @@ export function useStore() {
  }, []);
  const update = useCallback((change: (data: AppData) => AppData): Promise<void> => {
   const gen = generation.current, id = profileRef.current;
+  // Delayed callbacks belong to the account that rendered them.
+  if (profile !== id) return Promise.reject(new Error('Your account changed. Reopen the page before saving.'));
   const work = async () => {
    if (!current.current || gen !== generation.current) throw new Error('Your account changed. Reopen the page before saving.');
    const next = reconcileAssessment(change(structuredClone(current.current)),current.current.plan); next.updatedAt = new Date().toISOString();
@@ -93,7 +95,7 @@ export function useStore() {
    await publish(id, next, gen);
   };
   const task = queue.current.then(work); queue.current = task.catch(() => {}); return task;
- }, [publish]);
+ }, [publish, profile]);
  const sync = useCallback(async () => {
   const gen = generation.current, id = profileRef.current;
   if (id === 'local') return;

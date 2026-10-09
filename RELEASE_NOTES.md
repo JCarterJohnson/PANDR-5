@@ -1,3 +1,13 @@
+# 0.5.9 — Feedback, name saving, and independent assessments
+
+- Add an in-app update log beside App version in Settings, with expandable features, improvements, and fixes for releases 0.1.0 through 0.5.9.
+- Add Report a bug or request a feature in Settings, opening the published PANDR-5 Google Form. Its ten concise questions cover report type, summary, app area, platform, version, details, impact, frequency, optional device/screenshot information, and optional reply email. No sign-in or automatic email collection; responses stay private to the owner.
+- Save name edits automatically after a brief pause, on blur, and before leaving Settings. Save only the name, preserve unrelated preference drafts, retain failed edits for retry, and allow names to save during workouts and assessments.
+- Allow other preferences to save during an open or paused assessment. Keep its weight unit fixed until its tests finish, preserving recorded load conventions.
+- Permit ending a cycle or scheduling a future cycle while an assessment is unfinished. Preserve completed results, pending exercises, partial inputs, and history; only an actual active workout blocks cycle changes.
+- Bind delayed account updates to their originating account. Verify authenticated account checks and database row-level isolation with rolled-back fixtures. No schema migration, account reset, or bulk user-data writes.
+- Update the existing desktop application in place, preserving application support data and avoiding duplicate installed copies.
+
 # 0.5.8 — Quiet saving and deliberate drag handles
 
 - Keep plan autosave feedback in a stable header status line. Remove success notices inserted above the editor and suppress the floating saving popup on Your plan, preventing layout shifts and interference with rapid editing. Save and retry behavior is preserved.
