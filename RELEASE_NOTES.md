@@ -1,3 +1,10 @@
+# 0.5.8 — Quiet saving and deliberate drag handles
+
+- Keep plan autosave feedback in a stable header status line. Remove success notices inserted above the editor and suppress the floating saving popup on Your plan, preventing layout shifts and interference with rapid editing. Save and retry behavior is preserved.
+- Settings displays the installed build version directly from package metadata; it does not substitute the latest server version for a cached or installed build.
+- Require a 450 ms hold on the three-line reorder handle before activation. Early release or movement cancels the pending gesture; mouse, touch, edge scrolling, Escape/cancellation, and keyboard Up/Down controls remain available. Clear pending hold timers when the editor unmounts.
+- Preserve account data, assessment progress, allocation, equipment and progression behavior.
+
 # 0.5.7 — Automatic plan saves and grouped assessments
 
 - Valid applied plan changes save automatically after editing pauses. Applying an exercise no longer requires remembering a separate Save plan action. Leaving Your plan first waits for the account save, including while an assessment is open; manual Save plan saves immediately.

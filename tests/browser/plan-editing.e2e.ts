@@ -42,10 +42,11 @@ for(const mobile of [false,true])test(`exercise order supports ${mobile?'touch':
   if(mobile){
     const cdp=await page.context().newCDPSession(page);await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:from.x+from.width/2,y:from.y+from.height/2}]});
+    await expect(handle).toHaveAttribute('aria-pressed','true');
     for(let step=1;step<=8;step++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:from.x+from.width/2,y:from.y+from.height/2+(to.y+to.height/2-from.y-from.height/2)*step/8}]});
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   }else{
-    await page.mouse.move(from.x+from.width/2,from.y+from.height/2);await page.mouse.down();await page.mouse.move(from.x+from.width/2,to.y+to.height/2,{steps:8});await page.mouse.up();
+    await page.mouse.move(from.x+from.width/2,from.y+from.height/2);await page.mouse.down();await expect(handle).toHaveAttribute('aria-pressed','true');await page.mouse.move(from.x+from.width/2,to.y+to.height/2,{steps:8});await page.mouse.up();
   }
   await expect(page.locator('.plan-row .exercise-name')).toHaveText([names[1]!,names[2]!,names[0]!]);
   await handle.focus();await handle.press('ArrowUp');await expect(page.locator('.plan-row .exercise-name')).toHaveText([names[1]!,names[0]!,names[2]!]);

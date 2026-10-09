@@ -1,3 +1,4 @@
+import { version } from '../package.json';
 import { convertPlanLoads } from './domain/coaching';
 import { useEffect, useRef, useState } from 'react';
 import { Account } from './Account';
@@ -39,7 +40,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
  const draftSchedule=scheduledCheckInDay({...data,settings:draft,cycles:data.cycles?.map(c=>c.id===data.activeCycleId?{...c,startDate:draft.startDate}:c)});
  const restWeekdays=data.plan.days.flatMap((day,i)=>day.kind==='rest'?[(new Date(`${draft.startDate}T12:00:00`).getDay()+i)%7]:[]);
  return <>
-  <header className="page-heading"><div><h1>Settings</h1><p>Training preferences, account, and data.</p></div></header>
+  <header className="page-heading"><div><h1>Settings</h1><p>Training preferences, account, and data.</p><p className="app-version">App version {version}</p></div></header>
   {message&&<Notice tone="success">{message}</Notice>}{error&&<Notice tone="error">{error}</Notice>}
   <div className="settings-grid"><div><section className="panel"><h2>Training preferences</h2>
    <Field label="Your name"><input value={draft.name} maxLength={100} onChange={e=>setDraft({...draft,name:e.target.value})}/></Field>
