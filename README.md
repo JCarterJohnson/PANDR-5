@@ -8,10 +8,10 @@ Autosaving uses a quiet status line without shifting the editor or showing a bot
 
 ## Public app and downloads
 
-**0.5.2 adds mandatory strength assessment and exercise-specific starting loads, while preserving the existing progression and recovery rules.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
+**0.5.8 includes the current plan editor and resumable strength assessments in both the web and desktop apps.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
 
 - **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
-- **Desktop downloads:** [get version 0.5.2](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.5.2).
+- **Desktop downloads:** [get version 0.5.8](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.5.8). Replace the existing application; keep its application data. Web updates do not update a downloaded desktop bundle. Older desktop builds can reject newer saved assessment fields after a successful Google sign-in.
 - **Earlier local edition:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
 - Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.

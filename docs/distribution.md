@@ -14,7 +14,7 @@ Public client configuration is included in source. `VITE_ENABLE_CLOUD_SYNC=true`
 
 - `ci.yml`: unit tests and production build on pushes and pull requests.
 - `pages.yml`: manual local-only Pages deployment. Enable Pages with GitHub Actions as the source.
-- `desktop.yml`: tags matching `v*` or manual invocation build all desktop packages. Tag builds publish a preview release; manual builds keep artifacts for 30 days.
+- `desktop.yml`: tags matching `v*` or manual invocation build all desktop packages into a draft preview release. Publish the release after checking all platform builds and account compatibility.
 
 Actions are pinned to immutable revisions. Updating dependencies or action revisions requires another verification pass.
 
@@ -27,6 +27,8 @@ Actions are pinned to immutable revisions. Updating dependencies or action revis
 - **iPhone / iPad:** open the HTTPS app in Safari and use Share → Add to Home Screen. No App Store listing or Apple developer membership is required for a PWA.
 
 Updates to the web app wait for an explicit action, and are not offered during an active workout. Native downloads require a manual replacement; no updater downloads or executes remote code.
+
+Replace the existing PANDR-5 application when installing an update, rather than keeping a second application. Keep its application support folder so the saved sign-in and older local exports remain available. Version 0.5.8 reads the current paused-assessment and onboarding metadata; an older desktop version may reject those fields even when Google sign-in succeeds. Check Settings for the installed build version.
 
 ## Free does not mean unlimited
 

@@ -5,6 +5,8 @@
 - Require a 450 ms hold on the three-line reorder handle before activation. Early release or movement cancels the pending gesture; mouse, touch, edge scrolling, Escape/cancellation, and keyboard Up/Down controls remain available. Clear pending hold timers when the editor unmounts.
 - Preserve account data, assessment progress, allocation, equipment and progression behavior.
 
+The desktop download now includes the current assessment schema and all changes since 0.5.2. Replace the existing application, retaining its application support data. Website updates do not update an older downloaded desktop bundle. Version 0.5.0 can reject `paused` and `onboardingStartedAt` after a successful Google sign-in; updating the application fixes that compatibility error without resetting the account.
+
 # 0.5.7 — Automatic plan saves and grouped assessments
 
 - Valid applied plan changes save automatically after editing pauses. Applying an exercise no longer requires remembering a separate Save plan action. Leaving Your plan first waits for the account save, including while an assessment is open; manual Save plan saves immediately.
