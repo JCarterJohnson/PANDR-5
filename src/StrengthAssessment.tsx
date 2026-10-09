@@ -18,7 +18,7 @@ export function StrengthAssessment({data,update}:{data:AppData;update:Update}) {
  const name=data.exercises.find(e=>e.id===draft.exerciseId)?.name??draft.exerciseId;
  async function saveDraft(){
   if(saved)return true;
-  try{await update(d=>{if(d.strength?.active?.id!==active.id)throw new Error('Assessment changed. Reopen Train.');d.strength.active.items[index]=structuredClone(draft);return d});setError('');return true}catch(e){setError((e as Error).message);return false}
+  try{await update(d=>{if(d.strength?.active?.id!==active.id||d.strength.active.items[index]?.exerciseId!==draft.exerciseId)throw new Error('Assessment changed. Reopen Train.');d.strength.active.items[index]=structuredClone(draft);return d});setError('');return true}catch(e){setError((e as Error).message);return false}
  }
  async function select(i:number){setBusy(true);if(await saveDraft()){setIndex(i);setDraft(structuredClone(active.items[i]));setError('')}setBusy(false)}
  async function record(){setBusy(true);try{await update(d=>recordAssessment(d,index,draft));setNow(Date.now());setRestUntil(Date.now()+300000);setError('')}catch(e){setError((e as Error).message)}finally{setBusy(false)}}

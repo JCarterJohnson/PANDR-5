@@ -18,7 +18,7 @@ export function Train({data,update,goPlan}:{data:AppData;update:Update;goPlan:()
  const [assessmentPrompt,setAssessmentPrompt]=useState(false);const [startError,setStartError]=useState('');const [starting,setStarting]=useState(false);
  const required=assessmentDue(data,day,now);const initial=needsOnboarding(data);
  const equipmentNeeds=pivot?[]:day.exercises.flatMap(slot=>{const log=cycleSessions.flatMap(s=>s.exercises).filter(e=>e.slotId===slot.id&&e.exerciseId===slot.exerciseId).at(-1);if(!log||log.load!==slot.load||log.unit!==data.settings.unit||log.sets.length!==slot.sets||JSON.stringify(log.bodyweight)!==JSON.stringify(slot.bodyweight))return [];const rec=recommendProgression({...log,increment:slot.increment,availableLoads:slot.availableLoads},data.settings);return rec.status?[{name:log.name,reason:rec.reason}]:[]});
- if(data.strength?.active&&!data.strength.active.paused&&!data.activeSession)return <StrengthAssessment data={data} update={update}/>;
+ if(data.strength?.active&&!data.strength.active.paused&&!data.activeSession)return <StrengthAssessment key={`${data.strength.active.id}:${data.strength.active.items.map(i=>i.exerciseId).join(',')}`} data={data} update={update}/>;
  if(data.activeSession)return <Workout data={data} update={update}/>;
  async function start(bypass=false){
   if(required.length&&!bypass){setAssessmentPrompt(true);return}

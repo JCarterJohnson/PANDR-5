@@ -12,6 +12,12 @@ The assessment is the authoritative starting point for an exact exercise. It ini
 - An unfinished workout at least 14 days old cannot accept new sets. Its existing sets can be saved without loss, or the user can discard it, before starting reassessment.
 - Assessment occupies the normal workout screen and uses its navigation/layout. A paused assessment can coexist with a workout; assessment recording cannot occur while that workout is active. Assessment observations are separate from sessions, volume, check-ins and recovery evidence.
 
+## Live plan changes
+
+Exercise edits can be saved during an unfinished assessment when no workout is active. The live queue follows the saved plan's movement selections and program order, de-duplicates repeated movements, replaces pending entries after a swap, and drops deselected movements from the queue. New selections needing a baseline join the visit. Existing visits retain their day scope; represented assessment days also supply replacements when an older saved slot ID has been removed. Opening an account and resuming a visit reconcile stale persisted queues as well.
+
+Completed observations remain in history even after a movement leaves the plan. Unchanged movement drafts retain measured loads, reps, setup notes and inline equipment input. Plan prescription edits refresh the draft snapshot; a changed resistance setup clears an unfinished confirmation. A replacement exercise never inherits another movement's result. Assessment form state follows queue changes and refuses stale saves into a different movement. Completing onboarding, initial gating, the 14-day rule and later custom-mode bypasses retain their existing behavior.
+
 ## Standardization
 
 Warm up progressively without fatiguing the test muscles. Rest 3–5 minutes between warm-ups/attempts, extending this when needed. Record the exact machine/station, settings, grip, range of motion, tempo, and whether dumbbell weights mean each dumbbell or the pair. Keep that convention unchanged in subsequent workouts. Use safeties or a competent spotter where appropriate.

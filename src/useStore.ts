@@ -3,6 +3,7 @@ import type { AppData } from './domain/types';
 import { validateAppData } from './domain/validation';
 import { createInitialData } from './data/seed';
 import { allocateSets } from './domain/engine';
+import { reconcileAssessment } from './domain/strength';
 import { getCloudClient, readCloudData, syncData } from './services/cloud';
 import { createMemoryPersistence } from './services/memory';
 
@@ -42,6 +43,7 @@ export function useStore() {
   try {
    let loaded = resume?.data ?? (id === 'local' ? undefined : await readCloudData(id, persistence.current));
    if (!loaded) { loaded = createInitialData(); loaded.plan = allocateSets(loaded.plan, loaded.exercises).plan; }
+   loaded=reconcileAssessment(loaded);
    if (gen !== generation.current) return;
    current.current = loaded; setData(loaded); setReady(true); setError('');
    dirty.current = !!resume; setPending(!!resume);
@@ -75,7 +77,7 @@ export function useStore() {
   try {
    const result = await syncData(id, next, persistence.current);
    if (gen !== generation.current) return;
-   current.current = result.data; setData(result.data);
+   const reconciled=reconcileAssessment(result.data);current.current = reconciled; setData(reconciled);
    dirty.current = false; setPending(false); setStatus('Saved to your account'); setError('');
   } catch (e) {
    if (gen === generation.current) { setStatus('Not saved · keep this tab open'); setError(`${(e as Error).message} Retry saving or download a backup before closing.`); }
@@ -86,7 +88,7 @@ export function useStore() {
   const gen = generation.current, id = profileRef.current;
   const work = async () => {
    if (!current.current || gen !== generation.current) throw new Error('Your account changed. Reopen the page before saving.');
-   const next = change(structuredClone(current.current)); next.updatedAt = new Date().toISOString();
+   const next = reconcileAssessment(change(structuredClone(current.current)),current.current.plan); next.updatedAt = new Date().toISOString();
    validateAppData(next); current.current = next; setData(next);
    await publish(id, next, gen);
   };

@@ -1,3 +1,11 @@
+# 0.5.6 — Exercise editing and live assessments
+
+- Replace up/down exercise-order arrows with one three-line drag handle. Support mouse and touch dragging, edge scrolling, cancellation and Up/Down keyboard moves.
+- Add exercise opens a searchable picker immediately. No slot is inserted until an exercise is chosen and its prescription applied; cancelling leaves the draft untouched.
+- Exercise search shows all matching name/alias suggestions as a dropdown, with equipment labels and keyboard selection. The same picker supports replacements.
+- Saving exercise changes updates unfinished assessment visits in program order. Retain completed observations and unchanged partial inputs, remove deselected movements from the pending queue, and add newly selected exercises needing a baseline. Repair stale persisted queues when opening an account or resuming a visit.
+- Preserve account history, completed observations, equipment settings, workout locks and existing assessment/progression rules.
+
 # 0.5.5 — Equipment-specific dumbbell defaults
 
 - Separate freeweight barbell, dumbbell rack and machine/cable defaults. New dumbbell prescriptions use per-dumbbell loads in 2.5 lb steps from 5 through 50 lb, then 5 lb steps through 200 lb.

@@ -25,7 +25,9 @@ test('search aliases, select, save, reload, import custom data, export and resto
   await page.getByRole('button',{name:'Your plan',exact:true}).click();
   await page.getByRole('button',{name:'Bench Press',exact:true}).click();
   await page.getByLabel('Find an exercise').fill('BB incline');
-  await page.getByLabel('Exercise',{exact:true}).selectOption('p5-barbell-incline-bench-press');
+  await expect(page.getByRole('option',{name:/^Barbell Incline Bench Press ·/})).toBeVisible();
+  await page.getByRole('combobox',{name:'Find an exercise',exact:true}).press('ArrowDown');
+  await page.getByRole('combobox',{name:'Find an exercise',exact:true}).press('Enter');
   await page.getByRole('button',{name:'Apply exercise'}).click();
   await page.getByRole('button',{name:'Save plan',exact:true}).click();
   await expect(page.getByText('Your plan is saved. It will be used for your next session.')).toBeVisible();

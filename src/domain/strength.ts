@@ -1,4 +1,4 @@
-import type { AppData, Exercise, PlanDay, PlanExercise, Rir, Session, StrengthAssessment, StrengthDraft, StrengthState } from './types';
+import type { AppData, Exercise, PlanDay, PlanExercise, Rir, Session, StrengthAssessment, StrengthDraft, StrengthState, TrainingPlan } from './types';
 import { createSession, getWeek, isPivotWeek } from './engine';
 import { activeCycle, inActiveCycle, localDate, materializeCycles } from './training';
 import { workingResistance } from './resistance';
@@ -50,6 +50,52 @@ export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { 
     const age = (Date.parse(localDate(now)) - Date.parse(last)) / 86400000;
     return age >= 14 ? [{slot,reason:'stale' as const}] : [];
   });
+}
+
+/** Rebuild only the live assessment queue; historical observations remain immutable.
+ * Slot IDs identify replacements in old persisted drafts. Existing day-scoped visits
+ * stay scoped, while newly selected, unassessed movements join an ongoing visit.
+ */
+export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, now = new Date()): AppData {
+  const active=state(data).active;
+  if(!active)return data;
+  const days=data.plan.days.filter(day=>day.kind==='training');
+  const entries=days.flatMap(day=>day.exercises.map(slot=>({day,slot})));
+  const due=new Map(days.flatMap(day=>assessmentDue(data,day,now)).map(item=>[item.slot.exerciseId,item]));
+  const prior=new Map(active.items.map(item=>[item.exerciseId,item]));
+  const wanted=new Set<string>();
+  const scope=new Set([active.dayId]);
+  for(const item of active.items){
+    const current=entries.find(e=>e.slot.id===item.slot.id)??entries.find(e=>e.slot.exerciseId===item.exerciseId);
+    if(entries.some(e=>e.slot.exerciseId===item.exerciseId))wanted.add(item.exerciseId);
+    if(current){scope.add(current.day.id);if(due.has(current.slot.exerciseId))wanted.add(current.slot.exerciseId)}
+  }
+  const focus=days.find(day=>day.id===active.dayId);
+  for(const day of days.filter(day=>scope.has(day.id)))for(const item of assessmentDue(data,day,now))wanted.add(item.slot.exerciseId);
+  if(previousPlan){
+    const oldIds=new Set(previousPlan.days.flatMap(day=>day.exercises.map(slot=>slot.exerciseId)));
+    for(const {slot} of entries)if(!oldIds.has(slot.exerciseId)&&due.has(slot.exerciseId))wanted.add(slot.exerciseId);
+  }
+  const items:StrengthDraft[]=[];
+  for(const {slot} of entries){
+    if(!wanted.has(slot.exerciseId)||items.some(item=>item.exerciseId===slot.exerciseId))continue;
+    const saved=prior.get(slot.exerciseId);
+    const previousSlot=previousPlan?.days.flatMap(day=>day.exercises).find(s=>s.id===slot.id);
+    const setupChanged=!saved||!!saved.resultId&&!compatible(saved.slot,slot)||!!previousSlot&&JSON.stringify([previousSlot.bodyweight,previousSlot.loadMode])!==JSON.stringify([slot.bodyweight,slot.loadMode]);
+    if(saved&&(!setupChanged||saved.resultId&&compatible(saved.slot,slot))){
+      // Keep an unfinished test's measured inputs and inline equipment setup.
+      // A deliberate plan edit refreshes its snapshot; a reload alone does not
+      // erase equipment entered in the assessment but not yet recorded.
+      const snapshot=previousSlot&&JSON.stringify(previousSlot)!==JSON.stringify(slot)?structuredClone(slot):{...structuredClone(saved.slot),id:slot.id,sets:slot.sets,repMin:slot.repMin,repMax:slot.repMax,rir:[...slot.rir]};
+      items.push({...structuredClone(saved),slot:snapshot});
+    }else items.push({exerciseId:slot.exerciseId,slot:structuredClone(slot),reason:due.get(slot.exerciseId)?.reason??'setup',method:'failure',reps:0,load:slot.load,loadMode:slot.loadMode,unit:data.settings.unit,setup:'',confirmed:false});
+  }
+  const dayId=focus?.id??entries.find(e=>e.slot.exerciseId===items[0]?.exerciseId)?.day.id;
+  if(items.length&&active.dayId===dayId&&JSON.stringify(active.items)===JSON.stringify(items))return data;
+  const next=structuredClone(data);
+  if(items.length)next.strength!.active={...active,dayId:dayId!,items};
+  else delete next.strength!.active;
+  return next;
 }
 export function assessmentEstimate(a: StrengthAssessment): number {
   return toKg(workingResistance(a), a.unit) / fractionAt(a.reps, a.curve);
@@ -105,6 +151,7 @@ export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise 
 }
 export function beginAssessment(data: AppData, day: PlanDay, now = new Date(), force = false): AppData {
   if (data.activeSession) throw new Error('Finish the current workout first.');
+  data=reconcileAssessment(data,undefined,now);
   const due = force && !needsOnboarding(data) ? [...new Map(day.exercises.map(slot => [slot.exerciseId,slot])).values()].map(slot => ({slot,reason:'setup' as const})) : assessmentDue(data,day,now);
   if (!due.length && !state(data).active) throw new Error('No exercises require assessment.');
   const next = structuredClone(data);
