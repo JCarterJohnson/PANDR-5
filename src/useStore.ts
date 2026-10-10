@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppData } from './domain/types';
 import { validateAppData } from './domain/validation';
 import { createInitialData } from './data/seed';
-import { allocateSets } from './domain/engine';
+import { initializeDefaultPlan } from './domain/initial-plan';
 import { reconcileAssessment } from './domain/strength';
 import { getCloudClient, readCloudData, syncData } from './services/cloud';
 import { createMemoryPersistence } from './services/memory';
@@ -42,7 +42,7 @@ export function useStore() {
   dirty.current = false; setPending(false);
   try {
    let loaded = resume?.data ?? (id === 'local' ? undefined : await readCloudData(id, persistence.current));
-   if (!loaded) { loaded = createInitialData(); loaded.plan = allocateSets(loaded.plan, loaded.exercises).plan; }
+   if (!loaded) { loaded = createInitialData(); loaded.plan = initializeDefaultPlan(loaded.plan, loaded.exercises); }
    loaded=reconcileAssessment(loaded);
    if (gen !== generation.current) return;
    current.current = loaded; setData(loaded); setReady(true); setError('');

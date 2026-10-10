@@ -106,3 +106,7 @@ The source now includes one shared bodyweight editor in Settings and assessment,
 ## Strength assessment
 
 New accounts complete a resumable exercise-specific assessment before their first workout with each exercise. The measured baseline determines each initial rep/RIR load; existing PANDR-5 progression owns later workouts. New or 14-day-stale movements require reassessment in constrained mode. Custom mode permits later bypass and load overrides. Assessment history is account-saved and included in all-time CSV and backups. See [the protocol and algorithm](docs/strength-assessment.md).
+
+## Intentional set allocation
+
+Set adjustment now has a full-week review before applying changes, explicit exercise priorities, and a preference for useful distribution ahead of fractional target precision. Existing plans are not silently recalculated. The source coefficients and constrained framework remain visible model choices. See [research, allocation policy, and limitations](docs/set-allocation.md).

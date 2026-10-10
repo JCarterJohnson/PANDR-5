@@ -44,7 +44,14 @@ for(const workout of [false,true])test(`name autosaves without applying unrelate
 test('failed name saves retain the edit and block navigation until retry succeeds',async({page})=>{
  const account=await accountFixture(page,trainingReadyData());await page.goto('/');await navigate(page,'Settings');const name=account.getHead().metadata.settings.name;
  account.setFailure(true);await page.getByLabel('Your name').fill('Retry this name');await expect(page.getByRole('button',{name:'Retry saving name'})).toBeVisible();expect(account.getHead().metadata.settings.name).toBe(name);
- await navigate(page,'History');await expect(page.getByRole('heading',{name:'Settings',exact:true})).toBeVisible();await expect(page.getByLabel('Your name')).toHaveValue('Retry this name');
+ // Hold the navigation-triggered retry until its saving state is rendered. The
+ // Settings heading was already visible, so it cannot signal a completed save.
+ let releaseNavigationSave!:()=>void;const navigationSaveGate=new Promise<void>(resolve=>{releaseNavigationSave=resolve});
+ await page.route(`${PUBLIC_CLOUD.url}/rest/v1/pandr_profiles**`,async route=>{await navigationSaveGate;await route.fallback()});
+ const attemptedNavigationSave=page.waitForRequest(request=>request.url().startsWith(`${PUBLIC_CLOUD.url}/rest/v1/pandr_profiles`));
+ await navigate(page,'History');await attemptedNavigationSave;await expect(page.getByText('Saving name…',{exact:true})).toBeVisible();releaseNavigationSave();
+ await expect(page.getByRole('button',{name:'Retry saving name'})).toBeVisible();await expect(page.locator('main')).toHaveAttribute('aria-busy','false');
+ await expect(page.getByRole('heading',{name:'Settings',exact:true})).toBeVisible();await expect(page.getByLabel('Your name')).toHaveValue('Retry this name');
  account.setFailure(false);await page.getByRole('button',{name:'Retry saving name'}).click();await expect.poll(()=>account.getHead().metadata.settings.name).toBe('Retry this name');
  await navigate(page,'History');await expect(page.getByRole('heading',{name:'Your training, over time',exact:true})).toBeVisible();
 });
