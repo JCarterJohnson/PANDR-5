@@ -99,6 +99,10 @@ In Your plan, open an exercise and expand Equipment and bodyweight progression. 
 
 Desktop release builds upload directly to a draft GitHub release, without duplicating the installers in Actions artifact storage. Push a version tag or dispatch `desktop.yml` with the matching `release_tag`. After all three platform jobs and the account audit pass, publish the draft. Standard public runners are used; no larger paid runners are configured. Existing downloads remain available.
 
+## Bodyweight assessment improvements
+
+The source now includes one shared bodyweight editor in Settings and assessment, whole-body and calibrated partial-bodyweight setups, and reps-only baselines for unmeasured movements. Plates used as push-up platforms are setup details. Future loads account for bodyweight changes while preserving assessment and workout snapshots. Apple Health weight can be reviewed and imported through a foreground iPhone Shortcut; direct background HealthKit sync is not available in this web app. See [bodyweight instructions](docs/bodyweight.md).
+
 ## Strength assessment
 
 New accounts complete a resumable exercise-specific assessment before their first workout with each exercise. The measured baseline determines each initial rep/RIR load; existing PANDR-5 progression owns later workouts. New or 14-day-stale movements require reassessment in constrained mode. Custom mode permits later bypass and load overrides. Assessment history is account-saved and included in all-time CSV and backups. See [the protocol and algorithm](docs/strength-assessment.md).

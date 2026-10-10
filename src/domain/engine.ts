@@ -1,5 +1,6 @@
 import { chooseResistanceChange } from './resistance';
 import { fitSetCounts } from './allocation';
+import { resolveBodyweight } from './bodyweight';
 import { DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES } from '../data/seed';
 import type { CheckIn, ConstraintIssue, Exercise, ExerciseLog, PlanDay, Recommendation, Rir, Session, Settings, TrainingPlan, VolumeRow } from './types';
 
@@ -92,7 +93,9 @@ export function validatePlan(plan: TrainingPlan, exercises: Exercise[], strict: 
       if (!Number.isInteger(slot.repMin) || !Number.isInteger(slot.repMax) || slot.repMin < 1 || slot.repMax < slot.repMin || slot.repMax > 100) error('rep-range', `${label}: use a whole-number rep range from 1 to 100 with the floor at or below the cap.`);
       if (!finite(slot.load) || slot.load < 0 || !finite(slot.increment) || slot.increment <= 0) error('load', `${label}: load must be nonnegative and equipment increment must be positive.`);
       if (slot.availableLoads && (slot.availableLoads.some(n => !finite(n) || n < 0) || new Set(slot.availableLoads).size !== slot.availableLoads.length)) error('equipment-loads', `${label}: available loads must be unique nonnegative numbers.`);
-      if (slot.bodyweight && (!finite(slot.bodyweight.resistance) || slot.bodyweight.resistance <= 0 || slot.bodyweight.addedLoads.some(n => !finite(n) || n <= 0) || slot.bodyweight.assistanceLoads.some(n => !finite(n) || n <= 0 || n >= slot.bodyweight!.resistance) || (slot.loadMode === 'assistance' && slot.load >= slot.bodyweight.resistance))) error('bodyweight-resistance', `${label}: record positive bodyweight resistance and valid added/assistance loads; assistance must be smaller than the bodyweight resistance.`);
+      if (slot.bodyweight && (slot.bodyweight.tracking === 'reps-only'
+        ? slot.bodyweight.resistance !== 0 || slot.loadMode !== 'bodyweight' || slot.load !== 0 || slot.bodyweight.addedLoads.length > 0 || slot.bodyweight.assistanceLoads.length > 0
+        : !finite(slot.bodyweight.resistance) || slot.bodyweight.resistance <= 0 || slot.bodyweight.addedLoads.some(n => !finite(n) || n <= 0) || slot.bodyweight.assistanceLoads.some(n => !finite(n) || n <= 0 || !slot.bodyweight!.tracking && n >= slot.bodyweight!.resistance) || (slot.loadMode === 'assistance' && slot.load >= slot.bodyweight.resistance))) error('bodyweight-resistance', `${label}: record positive measured resistance and valid load options, or use reps-only with no added weight or assistance.`);
       if (slot.loadMode === 'bodyweight' && slot.load !== 0) error('bodyweight-load', `${label}: bodyweight mode has no external load; choose weighted or assisted mode to record load.`);
       if (slot.rir.length !== slot.sets) error('rir-count', `${label}: give each set an RIR target.`);
       if (slot.rir.some(rir => rir !== '0-1' && rir !== '<0' && (!finite(rir) || rir < 0 || rir > 10))) error('rir-value', `${label}: RIR targets must be 0–10, 0–1, or <0.`);
@@ -190,6 +193,7 @@ export function createSession(planDay: PlanDay, exercises: Exercise[], settings:
   const now = new Date();
   const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   return { id: crypto.randomUUID(), dayId: planDay.id, dayName: planDay.name, date, startedAt: now.toISOString(), week, pivot, notes: '', exercises: planDay.exercises.map(slot => {
+    slot = resolveBodyweight(slot,settings);
     const exercise = catalog.get(slot.exerciseId);
     if (!exercise) throw new Error(`Exercise ${slot.exerciseId} is missing from the library.`);
     const count = pivot ? Math.max(1, Math.ceil(slot.sets / 2)) : slot.sets;

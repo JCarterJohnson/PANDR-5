@@ -1,6 +1,8 @@
 import { effectivePlan } from './recovery';
 import type { AppData, CheckIn, Session, TrainingCycle, VolumeRow } from './types';
 import { calculateVolume, getWeek, isPivotWeek } from './engine';
+import { sameBodyweightSetup } from './bodyweight';
+import { workingResistance } from './resistance';
 
 export function localDate(now = new Date()): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -91,7 +93,7 @@ export function performanceEvidence(sessions: Session[], week: number): string[]
   const windows = new Map<string, Exposure[]>();
   const comparable = (a: Exposure['log'], b: Exposure['log']) => a.load === b.load && a.unit === b.unit && a.loadMode === b.loadMode
     && a.sets.length === b.sets.length && JSON.stringify(a.targetRir) === JSON.stringify(b.targetRir)
-    && a.repMin === b.repMin && a.repMax === b.repMax && JSON.stringify(a.bodyweight) === JSON.stringify(b.bodyweight);
+    && a.repMin === b.repMin && a.repMax === b.repMax && sameBodyweightSetup(a.bodyweight,b.bodyweight) && Math.abs(workingResistance(a)-workingResistance(b)) < 1e-6;
   for (const session of ordered) for (const log of session.exercises) {
     const key = `${session.cycleId ?? 'legacy'}:${log.slotId}:${log.exerciseId}`;
     const anchor = log.sets[log.targetRir.at(-1) === '<0' ? log.sets.length - 2 : log.sets.length - 1];

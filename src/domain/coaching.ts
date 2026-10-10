@@ -2,6 +2,8 @@ import { recommendProgression } from './engine';
 import { activeCycle, inActiveCycle, materializeCycles, performanceEvidence } from './training';
 import { effectivePlan, reviewRecoveryPlan } from './recovery';
 import type { AppData, CheckIn, Session, TrainingPlan } from './types';
+import { sameBodyweightSetup } from './bodyweight';
+import { selectProgressionLoad } from './strength';
 
 export function trainingPlan(data: AppData, week: number): TrainingPlan {
   return data.settings.strict && data.settings.adaptiveRecovery !== false ? effectivePlan(data.plan, week, activeCycle(data).id) : data.plan;
@@ -16,7 +18,14 @@ export function completeSession(data: AppData, session: Session, completedAt: st
   final.exercises.forEach(e => { e.recommendation = recommendProgression(e, data.settings, session.pivot); });
   const plan = { ...data.plan, updatedAt: completedAt, days: data.plan.days.map(day => ({ ...day, exercises: day.exercises.map(slot => {
     const log = final.exercises.find(e => e.slotId === slot.id && e.exerciseId === slot.exerciseId);
-    if (!log?.recommendation || JSON.stringify(log.bodyweight) !== JSON.stringify(slot.bodyweight)) return slot;
+    if (!log?.recommendation) return slot;
+    if (JSON.stringify(log.bodyweight) !== JSON.stringify(slot.bodyweight)) {
+      const tracked = slot.bodyweight?.tracking === 'full-body' || slot.bodyweight?.tracking === 'measured';
+      const inventoryUnchanged = JSON.stringify([log.bodyweight?.addedLoads,log.bodyweight?.assistanceLoads]) === JSON.stringify([slot.bodyweight?.addedLoads,slot.bodyweight?.assistanceLoads]);
+      if (!tracked || !sameBodyweightSetup(log.bodyweight,slot.bodyweight,log.unit,data.settings.unit) || !inventoryUnchanged) return slot;
+      try { return { ...slot, ...selectProgressionLoad(slot,log,data.settings.unit) }; }
+      catch { return slot; } // Finish the performed workout; future prescription explains missing equipment.
+    }
     return { ...slot, load: log.recommendation.nextLoad, loadMode: log.recommendation.nextLoadMode ?? slot.loadMode };
   }) })) };
   const next = { ...data, sessions: [...data.sessions, final], plan };
@@ -43,6 +52,6 @@ export function convertPlanLoads(plan: TrainingPlan, factor: number): TrainingPl
   return { ...plan, days: plan.days.map(day => ({ ...day, exercises: day.exercises.map(slot => ({ ...slot,
     load: convert(slot.load), increment: convert(slot.increment),
     ...(slot.availableLoads ? { availableLoads: slot.availableLoads.map(convert) } : {}),
-    ...(slot.bodyweight ? { bodyweight: { resistance: convert(slot.bodyweight.resistance), addedLoads: slot.bodyweight.addedLoads.map(convert), assistanceLoads: slot.bodyweight.assistanceLoads.map(convert) } } : {}),
+    ...(slot.bodyweight ? { bodyweight: { ...slot.bodyweight, resistance: convert(slot.bodyweight.resistance), addedLoads: slot.bodyweight.addedLoads.map(convert), assistanceLoads: slot.bodyweight.assistanceLoads.map(convert) } } : {}),
   })) })) };
 }

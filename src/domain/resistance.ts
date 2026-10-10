@@ -1,17 +1,22 @@
 import type { ExerciseLog, Recommendation, Settings } from './types';
 import { defaultLoadIncrement } from './equipment';
+import { isRepsOnly } from './bodyweight';
 
 const EPSILON = 1e-8;
 const round = (n: number) => Math.round(n * 1e6) / 1e6;
 
 /** Mechanical resistance proxy for an unchanged setup, not joint force or an e1RM. */
 export function workingResistance(log: Pick<ExerciseLog, 'load' | 'loadMode' | 'bodyweight'>): number {
+  if (isRepsOnly(log.bodyweight)) return 0;
   return log.bodyweight ? log.bodyweight.resistance + (log.loadMode === 'assistance' ? -log.load : log.loadMode === 'external' ? log.load : 0) : log.load;
 }
 
 /** Called only after the completed anchor has passed the original rep/RIR gates. */
 export function chooseResistanceChange(log: ExerciseLog, settings: Settings, increase: boolean, anchorIndex: number): Recommendation {
   const hold = (reason: string, extra: Partial<Recommendation> = {}): Recommendation => ({ action: 'hold', nextLoad: log.load, targetReps: log.repMin, anchorIndex, reason, ...extra });
+  if (isRepsOnly(log.bodyweight)) return hold(increase
+    ? 'You reached the rep cap for this bodyweight variation. Keep this setup until you can retest a harder variation, or measure its resistance to use PANDR percentage progression. No weight or assistance amount is guessed.'
+    : 'This bodyweight variation fell below the rep floor. Retest an easier setup, or measure its resistance to use PANDR percentage progression. No weight or assistance amount is guessed.', { nextLoad: 0, nextLoadMode: 'bodyweight', targetReps: increase ? log.repMax : log.repMin, status: 'bodyweight-setup' });
   if (log.loadMode === 'bodyweight' && !log.bodyweight) return hold('Bodyweight progression needs setup: record the bodyweight resistance actually moved and the added loads or measured assistance you have. No body-mass percentage or harder variation is guessed.', { status: 'bodyweight-setup' });
   const current = workingResistance(log);
   if (!Number.isFinite(current) || current <= 0) return hold('Enter a positive working resistance before calculating a percentage-based change.', log.bodyweight ? { status: 'bodyweight-setup' } : {});

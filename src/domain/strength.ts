@@ -1,8 +1,9 @@
-import type { AppData, Exercise, PlanDay, PlanExercise, Rir, Session, StrengthAssessment, StrengthDraft, StrengthState, TrainingPlan } from './types';
+import type { AppData, Exercise, ExerciseLog, PlanDay, PlanExercise, Rir, Session, StrengthAssessment, StrengthDraft, StrengthState, TrainingPlan } from './types';
 import { createSession, getWeek, isPivotWeek } from './engine';
 import { activeCycle, inActiveCycle, localDate, materializeCycles } from './training';
 import { workingResistance } from './resistance';
 import { assessmentGroup } from './assessment-order';
+import { isRepsOnly, resolveBodyweight, sameBodyweightSetup } from './bodyweight';
 
 export type Curve = 'general' | 'bench' | 'leg-press';
 // Nuzzo et al., Sports Medicine 2024, Figs 2–4. Mean reps at 95…45% 1RM.
@@ -35,8 +36,13 @@ export const needsOnboarding = (data: AppData) => !state(data).onboardingComplet
 export function latestAssessment(data: AppData, exerciseId: string): StrengthAssessment | undefined {
   return [...state(data).assessments].reverse().filter(a => a.exerciseId === exerciseId).sort((a,b) => Date.parse(b.completedAt)-Date.parse(a.completedAt)).at(0);
 }
-function compatible(a: { bodyweight?: {resistance: number}; loadMode: string }, b: {bodyweight?: {resistance: number}; loadMode: string}) {
-  return Boolean(a.bodyweight) === Boolean(b.bodyweight) && (a.bodyweight || (a.loadMode === 'external' && b.loadMode === 'external'));
+type ResistanceSetup = Pick<PlanExercise, 'bodyweight' | 'loadMode'> & { unit?: AppData['settings']['unit'] };
+function compatible(a: ResistanceSetup, b: ResistanceSetup, currentUnit: AppData['settings']['unit'] = 'kg') {
+  return sameBodyweightSetup(a.bodyweight,b.bodyweight,a.unit ?? currentUnit,b.unit ?? currentUnit) && (a.bodyweight || (a.loadMode === 'external' && b.loadMode === 'external'));
+}
+export function hasStrengthBaseline(data: AppData, slot: PlanExercise): boolean {
+  const baseline = latestAssessment(data,slot.exerciseId);
+  return !!baseline && !!compatible(baseline,resolveBodyweight(slot,data.settings),data.settings.unit);
 }
 export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup' }[] {
   const initial = needsOnboarding(data);
@@ -44,8 +50,8 @@ export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { 
   return slots.filter((slot,index)=>slots.findIndex(s=>s.exerciseId===slot.exerciseId)===index).flatMap<{slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup'}>(slot => {
     const baseline = latestAssessment(data, slot.exerciseId);
     if (!baseline) return [{slot, reason: initial ? 'initial' as const : 'new' as const}];
-    if (!compatible(baseline,slot)) return [{slot,reason:'setup' as const}];
-    const exposures = data.sessions.filter(s => s.completedAt && s.exercises.some(e => e.exerciseId === slot.exerciseId && compatible(e,slot) && e.sets.some(r => r.completed && r.reps > 0))).map(s => s.date);
+    if (!compatible(baseline,slot,data.settings.unit)) return [{slot,reason:'setup' as const}];
+    const exposures = data.sessions.filter(s => s.completedAt && s.exercises.some(e => e.exerciseId === slot.exerciseId && compatible(e,slot,data.settings.unit) && e.sets.some(r => r.completed && r.reps > 0))).map(s => s.date);
     const last = [baseline.date, ...exposures].sort().at(-1)!;
     // Calendar days, independent of DST or local clock time.
     const age = (Date.parse(localDate(now)) - Date.parse(last)) / 86400000;
@@ -88,8 +94,12 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
     if(!wanted.has(slot.exerciseId)||items.some(item=>item.exerciseId===slot.exerciseId))continue;
     const saved=prior.get(slot.exerciseId);
     const previousSlot=previousPlan?.days.flatMap(day=>day.exercises).find(s=>s.id===slot.id);
-    const setupChanged=!saved||!!saved.resultId&&!compatible(saved.slot,slot)||!!previousSlot&&JSON.stringify([previousSlot.bodyweight,previousSlot.loadMode])!==JSON.stringify([slot.bodyweight,slot.loadMode]);
-    if(saved&&(!setupChanged||saved.resultId&&compatible(saved.slot,slot))){
+    const massTracked = slot.bodyweight?.tracking === 'full-body' || slot.bodyweight?.tracking === 'measured' || slot.bodyweight?.tracking === 'reps-only';
+    const sameTrackedSetup = massTracked && previousSlot && previousSlot.bodyweight?.tracking === slot.bodyweight?.tracking && (slot.bodyweight?.tracking !== 'measured' || previousSlot.bodyweight?.fraction === slot.bodyweight.fraction);
+    const savedCompatible = saved && compatible({ ...saved.slot, unit: saved.unit },slot,data.settings.unit);
+    const setupChanged=!saved||!!saved.resultId&&!savedCompatible||!!previousSlot&&!sameTrackedSetup&&JSON.stringify([previousSlot.bodyweight,previousSlot.loadMode])!==JSON.stringify([slot.bodyweight,slot.loadMode]);
+    if (saved?.resultId && savedCompatible) { items.push({ ...structuredClone(saved), slot: { ...structuredClone(saved.slot), id: slot.id } }); continue; }
+    if(saved&&(!setupChanged||saved.resultId&&savedCompatible)){
       // Keep an unfinished test's measured inputs and inline equipment setup.
       // A deliberate plan edit refreshes its snapshot; a reload alone does not
       // erase equipment entered in the assessment but not yet recorded.
@@ -105,16 +115,18 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
   return next;
 }
 export function assessmentEstimate(a: StrengthAssessment): number {
+  if (isRepsOnly(a.bodyweight)) throw new Error('A reps-only test has no measured resistance or estimated 1RM.');
   return toKg(workingResistance(a), a.unit) / fractionAt(a.reps, a.curve);
 }
 export function estimatedCapacity(data: AppData, slot: PlanExercise): { kg: number; curve: Curve; source: string } | undefined {
   const a = latestAssessment(data,slot.exerciseId);
-  if (!a || !compatible(a,slot)) return;
+  if (!a || !compatible(a,slot,data.settings.unit) || isRepsOnly(a.bodyweight)) return;
   // Immutable assessment capacity. It is used to initialize a prescription only;
   // completed-workout recommendations, not a second estimator, own progression.
   return {kg:assessmentEstimate(a),curve:a.curve,source:a.id};
 }
 export function selectLoad(slot: PlanExercise, resistance: number): { load: number; loadMode: PlanExercise['loadMode'] } {
+  if (isRepsOnly(slot.bodyweight)) throw new Error('Reps-only setups cannot estimate or switch loads. Retest the same variation after changing the setup.');
   if (!Number.isFinite(resistance) || resistance <= 0) throw new Error('A positive resistance estimate is required.');
   let choices: { load: number; loadMode: PlanExercise['loadMode']; resistance: number }[];
   if (slot.bodyweight) {
@@ -129,17 +141,43 @@ export function selectLoad(slot: PlanExercise, resistance: number): { load: numb
   if (!selected) throw new Error('No available resistance is light enough for this target. Add a lighter load or measured assistance in your plan.');
   return {load:Math.round(selected.load*1e6)/1e6,loadMode:selected.loadMode};
 }
+/** Reweight a progression target without reversing it or exceeding PANDR's jump limits. */
+export function selectProgressionLoad(slot: PlanExercise, previous: ExerciseLog, unit: AppData['settings']['unit']): { load: number; loadMode: PlanExercise['loadMode'] } {
+  const recommendation = previous.recommendation!;
+  const current = fromKg(toKg(workingResistance(previous),previous.unit),unit);
+  const target = fromKg(toKg(workingResistance({ ...previous, load: recommendation.nextLoad, loadMode: recommendation.nextLoadMode ?? previous.loadMode }),previous.unit),unit);
+  const selected = selectLoad(slot,target);
+  const achieved = workingResistance({ ...slot, ...selected });
+  const valid = recommendation.action === 'hold' ? Math.abs(achieved-target) < .001
+    : recommendation.action === 'increase' ? achieved >= current * 1.02 - .001 && achieved <= current * 1.05 + .001
+    : achieved >= current * .97 - .001 && achieved <= current * .98 + .001;
+  if (!valid) throw new Error('No available resistance preserves the previous progression target within PANDR percentage limits.');
+  return selected;
+}
 export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise {
+  slot = resolveBodyweight(slot,data.settings);
+  if (!hasStrengthBaseline(data,slot)) throw new Error('Complete an assessment for this exact exercise first.');
+  if (isRepsOnly(slot.bodyweight)) return { ...slot, load: 0, loadMode: 'bodyweight' };
   const capacity = estimatedCapacity(data,slot);
   if (!capacity) throw new Error('Complete an assessment for this exact exercise first.');
   // Same prescription: preserve double progression exactly, including equipment holds.
   const a = latestAssessment(data,slot.exerciseId)!;
-  const completed = data.sessions.filter(s => s.completedAt && Date.parse(s.completedAt) > Date.parse(a.completedAt) && !s.pivot).sort((x,y) => Date.parse(y.completedAt!)-Date.parse(x.completedAt!)).flatMap(s => s.exercises).filter(e => e.exerciseId === slot.exerciseId && e.recommendation && e.sets.some(set=>set.completed) && compatible(e,slot));
+  const completed = data.sessions.filter(s => s.completedAt && Date.parse(s.completedAt) > Date.parse(a.completedAt) && !s.pivot).sort((x,y) => Date.parse(y.completedAt!)-Date.parse(x.completedAt!)).flatMap(s => s.exercises).filter(e => e.exerciseId === slot.exerciseId && e.recommendation && e.sets.some(set=>set.completed) && compatible(e,slot,data.settings.unit));
   const previous = completed.find(e => e.slotId === slot.id) ?? completed[0];
   if (previous) {
-    const next = { ...slot, load: fromKg(toKg(previous.recommendation!.nextLoad,previous.unit),data.settings.unit), loadMode: previous.recommendation!.nextLoadMode ?? previous.loadMode };
-    const sameRange = previous.repMin === slot.repMin && previous.repMax === slot.repMax;
+    const recommendation = previous.recommendation!;
+    const next = { ...slot, load: fromKg(toKg(recommendation.nextLoad,previous.unit),data.settings.unit), loadMode: recommendation.nextLoadMode ?? previous.loadMode };
+    // The performed snapshot owns this absolute target. A new body mass changes
+    // the offset needed to reach it, never the strength inferred from old reps.
+    const targetResistance = fromKg(toKg(workingResistance({ ...previous, load: recommendation.nextLoad, loadMode: recommendation.nextLoadMode ?? previous.loadMode }),previous.unit),data.settings.unit);
+    const oldReps = previous.repMin + Math.max(0,...previous.targetRir.filter(r=>r!=='<0').map(rirValue));
+    const newReps = slot.repMin + Math.max(0,...slot.rir.filter(r=>r!=='<0').map(rirValue));
+    const sameRange = previous.repMin === slot.repMin && previous.repMax === slot.repMax && oldReps === newReps;
     if(sameRange) {
+      if (slot.bodyweight && Math.abs(workingResistance(next)-targetResistance) > .001) {
+        try { return { ...slot, ...selectProgressionLoad(slot,previous,data.settings.unit) }; }
+        catch { throw new Error('Your body weight changed. No available added weight or measured assistance preserves the previous total-resistance target within PANDR limits. Update equipment options or reassess this exercise.'); }
+      }
       const epsilon=.001;
       const available = next.bodyweight ? next.loadMode==='bodyweight' || (next.loadMode==='assistance'?next.bodyweight.assistanceLoads:next.bodyweight.addedLoads).some(n=>Math.abs(n-next.load)<epsilon)
         : next.availableLoads ? next.availableLoads.some(n=>Math.abs(n-next.load)<epsilon)
@@ -149,9 +187,7 @@ export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise 
     }
     // A changed rep/RIR prescription is translated from the last prescribed
     // progression load, never re-estimated from arbitrary training sets.
-    const oldReps = previous.repMin + Math.max(0,...previous.targetRir.filter(r=>r!=='<0').map(rirValue));
-    const newReps = slot.repMin + Math.max(0,...slot.rir.filter(r=>r!=='<0').map(rirValue));
-    return {...slot,...selectLoad(slot,workingResistance(next)*fractionAt(newReps,capacity.curve)/fractionAt(oldReps,capacity.curve))};
+    return {...slot,...selectLoad(slot,targetResistance*fractionAt(newReps,capacity.curve)/fractionAt(oldReps,capacity.curve))};
   }
   const effortReps = slot.repMin + Math.max(0,...slot.rir.filter(r => r !== '<0').map(rirValue));
   return {...slot,...selectLoad(slot,fromKg(capacity.kg,data.settings.unit)*fractionAt(effortReps,capacity.curve))};
@@ -178,11 +214,15 @@ export function recordAssessment(data: AppData, index: number, draft: StrengthDr
   if (active.items[index].resultId) return data;
   if (draft.unit !== data.settings.unit) throw new Error('The weight unit changed during assessment. Restore the test unit before saving.');
   if (!draft.confirmed || !draft.setup.trim()) throw new Error('Record the exact setup and confirm a clean, pain-free maximum effort.');
-  if (!Number.isInteger(draft.reps) || (draft.method === '1rm' ? draft.reps !== 1 : draft.reps < 2 || draft.reps > 15)) throw new Error('Record one successful rep for a 1RM, or 2–15 clean reps to failure.');
+  const resolvedSlot = resolveBodyweight({ ...draft.slot, load: draft.load, loadMode: draft.loadMode },data.settings);
+  const repsOnly = isRepsOnly(resolvedSlot.bodyweight);
+  if (!Number.isInteger(draft.reps) || (repsOnly ? draft.method !== 'failure' || draft.reps < 2 || draft.reps > 100 : draft.method === '1rm' ? draft.reps !== 1 : draft.reps < 2 || draft.reps > 15)) throw new Error(repsOnly ? 'Record 2–100 clean reps to failure for this same bodyweight setup.' : 'Record one successful rep for a 1RM, or 2–15 clean reps to failure.');
   if (!Number.isFinite(draft.load) || draft.load < 0 || (draft.loadMode === 'bodyweight' && draft.load !== 0)) throw new Error('Enter a valid test load.');
-  const bodyweight = draft.slot.bodyweight;
-  if ((draft.loadMode !== 'external' && !bodyweight) || (bodyweight && (bodyweight.resistance <= 0 || (draft.loadMode === 'assistance' && draft.load >= bodyweight.resistance)))) throw new Error('Record measured bodyweight resistance; assistance must be less than it.');
-  if (workingResistance({...draft,bodyweight}) <= 0) throw new Error('Test resistance must be positive.');
+  const bodyweight = resolvedSlot.bodyweight;
+  if (repsOnly && (draft.loadMode !== 'bodyweight' || draft.load !== 0)) throw new Error('Reps-only tests have no added weight or assistance.');
+  if (Math.abs((draft.slot.bodyweight?.resistance ?? 0)-(bodyweight?.resistance ?? 0)) > .001 || repsOnly && draft.slot.bodyweight?.bodyMassKg !== bodyweight?.bodyMassKg) throw new Error('Your body weight changed. Review this test setup and repeat the test before saving.');
+  if ((draft.loadMode !== 'external' && !bodyweight) || (bodyweight && !repsOnly && (bodyweight.resistance <= 0 || (draft.loadMode === 'assistance' && draft.load >= bodyweight.resistance)))) throw new Error('Record measured bodyweight resistance; assistance must be less than it.');
+  if (!repsOnly && workingResistance({...draft,bodyweight}) <= 0) throw new Error('Test resistance must be positive.');
   const exercise = data.exercises.find(e => e.id === draft.exerciseId);
   if (!exercise) throw new Error('Exercise is missing from the library.');
   const result: StrengthAssessment = {id:crypto.randomUUID(),exerciseId:draft.exerciseId,name:exercise.name,date:localDate(now),completedAt:now.toISOString(),method:draft.method,reps:draft.reps,load:draft.load,loadMode:draft.loadMode,unit:draft.unit,...(bodyweight?{bodyweight:structuredClone(bodyweight)}:{}),setup:draft.setup.trim(),curve:curveFor(exercise),version:1};
@@ -211,7 +251,7 @@ export function finishAssessment(data: AppData, now = new Date()): AppData {
   // A visit may end with untested movements. They remain saved for another visit.
   if (current.initial) {
     next.strength!.onboardingStartedAt ??= current.startedAt;
-    const missing = next.plan.days.filter(d=>d.kind==='training').flatMap(d=>d.exercises).some(slot=>!estimatedCapacity(next,slot));
+    const missing = next.plan.days.filter(d=>d.kind==='training').flatMap(d=>d.exercises).some(slot=>!hasStrengthBaseline(next,slot));
     if (!missing) next.strength!.onboardingCompletedAt = now.toISOString();
   }
   if (current.items.every(i=>i.resultId)) delete next.strength!.active;
@@ -220,7 +260,7 @@ export function finishAssessment(data: AppData, now = new Date()): AppData {
 export function startTraining(data: AppData, day: PlanDay, bypass = false, now = new Date()): AppData {
   if (data.activeSession) throw new Error('A workout is already active.');
   const initial = needsOnboarding(data);
-  if (initial && day.exercises.some(slot=>!estimatedCapacity(data,slot))) throw new Error('Complete the initial strength assessment for every exercise in this workout before training.');
+  if (initial && day.exercises.some(slot=>!hasStrengthBaseline(data,slot))) throw new Error('Complete the initial strength assessment for every exercise in this workout before training.');
   const cycle = activeCycle(data);
   if (cycle.endedAt || localDate(now) < cycle.startDate) throw new Error('Your training cycle is not active today.');
   if (assessmentDue(data,day,now).length && (data.settings.strict || !bypass)) throw new Error('Complete the required assessment, or explicitly bypass it in custom mode.');
@@ -229,7 +269,7 @@ export function startTraining(data: AppData, day: PlanDay, bypass = false, now =
   const prescribed = {...day,exercises:day.exercises.map(slot => {
     const baseline = latestAssessment(data,slot.exerciseId);
     const trained = baseline && data.sessions.some(s=>s.completedAt && Date.parse(s.completedAt)>Date.parse(baseline.completedAt) && s.exercises.some(e=>e.exerciseId===slot.exerciseId && e.sets.some(r=>r.completed)));
-    if (!data.settings.strict && (!baseline || trained || (bypass && assessmentDue(data,day,now).some(d=>d.slot.exerciseId===slot.exerciseId)))) return slot;
+    if (!data.settings.strict && (!baseline || trained || (bypass && assessmentDue(data,day,now).some(d=>d.slot.exerciseId===slot.exerciseId)))) return resolveBodyweight(slot,data.settings);
     return prescribedSlot(data,slot);
   })};
   const session = createSession(prescribed,data.exercises,data.settings,week,isPivotWeek(data.checkIns.filter(c => inActiveCycle(data,c)),week));
@@ -237,7 +277,7 @@ export function startTraining(data: AppData, day: PlanDay, bypass = false, now =
   const next = pauseAssessment(data); materializeCycles(next); session.cycleId=activeCycle(next).id;
   if (initial) {
     next.strength = {...state(next),onboardingStartedAt:state(next).onboardingStartedAt ?? now.toISOString()};
-    if (next.plan.days.filter(d=>d.kind==='training').every(d=>d.exercises.every(slot=>!!estimatedCapacity(next,slot)))) next.strength.onboardingCompletedAt = now.toISOString();
+    if (next.plan.days.filter(d=>d.kind==='training').every(d=>d.exercises.every(slot=>hasStrengthBaseline(next,slot)))) next.strength.onboardingCompletedAt = now.toISOString();
   }
   session.exercises.forEach(e => { e.strengthAssessmentId=latestAssessment(data,e.exerciseId)?.id; e.prescribedLoad=e.load; e.prescribedLoadMode=e.loadMode; });
   next.activeSession=session;
@@ -246,18 +286,22 @@ export function startTraining(data: AppData, day: PlanDay, bypass = false, now =
 export function suggestedReps(data: AppData, session: Session, index: number): (number | undefined)[] {
   const log = session.exercises[index];
   const slot = data.plan.days.flatMap(d => d.exercises).find(s => s.id === log.slotId);
-  const capacity = slot && estimatedCapacity(data,slot);
-  if (!capacity) return log.sets.map(() => undefined);
   const baseline=latestAssessment(data,log.exerciseId)!;
+  if (!baseline || !compatible(baseline,log)) return log.sets.map(() => undefined);
+  const capacity = slot && estimatedCapacity(data,{ ...slot, bodyweight: log.bodyweight, loadMode: log.loadMode });
+  if (!capacity && !isRepsOnly(log.bodyweight)) return log.sets.map(() => undefined);
   const previous=data.sessions.filter(s=>s.completedAt && Date.parse(s.completedAt)>Date.parse(baseline.completedAt) && !s.pivot).sort((a,b)=>Date.parse(b.completedAt!)-Date.parse(a.completedAt!)).flatMap(s=>s.exercises).find(e=>e.exerciseId===log.exerciseId && e.slotId===log.slotId && e.recommendation && e.sets.some(set=>set.completed));
   // After initialization use the existing progression target; do not keep comparing
   // a stronger lifter with their old fresh-set maximum.
   if(previous && previous.repMin===log.repMin && previous.repMax===log.repMax) {
     return log.sets.map((_,i)=>log.targetRir[i]==='<0'?undefined:Math.max(log.repMin,Math.min(log.repMax,previous.recommendation!.targetReps)));
   }
-  const ratio=toKg(workingResistance(log),log.unit)/capacity.kg;
-  let failureReps=1;
-  for(let r=1;r<=30;r+=.1) { if(fractionAt(r,capacity.curve)>=ratio) failureReps=r; }
+  let failureReps=baseline.reps;
+  if (capacity) {
+    const ratio=toKg(workingResistance(log),log.unit)/capacity.kg;
+    failureReps=1;
+    for(let r=1;r<=30;r+=.1) { if(fractionAt(r,capacity.curve)>=ratio) failureReps=r; }
+  }
   return log.sets.map((_,i) => {
     if(log.targetRir[i]==='<0') return undefined;
     const prior=log.sets.slice(0,i).filter(s=>s.completed && s.rir>=0).at(-1);

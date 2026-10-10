@@ -6,6 +6,8 @@ import { FEEDBACK_URL } from './data/feedback';
 import { convertPlanLoads } from './domain/coaching';
 import { useEffect, useRef, useState } from 'react';
 import { Account } from './Account';
+import { BodyMassField } from './BodyMassField';
+import { HealthWeightHelp } from './HealthWeightHelp';
 import { Download, Upload, Check, Cloud, MessageCircle } from 'lucide-react';
 import { Support } from './Support';
 import type { AppData, Settings as SettingsType } from './domain/types';
@@ -32,6 +34,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
   const next=JSON.stringify(data.settings),previous=lastSavedSettings.current;if(next===previous)return;lastSavedSettings.current=next;
   const before=JSON.parse(previous) as SettingsType,edited=currentDraft.current,merged={...edited};let conflict=false;
   for(const key of Object.keys({...before,...data.settings}) as (keyof SettingsType)[]){
+   if(key==='bodyMass'){merged.bodyMass=data.settings.bodyMass;continue;}
    if(edited[key]===before[key])Object.assign(merged,{[key]:data.settings[key]});
    else if(before[key]!==data.settings[key]&&edited[key]!==data.settings[key])conflict=true;
   }
@@ -47,7 +50,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
    if(!draft.strict||draft.adaptiveRecovery===false)delete d.plan.recovery;
    if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan=convertPlanLoads(d.plan,factor);d.plan.updatedAt=new Date().toISOString()}
    if(d.cycles)activeCycle(d).startDate=draft.startDate;
-   d.settings=draft;return d;
+   d.settings={...draft,bodyMass:d.settings.bodyMass};return d;
   });setMessage(profile==='local'?'Preview preferences applied. Sign in to save them.':'Preferences saved to your account. Historical sessions keep their original units.')}catch(e){setError((e as Error).message)}finally{setSaving(false)}
  }
  async function stageRestore(file:File){try{setRestore(parseBackup(await readFile(file)));setError('')}catch(e){setError((e as Error).message)}}
@@ -56,7 +59,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
  return <>
   <header className="page-heading"><div><h1>Settings</h1><p>Training preferences, account, and data.</p><div className="version-actions"><p className="app-version">App version {version}</p><Button small onClick={()=>setShowUpdates(true)}>Update log</Button></div></div></header>
   {message&&<Notice tone="success">{message}</Notice>}{error&&<Notice tone="error">{error}</Notice>}
-  <div className="settings-grid"><div><section className="panel"><h2>Training preferences</h2>
+  <div className="settings-grid"><div><section className="panel" id="bodyweight"><BodyMassField data={data} update={update} compact/><p>One saved weight for linked bodyweight movements. Whole-body movements use that weight; partially supported movements use the fraction you measured for their exact setup. Unmeasured movements track reps and RIR and require a new test after your weight changes.</p><p>Future workouts use your new weight. Completed tests, workout history and a workout already in progress keep their original weight. RIR still means the clean reps you could perform before failure.</p><HealthWeightHelp/></section><section className="panel"><h2>Training preferences</h2>
    <Field label="Your name"><input value={draft.name} maxLength={100} onChange={e=>setDraft({...draft,name:e.target.value})} onBlur={()=>void nameSave.save()}/></Field><div className="name-save-status" role="status">{nameSave.failed?<>{nameSave.error} <button className="text-button" onClick={()=>void nameSave.save()}>Retry saving name</button></>:nameSave.saving?'Saving name…':nameSave.dirty?'Name will save automatically.':nameSave.saved?(profile==='local'?'Name applied to this preview.':'Name saved to your account.'):'Your name saves automatically.'}</div>
    <Field label="Appearance"><select value={draft.theme??'automatic'} onChange={e=>setDraft({...draft,theme:e.target.value as SettingsType['theme']})}><option value="light">Light</option><option value="dark">Dark Mode</option><option value="automatic">Automatic (device setting)</option></select></Field>
    <label className="switch-row"><div><h3>Constrained PANDR-5 mode</h3><p>Five training days, non-competing split, 10–20 effective sets for selected muscles, and the RIR staircase.</p></div><input role="switch" aria-label="Constrained PANDR-5 mode" type="checkbox" checked={draft.strict} onChange={e=>setDraft({...draft,strict:e.target.checked})}/></label>
