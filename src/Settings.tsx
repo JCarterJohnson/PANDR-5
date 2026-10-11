@@ -48,7 +48,7 @@ export function Settings({data,update,client,profile,email,sync,signOut,pending,
   const issues=validatePlan(data.plan,data.exercises,draft.strict).filter(i=>i.severity==='error');if(issues.length){setError(issues[0].message);return}
   setSaving(true);try{await update(d=>{
    if(!draft.strict||draft.adaptiveRecovery===false)delete d.plan.recovery;
-   if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan=convertPlanLoads(d.plan,factor);d.plan.updatedAt=new Date().toISOString()}
+   if(d.settings.unit!==draft.unit){const factor=draft.unit==='lb'?2.20462262185:1/2.20462262185;d.plan=convertPlanLoads(d.plan,factor,draft.unit,d.exercises);d.plan.updatedAt=new Date().toISOString()}
    if(d.cycles)activeCycle(d).startDate=draft.startDate;
    d.settings={...draft,bodyMass:d.settings.bodyMass};return d;
   });setMessage(profile==='local'?'Preview preferences applied. Sign in to save them.':'Preferences saved to your account. Historical sessions keep their original units.')}catch(e){setError((e as Error).message)}finally{setSaving(false)}

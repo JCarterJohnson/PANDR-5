@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { accountFixture } from './account-fixture';
 import { createInitialData } from '../../src/data/seed';
 import { makeRir } from '../../src/domain/engine';
+import { initializeDefaultPlan } from '../../src/domain/initial-plan';
 
 test('scale both leg days on a phone, preview totals without compounding, and save affected targets',async({page})=>{
   const data=createInitialData();data.settings.strict=false;
@@ -31,38 +32,49 @@ test('scale both leg days on a phone, preview totals without compounding, and sa
 
 test('standard and optional small-plate presets remain selectable without changing progression rates',async({page})=>{
   const account=await accountFixture(page);await page.goto('/');await page.getByRole('button',{name:'Your plan',exact:true}).click();await page.getByRole('button',{name:'Bench Press',exact:true}).click();
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('4.535924');
+  await expect(page.getByLabel('Weight increment (kg)')).toBeHidden();
   await page.getByText('Equipment options',{exact:true}).click();
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('5');
   await page.getByLabel('Equipment preset').selectOption('barbell-2.5');
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('2.267962');
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('2.5');
   await page.getByRole('button',{name:'Apply exercise'}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
-  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[0].increment).toBe(2.267962);
+  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[0].increment).toBe(2.5);
+  expect(account.getHead().metadata.plan.days[0].exercises[0].equipmentPreset).toBe('barbell-2.5');
+  expect(account.getHead().metadata.plan.days[0].exercises[0].availableLoads.slice(0,3)).toEqual([20,22.5,25]);
   expect(account.getHead().metadata.settings.increasePercent).toBe(2.5);expect(account.getHead().metadata.settings.decreasePercent).toBe(2.5);
   await page.getByRole('button',{name:'Bench Press',exact:true}).click();await page.getByText('Equipment options',{exact:true}).click();await page.getByLabel('Equipment preset').selectOption('barbell-standard');
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('4.535924');
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('5');
 });
 
 test('dumbbell rack defaults and custom inventory persist on a phone',async({page})=>{
-  const account=await accountFixture(page);await page.setViewportSize({width:390,height:844});await page.goto('/');
+  const data=createInitialData();data.plan=initializeDefaultPlan(data.plan,data.exercises);
+  const account=await accountFixture(page,data);await page.setViewportSize({width:390,height:844});await page.goto('/');
   const openExercise=async()=>{
     await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();
     await page.getByRole('button',{name:'Incline Dumbbell Press',exact:true}).click();
     await page.getByText('Equipment options',{exact:true}).click();
   };
   await openExercise();
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('1.133981');
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('2.5');
   const list=page.getByLabel(/^Available weights \(kg\)/);
-  const pounds=(await list.inputValue()).split(',').map(n=>Math.round(Number(n)*2.2046226218*100)/100);
-  expect(pounds).toEqual(expect.arrayContaining([47.5,50,55]));expect(pounds).not.toContain(52.5);
+  await expect(list).toHaveCount(0);
+  await expect(page.getByLabel('List available weights')).not.toBeChecked();
+  const defaults=account.getHead().metadata.plan.days[0].exercises[1].availableLoads;
+  expect(defaults.slice(0,4)).toEqual([2.5,5,7.5,10]);
+  expect(defaults.every((n:number)=>Number.isInteger(n/2.5))).toBe(true);
   await page.getByLabel('Equipment preset').selectOption('five-pound');
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('2.267962');
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('2.5');
   await expect(list).toHaveCount(0);
   await page.getByLabel('Equipment preset').selectOption('dumbbell-rack');
-  await expect(page.getByLabel('Smallest load increment')).toHaveValue('1.133981');
+  await expect(page.getByLabel('Weight increment (kg)')).toHaveValue('2.5');
+  await expect(list).toHaveCount(0);
+  await page.getByLabel('List available weights').check();
+  expect((await list.inputValue()).split(',').slice(0,4).map(Number)).toEqual([2.5,5,7.5,10]);
   await list.fill('20, 21.25, 22.5');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.getByRole('button',{name:'Apply exercise',exact:true}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
   await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[1].availableLoads).toEqual([20,21.25,22.5]);
+  expect(account.getHead().metadata.plan.days[0].exercises[1].equipmentPreset).toBe('custom');
   await page.reload();await openExercise();await expect(list).toHaveValue('20, 21.25, 22.5');
   expect(account.getHead().metadata.settings.increasePercent).toBe(2.5);
 });

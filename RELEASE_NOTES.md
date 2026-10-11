@@ -1,3 +1,14 @@
+# 0.5.13 — Practical working weights
+
+- Existing plans automatically replace recognized legacy load defaults with practical equipment steps. Exercise selections, set counts, targets, assessments, archived cycles, logged weights and workouts in progress are preserved.
+- Standard barbells use a 45 lb bar with equal plates and 10 lb total steps; smaller plates can be selected in Equipment options. Bilateral plate-loaded machines use 10 lb steps, while isolateral machines and dumbbell/cable defaults use 5 lb steps. Kilogram defaults use native metric increments.
+- Explicit equipment presets and custom inventories remain saved. Unit changes regenerate automatic equipment grids rather than converting a rounded increment into an impossible weight.
+- Future prescriptions reconcile old off-grid progression targets with available weights. The existing strength/RIR model and progression percentage limits remain in force; bodyweight and strength estimates are not rounded to plate increments.
+- Equipment overrides are grouped under Equipment options. Working weights display cleanly while recorded observations and exports retain their original precision.
+- A pending web update remains accessible if an older app cannot open newer account fields.
+
+Install **0.5.13 on every device** before sharing the new equipment preset field. Replace the desktop application and keep its application support data. No account reset or history rewrite is required.
+
 # 0.5.12 — Simple bodyweight tests and cycle history controls
 
 - Bodyweight movements choose their setup automatically. Push-ups and other supported movements start with reps tracking; pull-ups, chin-ups and dips use shared bodyweight.

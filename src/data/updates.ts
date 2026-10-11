@@ -8,6 +8,13 @@ export type AppUpdate = {
 
 /** User-facing release history. Add the new release here when bumping package.json. */
 export const appUpdates: AppUpdate[] = [
+ {version:'0.5.13',title:'Practical working weights',improved:[
+  'Existing plans use practical equipment steps automatically. Standard barbells count equal plates on both sides; dumbbell and cable weights use normal steps.',
+  'Change smaller plates, weight increments or an exact inventory under Equipment options. Your custom equipment remains saved.',
+ ],fixed:[
+  'Changing weight units no longer turns automatic equipment increments into impossible decimal weights.',
+  'Past tests, logged weights, archived cycles and a workout in progress keep their original data. Use version 0.5.13 on every device.',
+ ]},
  {version:'0.5.12',title:'Simple bodyweight tests and cycle history controls',added:[
   'Delete a previous ended cycle from History after two confirmations. Your strength assessments and current training stay saved.',
  ],improved:[

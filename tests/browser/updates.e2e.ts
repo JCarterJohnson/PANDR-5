@@ -59,9 +59,14 @@ test('mobile workout and dark settings fit the viewport',async({page})=>{
  await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'Settings',exact:true}).click();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`${evidence}/settings-mobile.png`,fullPage:true});
 });
 
-test('an external auth change preserves an unsaved draft for the same account only',async({page})=>{
+test('an external auth change preserves an unsaved draft and saves it when the same account returns',async({page})=>{
  const account=await accountFixture(page);await page.goto('/');await page.getByRole('button',{name:'Settings',exact:true}).click();
  account.setFailure(true);await page.getByLabel('Your name').fill('Interrupted draft');await page.getByRole('button',{name:'Save preferences'}).click();await expect(page.getByText(/Changes have not reached your account yet/)).toBeVisible();
  await account.broadcastAuth('SIGNED_OUT');await expect(page.getByText('Unsaved preview.',{exact:true})).toBeVisible();await expect(page.getByLabel('Your name')).toHaveValue('');await expect(page.getByText(/An account save was interrupted/)).toBeVisible();
- account.setFailure(false);await account.broadcastAuth('SIGNED_IN');await expect(page.getByLabel('Your name')).toHaveValue('Interrupted draft');await page.getByRole('button',{name:'Retry saving',exact:true}).click();await expect.poll(()=>account.getHead()?.metadata.settings.name).toBe('Interrupted draft');await expect(page.getByText(/An account save was interrupted/)).toHaveCount(0);
+ account.setFailure(false);await account.broadcastAuth('SIGNED_IN');await expect(page.getByLabel('Your name')).toHaveValue('Interrupted draft');
+ // Reopening the originating account now automatically retries its suspended draft.
+ // Assert the cloud acknowledgement and durable data, rather than a transient retry control.
+ await expect.poll(()=>account.getHead()?.metadata.settings.name).toBe('Interrupted draft');expect(account.getHead().user_id).toBe(account.userId);
+ await expect(page.getByRole('button',{name:'Retry saving',exact:true})).toHaveCount(0);await expect(page.getByText(/An account save was interrupted/)).toHaveCount(0);await expect(page.getByRole('button',{name:'Sign out',exact:true})).toBeEnabled();
+ await page.reload();await expect(page.locator('.app-shell')).toBeVisible();await page.getByRole('button',{name:'Settings',exact:true}).click();await expect(page.getByLabel('Your name')).toHaveValue('Interrupted draft');expect(account.getHead().user_id).toBe(account.userId);
 });

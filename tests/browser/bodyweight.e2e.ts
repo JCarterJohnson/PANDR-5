@@ -3,6 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 import { createInitialData } from '../../src/data/seed';
 import { PUBLIC_CLOUD } from '../../src/data/cloud-config';
 import { createSession } from '../../src/domain/engine';
+import { migratePracticalEquipment } from '../../src/domain/equipment';
 import { beginAssessment, curveFor } from '../../src/domain/strength';
 import type { AppData, PlanExercise, Session } from '../../src/domain/types';
 import { accountFixture } from './account-fixture';
@@ -255,7 +256,9 @@ test('the phone plan chooser defaults new push-ups and chin-ups to their bodywei
   await page.clock.install({ time: now });
   const data = createInitialData();
   data.settings = { ...data.settings, strict: false, startDate: '2026-09-01', unit: 'lb', bodyMass: { kg: 80, recordedAt: now.toISOString() } };
-  const original = structuredClone(data.plan.days[0].exercises[0]);
+  // Normalize the existing equipment before testing the chooser. Account-open
+  // migration is covered separately; adding a movement must preserve this slot.
+  const original = structuredClone(migratePracticalEquipment(data).plan.days[0].exercises[0]);
   data.plan.days = [{ ...data.plan.days[0], exercises: [original] }];
   data.plan.targets = {};
   const account = await accountFixture(page, data);
@@ -338,7 +341,9 @@ test('one settings weight updates every linked future slot while preserving obse
 test('a Shortcut hash stages a measurement without writes and saves its date only after review', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: now });
-  const data = smallBodyweightPlan();
+  // Use an already upgraded account so unrelated equipment migration cannot
+  // be mistaken for accepting the staged health measurement.
+  const data = migratePracticalEquipment(smallBodyweightPlan());
   const account = await accountFixture(page, data);
   const before = structuredClone(account.getHead());
   const writes: string[] = [];

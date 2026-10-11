@@ -36,6 +36,7 @@ it('converts every resistance option with units and leaves historical workouts u
   const data = createInitialData(); const slot = data.plan.days[0].exercises[0];
   slot.load = 2; slot.bodyweight = { resistance: 80, addedLoads: [2, 4], assistanceLoads: [2, 4] };
   data.plan.days[0].exercises[1].availableLoads = [10, 10.25, 12.5];
+  data.plan.days[0].exercises[1].equipmentPreset = 'custom';
   data.sessions = [createSession(data.plan.days[0], data.exercises, data.settings, 1, false)];
   const converted = convertPlanLoads(data.plan, 2.20462262185);
   expect(converted.days[0].exercises[0].bodyweight?.resistance).toBeCloseTo(176.3698, 4);

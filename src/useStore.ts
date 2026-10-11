@@ -3,8 +3,8 @@ import type { AppData } from './domain/types';
 import { validateAppData } from './domain/validation';
 import { createInitialData } from './data/seed';
 import { initializeDefaultPlan } from './domain/initial-plan';
-import { reconcileAssessment } from './domain/strength';
-import { deleteClosedCycle, getCloudClient, readCloudData, syncData } from './services/cloud';
+import { deleteClosedCycle, getCloudClient, readCloudData } from './services/cloud';
+import { PracticalSyncError, prepareCurrentEquipment, syncPracticalData } from './services/practical-equipment';
 import { createMemoryPersistence } from './services/memory';
 
 export function useStore() {
@@ -43,11 +43,31 @@ export function useStore() {
   try {
    let loaded = resume?.data ?? (id === 'local' ? undefined : await readCloudData(id, persistence.current));
    if (!loaded) { loaded = createInitialData(); loaded.plan = initializeDefaultPlan(loaded.plan, loaded.exercises); }
-   loaded=reconcileAssessment(loaded);
+   const prepared=prepareCurrentEquipment(loaded);
+   const upgraded=prepared!==loaded;
+   loaded=prepared;
    if (gen !== generation.current) return;
    current.current = loaded; setData(loaded); setReady(true); setError('');
-   dirty.current = !!resume; setPending(!!resume);
-   setStatus(resume ? 'Not saved · keep this tab open' : id === 'local' ? 'Preview · not saved' : 'Saved to your account');
+   dirty.current = !!resume || (upgraded && id!=='local'); setPending(dirty.current);
+   setStatus(dirty.current ? 'Saving to your account…' : id === 'local' ? 'Preview · not saved' : 'Saved to your account');
+   if (dirty.current && id!=='local') {
+    loaded.updatedAt=new Date().toISOString();
+    const save=syncPracticalData(id,loaded,persistence.current);
+    queue.current=save.then(()=>{}).catch(()=>{});
+    try {
+     const result=await save;
+     // A sign-in change waits on this write. Keep its acknowledged snapshot
+     // before allowing that change to suspend or reopen the originating account.
+     if(profileRef.current===id){current.current=result.data;dirty.current=false}
+     if(gen!==generation.current)return;
+     current.current=result.data;setData(result.data);dirty.current=false;setPending(false);setStatus('Saved to your account');
+    } catch(e) {
+     if(e instanceof PracticalSyncError&&profileRef.current===id)current.current=e.data;
+     if(gen!==generation.current)return;
+     if(e instanceof PracticalSyncError)setData(e.data);
+     setStatus('Not saved · keep this tab open');setError(`${(e as Error).message} Retry saving or download a backup before closing.`);
+    }
+   }
   } catch (e) { if (gen === generation.current) setError((e as Error).message); }
   finally { if (gen === generation.current) setBusy(false); }
  }, []);
@@ -75,12 +95,14 @@ export function useStore() {
   if (id === 'local') { setStatus('Preview · not saved'); return; }
   dirty.current = true; setPending(true); setStatus('Saving to your account…');
   try {
-   const result = await syncData(id, next, persistence.current);
+   const result = await syncPracticalData(id, next, persistence.current);
+   if(profileRef.current===id){current.current=result.data;dirty.current=false}
    if (gen !== generation.current) return;
-   const reconciled=reconcileAssessment(result.data);current.current = reconciled; setData(reconciled);
+   current.current = result.data; setData(result.data);
    dirty.current = false; setPending(false); setStatus('Saved to your account'); setError('');
   } catch (e) {
-   if (gen === generation.current) { setStatus('Not saved · keep this tab open'); setError(`${(e as Error).message} Retry saving or download a backup before closing.`); }
+   if(e instanceof PracticalSyncError&&profileRef.current===id)current.current=e.data;
+   if (gen === generation.current) { if(e instanceof PracticalSyncError)setData(e.data);setStatus('Not saved · keep this tab open'); setError(`${(e as Error).message} Retry saving or download a backup before closing.`); }
    throw e;
   }
  }, []);
@@ -90,7 +112,7 @@ export function useStore() {
   if (profile !== id) return Promise.reject(new Error('Your account changed. Reopen the page before saving.'));
   const work = async () => {
    if (!current.current || gen !== generation.current) throw new Error('Your account changed. Reopen the page before saving.');
-   const next = reconcileAssessment(change(structuredClone(current.current)),current.current.plan); next.updatedAt = new Date().toISOString();
+   const next = prepareCurrentEquipment(change(structuredClone(current.current)),current.current.plan); next.updatedAt = new Date().toISOString();
    validateAppData(next); current.current = next; setData(next);
    await publish(id, next, gen);
   };

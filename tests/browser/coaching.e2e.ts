@@ -31,7 +31,11 @@ test('saved bodyweight setup stays intact and progresses, saves modes and export
  const waiting=page.waitForEvent('download');await page.getByRole('button',{name:'Download complete backup'}).click();
  const backup=JSON.parse(await readFile((await (await waiting).path())!,'utf8'));
  expect(backup.sessions[0].exercises.find((e:any)=>e.bodyweight)).toMatchObject({unit:'kg',loadMode:'bodyweight',load:0,recommendation:{nextLoadMode:'external',nextLoad:2.5}});
- expect(backup.plan.days[0].exercises.find((e:any)=>e.bodyweight)).toMatchObject({loadMode:'external',load:5.5116});
+ const converted=backup.plan.days[0].exercises.find((e:any)=>e.bodyweight);
+ expect(converted.loadMode).toBe('external');
+ // This confirmed bodyweight inventory is converted faithfully, rather than snapped to a default grid.
+ expect(converted.load).toBeCloseTo(2.5*2.2046226218,7);
+ expect(converted.bodyweight.resistance).toBeCloseTo(80*2.2046226218,7);
 });
 
 test('exact equipment lists survive reload and stay usable on a phone',async({page})=>{

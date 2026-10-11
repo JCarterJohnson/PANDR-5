@@ -181,9 +181,13 @@ export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise 
         catch { throw new Error('Your body weight changed. No available added weight or measured assistance preserves the previous total-resistance target within PANDR limits. Update equipment options or reassess this exercise.'); }
       }
       const epsilon=.001;
+      const automatic = !!next.equipmentPreset && next.equipmentPreset!=='custom';
       const available = next.bodyweight ? next.loadMode==='bodyweight' || (next.loadMode==='assistance'?next.bodyweight.assistanceLoads:next.bodyweight.addedLoads).some(n=>Math.abs(n-next.load)<epsilon)
         : next.availableLoads ? next.availableLoads.some(n=>Math.abs(n-next.load)<epsilon)
-        : previous.increment !== undefined && Math.abs(fromKg(toKg(previous.increment,previous.unit),data.settings.unit)-next.increment)<epsilon || Math.abs(next.load/next.increment-Math.round(next.load/next.increment))<epsilon;
+        : (!automatic && previous.increment !== undefined && Math.abs(fromKg(toKg(previous.increment,previous.unit),data.settings.unit)-next.increment)<epsilon) || Math.abs(next.load/next.increment-Math.round(next.load/next.increment))<epsilon;
+      // An equipment-default update changes future available weights, not the
+      // saved strength observation or the absolute target owned by past work.
+      if(!available && automatic && !next.bodyweight) return {...slot,...selectLoad(slot,targetResistance)};
       if(!available) throw new Error('The prescribed progression load is unavailable with this equipment. Restore the required load option or reassess this exercise.');
       return next;
     }
@@ -236,6 +240,7 @@ export function recordAssessment(data: AppData, index: number, draft: StrengthDr
     slot.bodyweight = bodyweight ? structuredClone(bodyweight) : undefined;
     slot.availableLoads = draft.slot.availableLoads;
     slot.increment = draft.slot.increment;
+    slot.equipmentPreset = draft.slot.equipmentPreset;
     slot.loadMode = draft.loadMode; slot.load = draft.load;
   }));
   next.strength!.active!.items[index] = {...draft,resultId:result.id};
