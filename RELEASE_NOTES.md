@@ -1,3 +1,11 @@
+# 0.5.11 — Bodyweight history fix
+
+- Fix History for reps-only assessments. Show the recorded repetitions and setup without requesting a weighted strength estimate or stopping the app.
+- Include the bodyweight and set-allocation improvements detailed below: shared current weight in Settings and assessment, reps-only push-up baselines, foreground Apple Health Shortcut imports that require confirmation, future load calculations that preserve historical bodyweight, and a full-week allocation review with explicit exercise priorities.
+- Preserve existing account data, assessments, workouts, and archived plans. The Shortcut integration requires confirmation; direct background HealthKit synchronization is not available.
+
+Install version **0.5.11 on every device** before sharing the new optional bodyweight, resistance-tracking, and exercise-priority fields. Older desktop builds or cached web apps can reject newer account data. Replace the desktop application and keep its application support data; web updates do not update a downloaded bundle. No account reset or database migration is required.
+
 # 0.5.10 — Clear bodyweight tracking and reviewed set allocation
 
 - Record current bodyweight once in Settings or assessment, with its measurement date and unit. Future full-bodyweight and calibrated partial-bodyweight loads use the shared value; past assessments, workouts, and an active workout retain their original bodyweight snapshots.
@@ -8,7 +16,7 @@
 - Prefer at least two sets where feasible, balance primary-role work across days, and allow explicit exercise priority without a blanket compound or isolation bonus. Preserve attainable budgets counted entirely in full sets; fractional-support targets use a transparent one-effective-set bookkeeping tolerance before the remaining preferences. Larger unattainable differences remain visible. These are research-informed application policies, not a proven optimal dose formula.
 - Keep new accounts’ authored source counts with the required lateral-raise adjustment. Existing saved plans are not silently reallocated. Preserve source muscle credits, exercise selections and order, assessments, active workouts, archived cycles, exports, and account history.
 
-Install version **0.5.10 on every device** before sharing the new optional bodyweight, resistance-tracking, and exercise-priority fields. Older desktop builds or cached web apps can reject newer account data after a successful sign-in. Replace the desktop application and keep its application support data; web updates do not update a downloaded bundle. No account reset, database migration, or bulk user-data rewrite is required.
+Install version **0.5.11 on every device** before sharing the new optional bodyweight, resistance-tracking, and exercise-priority fields. Older desktop builds or cached web apps can reject newer account data after a successful sign-in. Replace the desktop application and keep its application support data; web updates do not update a downloaded bundle. No account reset, database migration, or bulk user-data rewrite is required.
 
 See [bodyweight instructions](docs/bodyweight.md) and [set-allocation research and policy](docs/set-allocation.md).
 

@@ -8,6 +8,12 @@ export type AppUpdate = {
 
 /** User-facing release history. Add the new release here when bumping package.json. */
 export const appUpdates: AppUpdate[] = [
+ {version:'0.5.11',title:'Bodyweight history fix',improved:[
+  'Includes shared bodyweight in Settings, reps-only assessments, foreground Apple Health Shortcut imports that require confirmation, and reviewed set allocation with exercise priorities.',
+ ],fixed:[
+  'History opens reps-only assessment results without trying to calculate a weighted strength estimate or stopping the app.',
+  'Use version 0.5.11 on every device before sharing the new bodyweight and exercise-priority fields. Update the desktop app without resetting your account.',
+ ]},
  {version:'0.5.10',title:'Clear bodyweight tracking and reviewed set allocation',added:[
   'Set your current bodyweight once in Settings or assessment. Future bodyweight loads use it; past results and an active workout keep their original weight.',
   'Use a reps-only baseline for push-ups and other movements when resistance has not been measured, without guessing a weight.',
@@ -19,7 +25,7 @@ export const appUpdates: AppUpdate[] = [
  ],fixed:[
   'Bodyweight changes affect future total-resistance calculations without rewriting assessment results, workouts, or logged RIR.',
   'New plans keep the source exercise counts with the required lateral-raise adjustment. Existing plans change only when you apply an adjustment.',
-  'Use version 0.5.10 on every device before sharing the new bodyweight and exercise-priority fields. Older desktop builds can reject them; update the app without resetting your account.',
+  'Use version 0.5.11 on every device before sharing the new bodyweight and exercise-priority fields. Older desktop builds can reject them; update the app without resetting your account.',
  ]},
  {version:'0.5.9',title:'Feedback, name saving, and independent assessments',added:[
   'Read the update log beside your app version in Settings, including new features, improvements, and bug fixes.',

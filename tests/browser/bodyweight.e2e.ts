@@ -251,3 +251,33 @@ test('a resumed test clears stale reps and confirmation when current bodyweight 
   await expect(page.getByRole('button', { name: 'Save test result', exact: true })).toBeDisabled();
   expect(errors).toEqual([]);
 });
+
+test('History opens a saved reps-only baseline without calculating a maximum and preserves measured estimates', async ({ page }) => {
+  const data = linkedBodyweightPlan();
+  const baseline = {
+    ...data.strength!.assessments[1],
+    id: 'reps-only-history-baseline', date: '2026-09-01', completedAt: now.toISOString(),
+    method: 'failure' as const, reps: 16, load: 0, loadMode: 'bodyweight' as const,
+    bodyweight: { tracking: 'reps-only' as const, resistance: 0, bodyMassKg: 80, addedLoads: [], assistanceLoads: [] },
+    setup: 'Three plates under each hand at the same height; full range of motion.',
+  };
+  data.strength!.assessments.push(baseline);
+  const account = await accountFixture(page, data);
+  const saved = structuredClone(account.getHead().metadata.strength);
+  const errors = browserErrors(page);
+  await page.goto('/'); await navigate(page, 'History');
+  await expect(page.getByRole('heading', { name: 'Your training, over time', exact: true })).toBeVisible();
+  const row = page.locator('[data-assessment-id="reps-only-history-baseline"]');
+  await expect(row).toContainText('16 clean reps · bodyweight only');
+  await expect(row).toContainText(baseline.setup);
+  await expect(row).toContainText('Reps-only baseline');
+  await expect(row).not.toContainText('Estimated maximum');
+  await expect(row).not.toContainText('0 lb');
+  await expect(page.locator(`[data-assessment-id="${data.strength!.assessments[0].id}"]`)).toContainText(/Estimated maximum \d+\.\d lb total resistance/);
+  await expect(page.getByRole('heading', { name: 'PANDR-5 couldn’t open.', exact: true })).toHaveCount(0);
+  expect(account.getHead().metadata.strength).toEqual(saved);
+  await page.reload(); await navigate(page, 'History');
+  await expect(row).toContainText('16 clean reps · bodyweight only');
+  expect(account.getHead().metadata.strength).toEqual(saved);
+  expect(errors).toEqual([]);
+});

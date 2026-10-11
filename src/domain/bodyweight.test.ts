@@ -3,7 +3,7 @@ import { createInitialData } from '../data/seed';
 import { resolveBodyweight, updateBodyMass } from './bodyweight';
 import { completeSession, convertPlanLoads } from './coaching';
 import { createSession, recommendProgression, validatePlan } from './engine';
-import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, prescribedSlot, reconcileAssessment, recordAssessment, startTraining, suggestedReps } from './strength';
+import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, hasStrengthBaseline, prescribedSlot, reconcileAssessment, recordAssessment, startTraining, suggestedReps } from './strength';
 import { workingResistance } from './resistance';
 import { validateAppData } from './validation';
 import { exportBackup, exportCsv, parseBackup } from '../services/backup';
@@ -100,6 +100,42 @@ describe('shared body mass and immutable observations', () => {
     const unlinked = base({ tracking: 'measured', resistance: 48, addedLoads: [], assistanceLoads: [] });
     const withMass = updateBodyMass(unlinked,90,'kg');
     expect(updateBodyMass(withMass,100,'kg').plan.days[0].exercises[0].bodyweight).toEqual(unlinked.plan.days[0].exercises[0].bodyweight);
+  });
+
+  for (const unit of ['kg','lb'] as const) for (const loadMode of ['bodyweight','assistance','external'] as const) it(`preserves a saved legacy ${unit} ${loadMode} test through reload, shared-weight edits and unit changes`, () => {
+    const legacy = base({ resistance: unit === 'kg' ? 80 : 235, addedLoads: [10], assistanceLoads: [20] });
+    legacy.settings.unit = unit; delete legacy.settings.bodyMass;
+    const slot = legacy.plan.days[0].exercises[0];
+    slot.loadMode = loadMode; slot.load = loadMode === 'bodyweight' ? 0 : loadMode === 'assistance' ? 20 : 10;
+    const started = beginAssessment(legacy,legacy.plan.days[0],now);
+    const recorded = recordAssessment(started,0,{ ...started.strength!.active!.items[0], reps: 8, setup: 'Three plates under each hand; same elevation, grip and full range of motion.', confirmed: true },now);
+    const observations = JSON.stringify(recorded.strength!.assessments);
+    const savedDraft = structuredClone(recorded.strength!.active!.items[0]);
+    const originalSlot = structuredClone(recorded.plan.days[0].exercises[0]);
+    const capacity = estimatedCapacity(recorded,originalSlot)!.kg;
+
+    // Account/backup validation and the queue reconciliation used on hydration
+    // must not infer tracking or rewrite previously recorded observations.
+    const restored = reconcileAssessment(validateAppData(parseBackup(exportBackup(recorded))),undefined,now);
+    expect(JSON.stringify(restored.strength!.assessments)).toBe(observations);
+    expect(restored.strength!.active!.items[0]).toEqual(savedDraft);
+    const changed = reconcileAssessment(updateBodyMass(restored,90,'kg',now),restored.plan,now);
+    expect(changed.plan.days[0].exercises[0]).toEqual(originalSlot);
+    expect(changed.strength!.active!.items[0]).toEqual(savedDraft);
+    expect(JSON.stringify(changed.strength!.assessments)).toBe(observations);
+    expect(hasStrengthBaseline(changed,changed.plan.days[0].exercises[0])).toBe(true);
+    expect(assessmentDue(changed,changed.plan.days[0],now)).toEqual([]);
+    expect(estimatedCapacity(changed,changed.plan.days[0].exercises[0])!.kg).toBe(capacity);
+
+    const converted = structuredClone(changed);
+    converted.plan = convertPlanLoads(converted.plan,unit === 'kg' ? 2.2046226218 : 1 / 2.2046226218);
+    converted.settings.unit = unit === 'kg' ? 'lb' : 'kg';
+    const reopened = reconcileAssessment(validateAppData(converted),changed.plan,now);
+    expect(JSON.stringify(reopened.strength!.assessments)).toBe(observations);
+    expect(reopened.strength!.active!.items[0]).toEqual(savedDraft);
+    expect(hasStrengthBaseline(reopened,reopened.plan.days[0].exercises[0])).toBe(true);
+    expect(assessmentDue(reopened,reopened.plan.days[0],now)).toEqual([]);
+    expect(estimatedCapacity(reopened,reopened.plan.days[0].exercises[0])!.kg).toBe(capacity);
   });
 
   for (const tracking of [undefined,'measured'] as const) it(`requires reassessment after a fixed supported load changes, but preserves a unit-equivalent setup (${tracking ?? 'legacy'})`, () => {

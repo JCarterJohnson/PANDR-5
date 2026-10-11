@@ -28,7 +28,7 @@ Actions are pinned to immutable revisions. Updating dependencies or action revis
 
 Updates to the web app wait for an explicit action, and are not offered during an active workout. Native downloads require a manual replacement; no updater downloads or executes remote code.
 
-Replace the existing PANDR-5 application when installing an update, rather than keeping a second application. Keep its application support folder so the saved sign-in and older local exports remain available. Version 0.5.10 reads the current assessment metadata and the new optional shared-bodyweight, resistance-tracking, and exercise-priority fields. Use that version on every device before sharing these fields; older desktop versions can reject them even when Google sign-in succeeds. Check Settings for the installed build version.
+Replace the existing PANDR-5 application when installing an update, rather than keeping a second application. Keep its application support folder so the saved sign-in and older local exports remain available. Version 0.5.11 reads the current assessment metadata and the new optional shared-bodyweight, resistance-tracking, and exercise-priority fields, and safely displays reps-only assessments in History. Use that version on every device before sharing these fields; older desktop versions can reject them even when Google sign-in succeeds. Check Settings for the installed build version.
 
 ## Free does not mean unlimited
 
