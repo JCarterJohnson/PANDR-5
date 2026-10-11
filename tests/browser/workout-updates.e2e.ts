@@ -1,0 +1,97 @@
+import { test, expect } from '@playwright/test';
+import { accountFixture, trainingReadyData } from './account-fixture';
+import { createInitialData } from '../../src/data/seed';
+import { createSession } from '../../src/domain/engine';
+
+test('assessment days are gray until ready and readiness has no persistent banner', async ({ page }) => {
+  await accountFixture(page, createInitialData());
+  await page.goto('/');
+  await expect(page.locator('.week-strip button').first()).toHaveClass(/assessment-blocked/);
+  await expect(page.locator('.workout-panel')).toHaveClass(/assessment-blocked/);
+  await expect(page.getByText(/assessments ready/i)).toHaveCount(0);
+});
+
+for (const strict of [true, false]) {
+  test(`completed days stay locked in ${strict ? 'constrained' : 'custom'} mode and restart retains voided records`, async ({ page }) => {
+    const data = trainingReadyData(); data.settings.strict = strict;
+    const session = createSession(data.plan.days[0], data.exercises, data.settings, 1, false);
+    session.exercises.forEach(log => log.sets.forEach(set => { set.reps = 8; set.completed = true; }));
+    data.activeSession = session;
+    const account = await accountFixture(page, data);
+    const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/');
+    await expect(page).toHaveTitle(/PANDR/);
+    await page.getByRole('button', { name: 'Finish session', exact: true }).click();
+    await page.getByRole('button', { name: 'Save completed session', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Start session', exact: true })).toBeDisabled();
+    await expect(page.locator('.workout-panel')).toHaveClass(/completed-day/);
+    await expect(page.locator('.week-strip button').first()).toHaveClass(/completed-day/);
+    await expect(page.getByText(/assessments ready/i)).toHaveCount(0);
+    await page.screenshot({ path: strict ? '/tmp/pandr-completed-day-desktop.png' : '/tmp/pandr-completed-day-custom.png', fullPage: true, animations: 'disabled' });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.getByRole('button', { name: 'Restart this day', exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('records stay visible in History as voided');
+    await page.getByRole('button', { name: 'Keep completed session', exact: true }).click();
+    expect([...account.records.values()].filter(row => row.payload.voidedAt)).toHaveLength(0);
+    await page.getByRole('button', { name: 'Restart this day', exact: true }).click();
+    await page.getByRole('button', { name: 'Void sessions and restart', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Start session', exact: true })).toBeEnabled();
+    await expect(page.locator('.workout-panel')).not.toHaveClass(/completed-day/);
+    await expect.poll(() => [...account.records.values()].filter(row => row.payload.voidedAt).length).toBe(1);
+    const saved = [...account.records.values()].find(row => row.payload.voidedAt)!.payload;
+    expect(saved.exercises).toEqual([...account.records.values()].find(row => !row.payload.voidedAt)!.payload.exercises);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('phone workout can correct chin-ups to 80 lb assistance without losing logged reps or RIR', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const now = new Date(); await page.clock.install({ time: now });
+  const data = trainingReadyData(); data.settings.unit = 'lb';
+  const slot = data.plan.days[0].exercises.find(item => item.bodyweight)!;
+  slot.bodyweight = { tracking: 'full-body', resistance: 235, bodyMassKg: 235 / 2.2046226218, addedLoads: [5], assistanceLoads: [10] };
+  slot.load = 0; slot.loadMode = 'bodyweight';
+  const baseline = data.strength!.assessments.find(item => item.exerciseId === slot.exerciseId)!;
+  baseline.bodyweight = structuredClone(slot.bodyweight); baseline.load = 0; baseline.loadMode = 'bodyweight'; baseline.unit = 'lb';
+  const session = createSession(data.plan.days[0], data.exercises, data.settings, 1, false);
+  const chin = session.exercises.find(log => log.slotId === slot.id)!;
+  chin.sets[0] = { index: 0, reps: 9, rir: 0, completed: true };
+  data.activeSession = session;
+  const account = await accountFixture(page, data);
+  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await expect(page).toHaveTitle(/PANDR/);
+  await page.locator('.exercise-picker').getByRole('button', { name: /Chinups/ }).click();
+  await expect(page.getByLabel('Set 1 reps', { exact: true })).toHaveValue('9');
+  await page.getByLabel('Resistance for this workout', { exact: true }).selectOption('assistance');
+  await expect(page.getByRole('dialog', { name: 'Change resistance for the whole exercise?' })).toBeVisible();
+  await page.getByRole('button', { name: 'Keep current setup', exact: true }).click();
+  await expect(page.getByLabel('Resistance for this workout', { exact: true })).toHaveValue('bodyweight');
+  await page.getByLabel('Resistance for this workout', { exact: true }).selectOption('assistance');
+  await page.getByRole('button', { name: 'Change resistance setup', exact: true }).click();
+  await page.getByLabel('Working load', { exact: true }).fill('80');
+  await page.getByLabel('Set 1 reps', { exact: true }).click();
+  await expect.poll(() => account.getHead().metadata.activeSession.exercises.find((log: { slotId: string }) => log.slotId === slot.id).load).toBe(80);
+  await expect(page.getByLabel('Set 1 reps', { exact: true })).toHaveValue('9');
+  await expect(page.getByLabel('Set 1 actual RIR', { exact: true })).toHaveValue('0');
+  await expect(page.getByRole('button', { name: 'Unlog set 1', exact: true })).toBeVisible();
+  await expect(page.getByText('Total resistance this workout: 155 lb', { exact: true })).toBeVisible();
+  await page.screenshot({ path: '/tmp/pandr-workout-assistance-phone.png', fullPage: true, animations: 'disabled' });
+  await page.getByLabel('Exercise notes').fill('HOIST machine, 80 lb assistance.');
+  await page.getByRole('button', { name: 'Finish session', exact: true }).click();
+  await page.getByRole('button', { name: /Finish with .* unlogged sets/ }).click();
+  await expect.poll(() => account.records.size).toBe(1);
+  const recorded = [...account.records.values()][0].payload.exercises.find((log: { slotId: string }) => log.slotId === slot.id);
+  expect(recorded).toMatchObject({ load: 80, loadMode: 'assistance', actualLoadOverride: true, bodyweight: { resistance: 235 }, notes: 'HOIST machine, 80 lb assistance.' });
+  expect(recorded.sets[0]).toEqual({ index: 0, reps: 9, rir: 0, completed: true });
+  const nextWeek = new Date(now); nextWeek.setDate(nextWeek.getDate() + 7);
+  await page.clock.setSystemTime(nextWeek); await page.clock.runFor(1100); await page.reload();
+  await expect(page.getByRole('button', { name: 'Start session', exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: 'Start session', exact: true }).click();
+  await page.locator('.exercise-picker').getByRole('button', { name: /Chinups/ }).click();
+  await expect(page.getByLabel('Resistance for this workout', { exact: true })).toHaveValue('assistance');
+  await expect(page.getByLabel('Working load', { exact: true })).toHaveValue('80');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+});

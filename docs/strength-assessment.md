@@ -2,6 +2,8 @@
 
 The assessment is the authoritative starting point for an exact exercise. It initializes the first workout's load from the assessed maximum, the prescribed rep floor and the RIR staircase. After that, existing PANDR-5 anchor progression controls the next load. There is no rolling estimated-1RM filter, hidden safety multiplier, or competing strength progression model.
 
+An explicitly requested correction can establish the initial baseline from an already completed workout instead of a separate test. It preserves the performed reps, actual RIR, load, unit and bodyweight snapshot, with references to the source workout and set. The strongest supported full-rep observation supplies `completed reps + actual RIR` to the same population curve; ties favor directly completed reps over estimated reserve. This is a calculated starting baseline, not a claim that a maximal strength test occurred. Subsequent training continues to use PANDR-5 progression. Voiding the source workout retains this observation in history but excludes it from current strength and assessment readiness.
+
 ## Assessment flow
 
 - A new account without completed training history must assess each exercise before its first workout in both constrained and custom mode. The gate checks only the selected workout, preserving its exercise order. Duplicate slots share a movement baseline but retain their own rep prescriptions and subsequent progression.
@@ -37,6 +39,7 @@ Let `f(r)` be relative load at a fresh-set failure capacity of `r` repetitions.
 - Initial target: `r = repMin + max(non-finisher target RIR)`.
 - Initial working resistance: `maximum * f(r)`.
 - `0–1 RIR` maps to 0.5 for initialization; `<0` finishers never increase predicted capacity.
+- A prescribed `<0` target describes the finisher technique, not the actual RIR of its completed full reps. Reps are the last fully completed repetition; partial, assisted or forced reps are excluded. Actual RIR defaults to zero on these sets. A performance baseline may use full reps at actual zero RIR even when the target is `<0`; it never uses a negative actual-RIR observation.
 - The same resistance is used for every set. The rep floor is used to provide room for double progression; there is no additional percentage reduction.
 - Only confirmed equipment rounding changes the resulting load: choose the largest available positive resistance no greater than the calculated value. An unavailable load blocks constrained prescription with an equipment message; zero-load guesses and invented microplates are not used.
 - Exactly 185 lb entered as a true 1RM stays 185 lb in this calculation. Historical observations retain original units; internal unit normalization does not round the maximum. Equipment conversion follows existing account-unit behavior.
@@ -51,7 +54,7 @@ The first session preserves program order and stores the prescribed load, mode a
 
 Initial per-set rep suggestions use baseline capacity minus target RIR, bounded by the rep cap. Completed preceding sets can reduce the guide as fatigue appears. Once normal training has begun, the existing recommendation's target reps provide guidance. No fixed fatigue percentage is invented. Actual prescribed RIR takes priority over an approximate rep suggestion.
 
-Constrained mode locks workout and plan load editing; the domain completion boundary also checks recorded prescribed loads. Users can turn constrained mode off during a workout, then override its load. Progression starts from the actual performed load. Original prescriptions remain in history and CSV.
+Workout loads, added weight and machine assistance can be recorded as performed. Progression starts from the actual performed resistance, using the frozen bodyweight snapshot plus added weight or minus measured assistance. Original prescriptions remain in history and CSV.
 
 ## Persistence and compatibility
 

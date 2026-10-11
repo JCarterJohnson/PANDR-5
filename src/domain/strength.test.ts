@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createInitialData } from '../data/seed';
-import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, fractionAt, needsOnboarding, prescribedSlot, recordAssessment, selectLoad, startTraining, suggestedReps, pauseAssessment } from './strength';
+import { assessmentDue, assessmentEstimate, baselineFromPerformance, beginAssessment, estimatedCapacity, finishAssessment, fractionAt, latestAssessment, needsOnboarding, prescribedSlot, recordAssessment, selectLoad, startTraining, suggestedReps, pauseAssessment } from './strength';
 import { completeSession, convertPlanLoads } from './coaching';
+import { createSession } from './engine';
 import { completedWeeklyVolume } from './training';
 import { exportBackup, exportCsv, parseBackup, restoreBackup } from '../services/backup';
 import { validateAppData } from './validation';
@@ -73,11 +74,11 @@ describe('exercise-specific strength baseline',()=>{
   const old=base();const merged=restoreBackup(d,old);expect(merged.strength!.assessments).toEqual(d.strength!.assessments);
   d.plan.days[0].exercises=[];expect(parseBackup(exportBackup(d)).strength!.assessments).toHaveLength(1);
  });
- it('keeps double progression authoritative and rejects constrained overrides',()=>{
+ it('keeps double progression authoritative and rejects unconfirmed constrained overrides',()=>{
   let d=firstWorkout();let s=d.activeSession!;const e=s.exercises[0];e.sets.forEach(r=>{r.reps=12;r.rir=1;r.completed=true});
-  e.load+=1;expect(()=>completeSession(d,s,'2026-09-02T13:00:00Z')).toThrow('prescribed');e.load-=1;
+  e.load+=1;expect(()=>completeSession(d,s,'2026-09-02T13:00:00Z')).toThrow('prescription');e.load-=1;
   d=completeSession(d,s,'2026-09-02T13:00:00Z');expect(prescribedSlot(d,d.plan.days[0].exercises[0]).load).toBe(d.sessions[0].exercises[0].recommendation!.nextLoad);
-  s=structuredClone(s);s.id='custom-override';s.exercises[0].load=50;d.settings.strict=false;const custom=completeSession(d,s,'2026-09-03T13:00:00Z');expect(custom.sessions.at(-1)!.exercises[0].load).toBe(50);expect(exportCsv(custom)).toContain('prescribed_load');
+  s=structuredClone(s);s.id='custom-override';s.week=2;s.date='2026-09-09';s.exercises[0].load=50;d.settings.strict=false;const custom=completeSession(d,s,'2026-09-09T13:00:00Z');expect(custom.sessions.at(-1)!.exercises[0].load).toBe(50);expect(exportCsv(custom)).toContain('prescribed_load');
  });
  it('excludes finishers and pivot sessions from capacity updates and adapts RIR guidance',()=>{
   const d=firstWorkout(),slot=d.plan.days[0].exercises[0],kg=estimatedCapacity(d,slot)!.kg,s=d.activeSession!;
@@ -157,10 +158,105 @@ it('retains partial onboarding when restoring an older backup with workout histo
  const merged=restoreBackup(d,restored);
  expect(merged.strength!.onboardingStartedAt).toBe(d.strength!.onboardingStartedAt);
  expect(needsOnboarding(merged)).toBe(true);
- expect(()=>startTraining(merged,merged.plan.days[0],true,new Date('2026-09-02T14:00:00Z'))).toThrow('initial strength');
+ expect(()=>startTraining(merged,merged.plan.days[0],true,new Date('2026-09-09T14:00:00Z'))).toThrow('initial strength');
 });
 it('rejects test recording while a workout is active',()=>{
  let d=base();d=beginAssessment(d,d.plan.days[0],now);const draft={...d.strength!.active!.items[0],load:80,reps:8,confirmed:true,setup:'Rack A'};
  d=recordAssessment(d,0,draft,now);d=startTraining(d,d.plan.days[0],false,now);
  expect(()=>recordAssessment(d,0,draft,now)).toThrow('current workout');
+});
+
+describe('explicit baseline from performed full repetitions',()=>{
+ function performed() {
+  const data=base();data.settings.unit='lb';
+  const session=createSession(data.plan.days[0],data.exercises,data.settings,1,false);
+  session.date='2026-09-02';session.completedAt='2026-09-02T13:00:00Z';
+  const log=session.exercises[0];log.load=80;log.targetRir=[1,0,'<0'];
+  log.sets=[{index:0,reps:8,rir:1,completed:true},{index:1,reps:9,rir:0,completed:true},{index:2,reps:9,rir:0,completed:true}];
+  data.sessions=[session];return {data,session,log};
+ }
+ it('uses 9 completed full reps at zero actual RIR even with a beyond-failure target',()=>{
+  const {data,session,log}=performed();log.sets[1].completed=false;
+  const next=baselineFromPerformance(data,session.id,0,'Hammer Strength lateral raise, same seat and ROM',new Date('2026-09-02T14:00:00Z'));
+  const baseline=next.strength!.assessments[0];
+  expect(baseline).toMatchObject({method:'performance',reps:9,actualRir:0,load:80,unit:'lb',sourceSessionId:session.id,sourceSetIndex:2});
+  expect(assessmentEstimate(baseline)*fractionAt(9,baseline.curve)*2.2046226218).toBeCloseTo(80);
+  expect(next.sessions[0].exercises[0].sets).toEqual(log.sets);
+  expect(data.strength?.assessments??[]).toHaveLength(0);
+  expect(assessmentDue(next,next.plan.days[0],new Date('2026-09-03T12:00:00'))).toEqual([]);
+  expect(()=>validateAppData(next)).not.toThrow();
+  expect(parseBackup(exportBackup(next))).toEqual(next);
+ });
+ it('prefers completed reps when reserve-adjusted capacities tie and excludes negative actual RIR',()=>{
+  const {data,session,log}=performed();log.sets[2].rir=-1;log.sets[2].reps=25;
+  const next=baselineFromPerformance(data,session.id,0,'Measured load',now);
+  expect(next.strength!.assessments[0]).toMatchObject({reps:9,actualRir:0,sourceSetIndex:1});
+  log.sets.forEach(set=>{set.rir=-1});
+  expect(()=>baselineFromPerformance(data,session.id,0,'Measured load',now)).toThrow('full repetitions');
+ });
+ it('keeps full reps and reported reserve distinct and calculates bodyweight minus assistance',()=>{
+  const {data,session,log}=performed();
+  const profile={tracking:'full-body' as const,resistance:235,bodyMassKg:235/2.2046226218,addedLoads:[10],assistanceLoads:[80]};
+  Object.assign(log,{bodyweight:profile,loadMode:'assistance',load:80});
+  data.plan.days[0].exercises[0].bodyweight=structuredClone(profile);
+  data.plan.days[0].exercises[0].loadMode='assistance';data.plan.days[0].exercises[0].load=80;
+  log.sets=[{index:0,reps:9,rir:2,completed:true},{index:1,reps:8,rir:0,completed:true},{index:2,reps:9,rir:-1,completed:true}];
+  const next=baselineFromPerformance(data,session.id,0,'HOIST chin-up, 80 lb machine assistance',now);
+  const baseline=next.strength!.assessments[0];
+  expect(baseline).toMatchObject({reps:9,actualRir:2,bodyweight:profile,load:80,loadMode:'assistance'});
+  expect(assessmentEstimate(baseline)*fractionAt(11,baseline.curve)*2.2046226218).toBeCloseTo(155);
+ });
+ it('preserves the source workout recommendation when its baseline is established later',()=>{
+  const {data,session,log}=performed();
+  const profile={tracking:'full-body' as const,resistance:235,bodyMassKg:235/2.2046226218,addedLoads:[],assistanceLoads:[80]};
+  const slot=data.plan.days[0].exercises[0];
+  Object.assign(slot,{bodyweight:structuredClone(profile),load:80,loadMode:'assistance',repMin:5,repMax:7,rir:[3,2,'0-1']});
+  Object.assign(log,{bodyweight:profile,loadMode:'assistance',load:80,repMin:5,repMax:7,targetRir:[3,2,'0-1'],recommendation:{action:'hold',nextLoad:80,nextLoadMode:'assistance',targetReps:6,anchorIndex:2,reason:'Keep the performed assistance.'}});
+  log.sets=[{index:0,reps:5,rir:2,completed:true},{index:1,reps:4,rir:1,completed:true},{index:2,reps:5,rir:1,completed:true}];
+  const next=baselineFromPerformance(data,session.id,0,'HOIST chin-up, 80 lb assistance',new Date('2026-09-02T14:00:00Z'));
+  // Eight target effort reps need lighter resistance than the seven-rep source
+  // observation, but the completed-workout hold still owns the next load.
+  expect(prescribedSlot(next,next.plan.days[0].exercises[0])).toMatchObject({load:80,loadMode:'assistance'});
+  const following=startTraining(next,next.plan.days[0],false,new Date('2026-09-09T12:00:00'));
+  expect(following.activeSession!.exercises[0]).toMatchObject({load:80,loadMode:'assistance'});
+  expect(suggestedReps(following,following.activeSession!,0)).toEqual([6,6,6]);
+ });
+ it('does not use a voided workout or its baseline as current strength evidence',()=>{
+  const {data,session}=performed();
+  const next=baselineFromPerformance(data,session.id,0,'Measured load',now);
+  next.sessions[0].voidedAt='2026-09-03T00:00:00Z';next.sessions[0].voidedFromSessionId=session.id;
+  expect(latestAssessment(next,session.exercises[0].exerciseId)).toBeUndefined();
+  expect(assessmentDue(next,next.plan.days[0],now)[0].reason).toBe('new');
+  expect(()=>baselineFromPerformance(next,session.id,0,'Measured load',now)).toThrow('non-voided');
+  expect(next.strength!.assessments).toHaveLength(1);
+ });
+ it('retains fallback strength after a voided performance baseline loses its source history',()=>{
+  const {data,session}=performed();
+  const original=assessed().strength!.assessments[0];
+  data.strength={assessments:[original]};
+  const next=baselineFromPerformance(data,session.id,0,'Measured load',new Date('2026-09-02T14:00:00Z'));
+  expect(latestAssessment(next,original.exerciseId)?.method).toBe('performance');
+  next.strength!.assessments.at(-1)!.voidedAt='2026-09-03T00:00:00Z';
+  next.sessions=[];
+  expect(latestAssessment(next,original.exerciseId)?.id).toBe(original.id);
+  expect(()=>validateAppData(next)).not.toThrow();
+ });
+ it('rejects incomplete workouts, absent setups, and unsupported reserve-adjusted rep counts',()=>{
+  const {data,session,log}=performed();
+  delete session.completedAt;
+  expect(()=>baselineFromPerformance(data,session.id,0,'Measured load',now)).toThrow('completed');
+  session.completedAt='2026-09-02T13:00:00Z';
+  expect(()=>baselineFromPerformance(data,session.id,0,' ',now)).toThrow('setup');
+  log.sets.forEach(set=>{set.reps=30;set.rir=1});
+  expect(()=>baselineFromPerformance(data,session.id,0,'Measured load',now)).toThrow('supported');
+ });
+ it('does not reuse unmeasured bodyweight rep guidance after manually changing its offset',()=>{
+  const {data,session,log}=performed();
+  const profile={tracking:'reps-only' as const,resistance:0,addedLoads:[],assistanceLoads:[]};
+  Object.assign(log,{bodyweight:profile,loadMode:'bodyweight',load:0});
+  Object.assign(data.plan.days[0].exercises[0],{bodyweight:structuredClone(profile),loadMode:'bodyweight',load:0});
+  const next=baselineFromPerformance(data,session.id,0,'Unmeasured bodyweight setup',now);
+  const current=structuredClone(session);current.exercises[0].loadMode='assistance';current.exercises[0].load=80;
+  expect(suggestedReps(next,current,0)).toEqual([undefined,undefined,undefined]);
+ });
 });

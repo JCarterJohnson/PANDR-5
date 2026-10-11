@@ -15,8 +15,8 @@ export function workingResistance(log: Pick<ExerciseLog, 'load' | 'loadMode' | '
 export function chooseResistanceChange(log: ExerciseLog, settings: Settings, increase: boolean, anchorIndex: number): Recommendation {
   const hold = (reason: string, extra: Partial<Recommendation> = {}): Recommendation => ({ action: 'hold', nextLoad: log.load, targetReps: log.repMin, anchorIndex, reason, ...extra });
   if (isRepsOnly(log.bodyweight)) return hold(increase
-    ? 'You reached the rep cap. Keep this setup and additional weight until you retest a harder variation.'
-    : 'You fell below the rep floor. Retest an easier variation or use less additional weight.', { nextLoad: 0, nextLoadMode: 'bodyweight', targetReps: increase ? log.repMax : log.repMin, status: 'bodyweight-setup' });
+    ? 'You reached the rep cap. Keep this recorded setup until you retest a harder variation. Assistance or added resistance is recorded without estimating total resistance.'
+    : 'You fell below the rep floor. Retest an easier variation or adjust the assistance or added resistance.', { nextLoad: log.load, nextLoadMode: log.loadMode, targetReps: increase ? log.repMax : log.repMin, status: 'bodyweight-setup' });
   if (log.loadMode === 'bodyweight' && !log.bodyweight) return hold('Reassess this bodyweight exercise to use its automatic setup. Your saved workouts stay in History.', { status: 'bodyweight-setup' });
   const current = workingResistance(log);
   if (!Number.isFinite(current) || current <= 0) return hold('Enter a positive working resistance before calculating a percentage-based change.', log.bodyweight ? { status: 'bodyweight-setup' } : {});

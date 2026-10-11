@@ -1,6 +1,6 @@
 import type { AppData, Exercise, ExerciseLog, PlanDay, PlanExercise, Rir, Session, StrengthAssessment, StrengthDraft, StrengthState, TrainingPlan } from './types';
 import { createSession, getWeek, isPivotWeek } from './engine';
-import { activeCycle, inActiveCycle, localDate, materializeCycles } from './training';
+import { activeCycle, completedSessionForDay, inActiveCycle, localDate, materializeCycles } from './training';
 import { workingResistance } from './resistance';
 import { assessmentGroup } from './assessment-order';
 import { isRepsOnly, resolveBodyweight, sameBodyweightSetup } from './bodyweight';
@@ -32,13 +32,19 @@ export const rirValue = (rir: Rir) => rir === '<0' ? 0 : rir === '0-1' ? .5 : ri
 export const toKg = (value: number, unit: 'kg' | 'lb') => unit === 'kg' ? value : value / 2.2046226218;
 export const fromKg = (value: number, unit: 'kg' | 'lb') => unit === 'kg' ? value : value * 2.2046226218;
 const state = (data: AppData): StrengthState => data.strength ?? { assessments: [] };
-export const needsOnboarding = (data: AppData) => !state(data).onboardingCompletedAt && (!!state(data).onboardingStartedAt || !!state(data).active?.initial || !data.sessions.some(s => s.completedAt && s.exercises.some(e => e.sets.some(r => r.completed))));
+export const needsOnboarding = (data: AppData) => !state(data).onboardingCompletedAt && (!!state(data).onboardingStartedAt || !!state(data).active?.initial || !data.sessions.some(s => s.completedAt && !s.voidedAt && s.exercises.some(e => e.sets.some(r => r.completed))));
 export function latestAssessment(data: AppData, exerciseId: string): StrengthAssessment | undefined {
-  return [...state(data).assessments].reverse().filter(a => a.exerciseId === exerciseId).sort((a,b) => Date.parse(b.completedAt)-Date.parse(a.completedAt)).at(0);
+  const voided = new Set(data.sessions.filter(s => s.voidedAt).map(s => s.id));
+  return [...state(data).assessments].reverse().filter(a => a.exerciseId === exerciseId && !a.voidedAt && (!a.sourceSessionId || !voided.has(a.sourceSessionId))).sort((a,b) => Date.parse(b.completedAt)-Date.parse(a.completedAt)).at(0);
 }
-type ResistanceSetup = Pick<PlanExercise, 'bodyweight' | 'loadMode'> & { unit?: AppData['settings']['unit'] };
+type ResistanceSetup = Pick<PlanExercise, 'bodyweight' | 'loadMode' | 'load'> & { unit?: AppData['settings']['unit'] };
 function compatible(a: ResistanceSetup, b: ResistanceSetup, currentUnit: AppData['settings']['unit'] = 'kg') {
-  return sameBodyweightSetup(a.bodyweight,b.bodyweight,a.unit ?? currentUnit,b.unit ?? currentUnit) && (a.bodyweight || (a.loadMode === 'external' && b.loadMode === 'external'));
+  const aUnit=a.unit ?? currentUnit,bUnit=b.unit ?? currentUnit;
+  if (!sameBodyweightSetup(a.bodyweight,b.bodyweight,aUnit,bUnit)) return false;
+  // Without measured total resistance, assistance and added weight change the
+  // tested variation. Its old rep capacity cannot describe the new offset.
+  if (isRepsOnly(a.bodyweight)) return a.loadMode===b.loadMode && Math.abs(toKg(a.load,aUnit)-toKg(b.load,bUnit))<.001;
+  return !!a.bodyweight || (a.loadMode === 'external' && b.loadMode === 'external');
 }
 export function hasStrengthBaseline(data: AppData, slot: PlanExercise): boolean {
   const baseline = latestAssessment(data,slot.exerciseId);
@@ -51,7 +57,7 @@ export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { 
     const baseline = latestAssessment(data, slot.exerciseId);
     if (!baseline) return [{slot, reason: initial ? 'initial' as const : 'new' as const}];
     if (!compatible(baseline,slot,data.settings.unit)) return [{slot,reason:'setup' as const}];
-    const exposures = data.sessions.filter(s => s.completedAt && s.exercises.some(e => e.exerciseId === slot.exerciseId && compatible(e,slot,data.settings.unit) && e.sets.some(r => r.completed && r.reps > 0))).map(s => s.date);
+    const exposures = data.sessions.filter(s => s.completedAt && !s.voidedAt && s.exercises.some(e => e.exerciseId === slot.exerciseId && compatible(e,slot,data.settings.unit) && e.sets.some(r => r.completed && r.reps > 0))).map(s => s.date);
     const last = [baseline.date, ...exposures].sort().at(-1)!;
     // Calendar days, independent of DST or local clock time.
     const age = (Date.parse(localDate(now)) - Date.parse(last)) / 86400000;
@@ -76,6 +82,8 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
   const entries=[...programEntries].sort((a,b)=>groups.get(assessmentGroup(catalog.get(a.slot.exerciseId)))!-groups.get(assessmentGroup(catalog.get(b.slot.exerciseId)))!);
   const due=new Map(days.flatMap(day=>assessmentDue(data,day,now)).map(item=>[item.slot.exerciseId,item]));
   const prior=new Map(active.items.map(item=>[item.exerciseId,item]));
+  const voidedSessions=new Set(data.sessions.filter(session=>session.voidedAt).map(session=>session.id));
+  const voidedResults=new Set(state(data).assessments.filter(result=>result.voidedAt || result.sourceSessionId && voidedSessions.has(result.sourceSessionId)).map(result=>result.id));
   const wanted=new Set<string>();
   const scope=new Set([active.dayId]);
   for(const item of active.items){
@@ -96,7 +104,7 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
     const previousSlot=previousPlan?.days.flatMap(day=>day.exercises).find(s=>s.id===slot.id);
     const massTracked = slot.bodyweight?.tracking === 'full-body' || slot.bodyweight?.tracking === 'measured' || slot.bodyweight?.tracking === 'reps-only';
     const sameTrackedSetup = massTracked && previousSlot && previousSlot.bodyweight?.tracking === slot.bodyweight?.tracking && (slot.bodyweight?.tracking !== 'measured' || previousSlot.bodyweight?.fraction === slot.bodyweight.fraction) && (slot.bodyweight?.tracking !== 'reps-only' || (previousSlot.bodyweight?.additionalWeightKg ?? 0) === (slot.bodyweight.additionalWeightKg ?? 0));
-    const savedCompatible = saved && compatible({ ...saved.slot, unit: saved.unit },slot,data.settings.unit);
+    const savedCompatible = saved && (!saved.resultId || !voidedResults.has(saved.resultId)) && compatible({ ...saved.slot, unit: saved.unit },slot,data.settings.unit);
     const setupChanged=!saved||!!saved.resultId&&!savedCompatible||!!previousSlot&&!sameTrackedSetup&&JSON.stringify([previousSlot.bodyweight,previousSlot.loadMode])!==JSON.stringify([slot.bodyweight,slot.loadMode]);
     if (saved?.resultId && savedCompatible) { items.push({ ...structuredClone(saved), slot: { ...structuredClone(saved.slot), id: slot.id } }); continue; }
     if(saved&&(!setupChanged||saved.resultId&&savedCompatible)){
@@ -118,7 +126,37 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
 }
 export function assessmentEstimate(a: StrengthAssessment): number {
   if (isRepsOnly(a.bodyweight)) throw new Error('A reps-only test has no measured resistance or estimated 1RM.');
-  return toKg(workingResistance(a), a.unit) / fractionAt(a.reps, a.curve);
+  const effortReps = a.reps + (a.method === 'performance' ? a.actualRir ?? 0 : 0);
+  return toKg(workingResistance(a), a.unit) / fractionAt(effortReps, a.curve);
+}
+/** Explicitly establish an initial baseline from completed full-rep workout data.
+ * The target RIR never substitutes for actual effort. Negative actual RIR may
+ * contain partial/forced repetitions and cannot establish a clean-rep capacity.
+ * Normal workouts still use the existing progression policy, not this estimator.
+ */
+export function baselineFromPerformance(data: AppData, sessionId: string, exerciseIndex: number, setup: string, now = new Date()): AppData {
+  const session = data.sessions.find(s => s.id === sessionId);
+  if (!session?.completedAt || session.voidedAt) throw new Error('Use a completed, non-voided workout to establish a performance baseline.');
+  const log = session.exercises[exerciseIndex];
+  const exercise = log && data.exercises.find(e => e.id === log.exerciseId);
+  if (!log || !exercise) throw new Error('Exercise is missing from this workout or the library.');
+  if (!setup.trim() || !Number.isFinite(now.getTime())) throw new Error('Record the performed equipment setup and a valid baseline date.');
+  const repsOnly = isRepsOnly(log.bodyweight);
+  if (!Number.isFinite(log.load) || log.load < 0 || log.loadMode === 'bodyweight' && log.load !== 0 || log.loadMode !== 'external' && !log.bodyweight || !repsOnly && (!Number.isFinite(workingResistance(log)) || workingResistance(log) <= 0)) throw new Error('Record a positive measured resistance; bodyweight assistance needs its performed bodyweight setup.');
+  const candidates = log.sets.filter(set => set.completed && Number.isInteger(set.reps) && set.reps > 0 && Number.isFinite(set.rir) && set.rir >= 0 && set.rir <= 100 && set.reps + set.rir <= (repsOnly ? 100 : 30));
+  // Prefer directly completed reps over estimated reserve when capacities tie.
+  const best = [...candidates].sort((a,b) => (b.reps+b.rir)-(a.reps+a.rir) || b.reps-a.reps || a.index-b.index)[0];
+  if (!best) throw new Error('A baseline needs completed full repetitions with nonnegative actual RIR within the supported repetition range.');
+  const result: StrengthAssessment = { id: crypto.randomUUID(), exerciseId: log.exerciseId, name: log.name, date: session.date, completedAt: now.toISOString(), method: 'performance', reps: best.reps, actualRir: best.rir, load: log.load, loadMode: log.loadMode, unit: log.unit, ...(log.bodyweight ? {bodyweight: structuredClone(log.bodyweight)} : {}), setup: setup.trim(), curve: curveFor(exercise), version: 1, sourceSessionId: session.id, sourceSetIndex: best.index };
+  const next = structuredClone(data);
+  next.strength = {...state(next), assessments: [...state(next).assessments, result]};
+  next.sessions.find(s => s.id === sessionId)!.exercises[exerciseIndex].strengthAssessmentId = result.id;
+  if (next.strength.active) {
+    next.strength.active.items = next.strength.active.items.filter(item => item.exerciseId !== log.exerciseId || !!item.resultId);
+    if (!next.strength.active.items.length) delete next.strength.active;
+  }
+  if (next.plan.days.filter(day => day.kind === 'training').every(day => day.exercises.every(slot => hasStrengthBaseline(next,slot)))) next.strength.onboardingCompletedAt ??= now.toISOString();
+  return reconcileAssessment(next, undefined, now);
 }
 export function estimatedCapacity(data: AppData, slot: PlanExercise): { kg: number; curve: Curve; source: string } | undefined {
   const a = latestAssessment(data,slot.exerciseId);
@@ -164,7 +202,7 @@ export function prescribedSlot(data: AppData, slot: PlanExercise): PlanExercise 
   if (!capacity) throw new Error('Complete an assessment for this exact exercise first.');
   // Same prescription: preserve double progression exactly, including equipment holds.
   const a = latestAssessment(data,slot.exerciseId)!;
-  const completed = data.sessions.filter(s => s.completedAt && Date.parse(s.completedAt) > Date.parse(a.completedAt) && !s.pivot).sort((x,y) => Date.parse(y.completedAt!)-Date.parse(x.completedAt!)).flatMap(s => s.exercises).filter(e => e.exerciseId === slot.exerciseId && e.recommendation && e.sets.some(set=>set.completed) && compatible(e,slot,data.settings.unit));
+  const completed = data.sessions.filter(s => s.completedAt && !s.voidedAt && (s.id === a.sourceSessionId || Date.parse(s.completedAt) > Date.parse(a.completedAt)) && !s.pivot).sort((x,y) => Date.parse(y.completedAt!)-Date.parse(x.completedAt!)).flatMap(s => s.exercises).filter(e => e.exerciseId === slot.exerciseId && e.recommendation && e.sets.some(set=>set.completed) && compatible(e,slot,data.settings.unit));
   const previous = completed.find(e => e.slotId === slot.id) ?? completed[0];
   if (previous) {
     const recommendation = previous.recommendation!;
@@ -266,16 +304,16 @@ export function finishAssessment(data: AppData, now = new Date()): AppData {
 }
 export function startTraining(data: AppData, day: PlanDay, bypass = false, now = new Date()): AppData {
   if (data.activeSession) throw new Error('A workout is already active.');
+  if (completedSessionForDay(data,day.id,now)) throw new Error('This workout is already completed this week. Restart it from History before training again.');
   const initial = needsOnboarding(data);
   if (initial && day.exercises.some(slot=>!hasStrengthBaseline(data,slot))) throw new Error('Complete the initial strength assessment for every exercise in this workout before training.');
   const cycle = activeCycle(data);
   if (cycle.endedAt || localDate(now) < cycle.startDate) throw new Error('Your training cycle is not active today.');
   if (assessmentDue(data,day,now).length && (data.settings.strict || !bypass)) throw new Error('Complete the required assessment, or explicitly bypass it in custom mode.');
   const week = getWeek(cycle.startDate,now);
-  if (data.settings.strict && data.sessions.some(s => inActiveCycle(data,s) && s.week === week && s.dayId === day.id)) throw new Error('This session is already completed this week.');
   const prescribed = {...day,exercises:day.exercises.map(slot => {
     const baseline = latestAssessment(data,slot.exerciseId);
-    const trained = baseline && data.sessions.some(s=>s.completedAt && Date.parse(s.completedAt)>Date.parse(baseline.completedAt) && s.exercises.some(e=>e.exerciseId===slot.exerciseId && e.sets.some(r=>r.completed)));
+    const trained = baseline && data.sessions.some(s=>s.completedAt && !s.voidedAt && (s.id===baseline.sourceSessionId || Date.parse(s.completedAt)>Date.parse(baseline.completedAt)) && s.exercises.some(e=>e.exerciseId===slot.exerciseId && e.sets.some(r=>r.completed)));
     if (!data.settings.strict && (!baseline || trained || (bypass && assessmentDue(data,day,now).some(d=>d.slot.exerciseId===slot.exerciseId)))) return resolveBodyweight(slot,data.settings);
     return prescribedSlot(data,slot);
   })};
@@ -297,13 +335,13 @@ export function suggestedReps(data: AppData, session: Session, index: number): (
   if (!baseline || !compatible(baseline,log)) return log.sets.map(() => undefined);
   const capacity = slot && estimatedCapacity(data,{ ...slot, bodyweight: log.bodyweight, loadMode: log.loadMode });
   if (!capacity && !isRepsOnly(log.bodyweight)) return log.sets.map(() => undefined);
-  const previous=data.sessions.filter(s=>s.completedAt && Date.parse(s.completedAt)>Date.parse(baseline.completedAt) && !s.pivot).sort((a,b)=>Date.parse(b.completedAt!)-Date.parse(a.completedAt!)).flatMap(s=>s.exercises).find(e=>e.exerciseId===log.exerciseId && e.slotId===log.slotId && e.recommendation && e.sets.some(set=>set.completed));
+  const previous=data.sessions.filter(s=>s.completedAt && !s.voidedAt && (s.id===baseline.sourceSessionId || Date.parse(s.completedAt)>Date.parse(baseline.completedAt)) && !s.pivot).sort((a,b)=>Date.parse(b.completedAt!)-Date.parse(a.completedAt!)).flatMap(s=>s.exercises).find(e=>e.exerciseId===log.exerciseId && e.slotId===log.slotId && e.recommendation && e.sets.some(set=>set.completed));
   // After initialization use the existing progression target; do not keep comparing
   // a stronger lifter with their old fresh-set maximum.
   if(previous && previous.repMin===log.repMin && previous.repMax===log.repMax) {
     return log.sets.map((_,i)=>log.targetRir[i]==='<0'?undefined:Math.max(log.repMin,Math.min(log.repMax,previous.recommendation!.targetReps)));
   }
-  let failureReps=baseline.reps;
+  let failureReps=baseline.reps+(baseline.method==='performance'?baseline.actualRir??0:0);
   if (capacity) {
     const ratio=toKg(workingResistance(log),log.unit)/capacity.kg;
     failureReps=1;

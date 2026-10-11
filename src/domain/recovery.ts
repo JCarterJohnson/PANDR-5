@@ -46,7 +46,7 @@ export function reviewRecoveryPlan(plan: TrainingPlan, exercises: Exercise[], ch
   const reduce = isPivotWeek([check], week + 1) && new Set(qualifying.map(c => c.week)).size >= 2 && (!last || week - last.reviewedWeek >= 2);
   const scheduled = new Set(plan.days.filter(d => d.kind === 'training').map(d => d.id));
   const attended = (w: number) => {
-    const days = new Set(sessions.filter(s => s.week === w && (!s.cycleId || s.cycleId === cycleId) && s.completedAt && !s.pivot && scheduled.has(s.dayId) && s.exercises.length > 0 && s.exercises.every(e => e.sets.filter(set => set.completed).length >= Math.ceil(e.sets.length * 0.8))).map(s => s.dayId));
+    const days = new Set(sessions.filter(s => !s.voidedAt && s.week === w && (!s.cycleId || s.cycleId === cycleId) && s.completedAt && !s.pivot && scheduled.has(s.dayId) && s.exercises.length > 0 && s.exercises.every(e => e.sets.filter(set => set.completed).length >= Math.ceil(e.sets.length * 0.8))).map(s => s.dayId));
     return days.size >= Math.ceil(scheduled.size * 0.8);
   };
   const restore = !reduce && beforeSets < totalSets(plan) && (!last || week - last.reviewedWeek >= 3)

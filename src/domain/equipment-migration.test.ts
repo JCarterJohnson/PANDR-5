@@ -67,8 +67,9 @@ describe('practical equipment migration', () => {
 
   it('uses current equipment for an old active workout’s next recommendation but logs the weight actually lifted', () => {
     const next = migratePracticalEquipment(legacyAccount()), active = next.activeSession!;
+    active.week = 2; active.date = '2026-10-15'; active.startedAt = '2026-10-15T12:00:00Z';
     const performed = structuredClone(active.exercises[0]!);
-    const completed = completeSession(next, active, '2026-10-09T13:00:00Z');
+    const completed = completeSession(next, active, '2026-10-15T13:00:00Z');
     const recorded = completed.sessions.at(-1)!.exercises[0]!;
     expect(recorded.load).toBe(performed.load);
     expect(recorded.increment).toBe(performed.increment);

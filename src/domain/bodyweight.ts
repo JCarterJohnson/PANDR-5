@@ -1,9 +1,25 @@
-import type { AppData, BodyweightResistance, Exercise, PlanExercise, Settings } from './types';
+import type { AppData, BodyweightResistance, Exercise, ExerciseLog, PlanExercise, Settings } from './types';
 
 const KG_TO_LB = 2.2046226218;
 const fromKg = (value: number, unit: Settings['unit']) => unit === 'kg' ? value : value * KG_TO_LB;
 const toKg = (value: number, unit: Settings['unit']) => unit === 'kg' ? value : value / KG_TO_LB;
 export const isRepsOnly = (bodyweight?: BodyweightResistance) => bodyweight?.tracking === 'reps-only';
+
+/** Record an observed offset against this workout's frozen setup, without inventing equipment options. */
+export function withObservedBodyweightLoad(log: ExerciseLog, loadMode: ExerciseLog['loadMode'], load: number): ExerciseLog {
+  if (!log.bodyweight) throw new Error('This exercise has no bodyweight setup to adjust.');
+  if (!Number.isFinite(load) || load < 0) throw new Error('Enter a nonnegative assistance or added resistance.');
+  const observedLoad = loadMode === 'bodyweight' ? 0 : load;
+  if (!isRepsOnly(log.bodyweight) && loadMode === 'assistance' && observedLoad >= log.bodyweight.resistance) throw new Error('Assistance must be less than the bodyweight resistance recorded for this workout.');
+  const next = structuredClone(log);
+  next.loadMode = loadMode;
+  next.load = observedLoad;
+  next.actualLoadOverride = true;
+  // Legacy reps-only added weight lived in setup context. A manual offset now
+  // uses the same observed load field as assistance, so never count it twice.
+  if (isRepsOnly(next.bodyweight)) delete next.bodyweight!.additionalWeightKg;
+  return next;
+}
 
 /** Catalog-informed defaults. Machine dip presses and band exercises never imply whole-body load. */
 export function bodyweightMovement(exercise?: Pick<Exercise, 'name' | 'equipment'>): 'full-body' | 'partial-body' | undefined {

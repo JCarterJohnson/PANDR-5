@@ -129,3 +129,22 @@ it('retains merged remote plan changes when the equipment-upgrade write fails an
  expect(retried.plan.name).toBe('Other device plan');expect(retried.settings.name).toBe('Local preferences');expect(retried.strength).toEqual(initial.data.strength);
  expect(fake.profiles.get(fake.user).metadata.plan.name).toBe('Other device plan');
 });
+
+it('synchronizes a reversible workout void and sourced baseline tombstone to a fresh device',async()=>{
+ const {createMemoryPersistence}=await import('./memory');
+ const {completeSession}=await import('../domain/coaching');
+ const {baselineFromPerformance,latestAssessment}=await import('../domain/strength');
+ const {restartTrainingFromSession,completedWeeklyVolume}=await import('../domain/training');
+ const memory=createMemoryPersistence(),now=new Date('2026-10-11T12:00:00Z');
+ let data=createInitialData();data.settings.startDate='2026-10-05';data.settings.strict=false;
+ data.plan.days=[{...data.plan.days[0],exercises:[{...data.plan.days[0].exercises[0],load:80}]}];
+ const session=createSession(data.plan.days[0],data.exercises,data.settings,1,false);session.date='2026-10-10';session.startedAt='2026-10-10T12:00:00Z';
+ session.exercises[0].sets.forEach(set=>Object.assign(set,{completed:true,reps:9,rir:0}));
+ data=completeSession(data,session,'2026-10-10T13:00:00Z');data=baselineFromPerformance(data,session.id,0,'Saved machine',now);
+ const first=await syncData(fake.user,data,memory), restarted=restartTrainingFromSession(first.data,session.id,now);
+ await syncData(fake.user,restarted,memory);const restored=(await readCloudData(fake.user,createMemoryPersistence()))!;
+ expect(restored.sessions[0]).toEqual(restarted.sessions[0]);expect(restored.strength).toEqual(restarted.strength);
+ expect(restored.sessions[0].voidedAt).toBe(now.toISOString());expect(restored.strength?.assessments[0].voidedAt).toBe(now.toISOString());
+ expect(latestAssessment(restored,session.exercises[0].exerciseId)).toBeUndefined();expect(completedWeeklyVolume(restored,1).every(row=>row.total===0)).toBe(true);
+ expect(fake.records.size).toBe(2); // The old payload remains immutable while the head references its voided revision.
+});

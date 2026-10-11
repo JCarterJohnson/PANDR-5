@@ -1,3 +1,13 @@
+# 0.5.14 — Actual workout loads and completed days
+
+- Bodyweight workouts allow observed machine assistance and added resistance, including when the exercise began as bodyweight only. Actual-load overrides preserve the original prescription and logged repetitions.
+- Completed training days stay gray and locked until the week resets in both modes. A deliberate restart voids the selected workout and subsequent workouts in the same cycle, retaining their audit history and excluding them from progression, weekly volume and strength evidence.
+- Assessment readiness unlocks the corresponding day without a persistent success banner.
+- A prescribed beyond-failure finisher defaults to 0 actual RIR for the last completed full repetition. Negative actual RIR remains available for extended work and is excluded from performance baselines.
+- Corrected completed workouts can establish exercise-specific performance baselines from observed load, full repetitions and actual RIR. The original test history remains available.
+
+Use **0.5.14 on every device** before saving the new optional workout audit and performance-baseline fields. Replace an older desktop bundle while keeping its application support data. No account reset or database migration is required.
+
 # 0.5.13 — Practical working weights
 
 - Existing plans automatically replace recognized legacy load defaults with practical equipment steps. Exercise selections, set counts, targets, assessments, archived cycles, logged weights and workouts in progress are preserved.

@@ -24,7 +24,7 @@ test('phone assessment and 14-day custom bypass stay usable after reload',async(
  await expect.poll(()=>account.getHead().metadata.strength.onboardingCompletedAt).toBeTruthy();await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await page.clock.setSystemTime(new Date('2026-09-15T12:00:00'));await page.clock.runFor(1100);await page.reload();await page.getByRole('button',{name:'Start session',exact:true}).click();await expect(page.getByText(/14\+ days without training/)).toBeVisible();await page.getByRole('button',{name:'Bypass assessment for this workout'}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeVisible();
 });
-test('constrained prescribed loads are locked and can be unlocked explicitly mid-workout',async({page})=>{
+test('constrained prescribed loads allow an explicit actual-load correction mid-workout',async({page})=>{
  const now=new Date('2026-09-01T12:00:00');let d=createInitialData();d.settings.startDate='2026-09-01';d.plan=allocateSets(d.plan,d.exercises).plan;
  d=beginAssessment(d,d.plan.days[0],now);
  for(let i=0;i<d.strength!.active!.items.length;i++){
@@ -34,7 +34,7 @@ test('constrained prescribed loads are locked and can be unlocked explicitly mid
   d=recordAssessment(d,i,{...item,loadMode:'external',load:80,reps:8,setup:'Same station and full range',confirmed:true},now);
  }
  d=finishAssessment(d,now);await page.clock.install({time:new Date('2026-09-01T12:00:00')});await accountFixture(page,d);await page.goto('/');await page.getByRole('button',{name:'Start session',exact:true}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeDisabled();
- await page.getByRole('button',{name:'Open navigation',exact:true}).click();await page.getByRole('button',{name:'Settings',exact:true}).click();await page.getByRole('switch',{name:/constrained/i}).uncheck();await page.getByRole('button',{name:'Save preferences'}).click();await page.getByRole('button',{name:'Train',exact:true}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeEnabled();
+ await page.getByRole('button',{name:'Edit actual load',exact:true}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeEnabled();await page.getByLabel('Working load',{exact:true}).fill('83');await page.getByLabel('Set 1 reps',{exact:true}).fill('8');await page.getByRole('button',{name:'Log set 1',exact:true}).click();await page.getByRole('button',{name:'Finish session',exact:true}).click();await page.getByRole('button',{name:/Finish with .* unlogged sets/}).click();await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
 });
 
 test('an abandoned workout cannot bypass reassessment by resuming stale loads',async({page})=>{

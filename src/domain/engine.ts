@@ -199,7 +199,7 @@ export function createSession(planDay: PlanDay, exercises: Exercise[], settings:
     if (!exercise) throw new Error(`Exercise ${slot.exerciseId} is missing from the library.`);
     const count = pivot ? Math.max(1, Math.ceil(slot.sets / 2)) : slot.sets;
     const targetRir = slot.rir.slice(0, count);
-    return { slotId: slot.id, exerciseId: slot.exerciseId, name: exercise.name, load: slot.load, increment: slot.increment, unit: settings.unit, loadMode: slot.loadMode, ...(slot.equipmentPreset ? {equipmentPreset:slot.equipmentPreset} : {}), ...(slot.availableLoads ? { availableLoads: [...slot.availableLoads] } : {}), ...(slot.bodyweight ? { bodyweight: structuredClone(slot.bodyweight) } : {}), repMin: slot.repMin, repMax: slot.repMax, targetRir, contributions: structuredClone(exercise.contributions), notes: '', sets: targetRir.map((rir, index) => ({ index, reps: 0, rir: rir === '<0' ? -1 : rir === '0-1' ? 1 : rir, completed: false })) };
+    return { slotId: slot.id, exerciseId: slot.exerciseId, name: exercise.name, load: slot.load, increment: slot.increment, unit: settings.unit, loadMode: slot.loadMode, ...(slot.equipmentPreset ? {equipmentPreset:slot.equipmentPreset} : {}), ...(slot.availableLoads ? { availableLoads: [...slot.availableLoads] } : {}), ...(slot.bodyweight ? { bodyweight: structuredClone(slot.bodyweight) } : {}), repMin: slot.repMin, repMax: slot.repMax, targetRir, contributions: structuredClone(exercise.contributions), notes: '', sets: targetRir.map((rir, index) => ({ index, reps: 0, rir: rir === '<0' ? 0 : rir === '0-1' ? 1 : rir, completed: false })) };
   }) };
 }
 

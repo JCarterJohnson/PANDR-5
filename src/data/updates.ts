@@ -8,6 +8,14 @@ export type AppUpdate = {
 
 /** User-facing release history. Add the new release here when bumping package.json. */
 export const appUpdates: AppUpdate[] = [
+ {version:'0.5.14',title:'Actual workout loads and completed days',added:[
+  'Record bodyweight only, added resistance, or machine assistance during a workout. An explicit actual-load override records what you performed while preserving the prescribed load.',
+  'Completed days stay locked until the next training week in both modes. Confirming a restart voids that workout and later workouts in the same cycle, preserving their records in History.',
+ ],fixed:[
+  'Ready assessments unlock the day without a persistent green notification.',
+  'A beyond-failure target starts with actual RIR at zero for your last complete rep. Record partial or assisted repetitions separately; they do not count toward a strength baseline.',
+  'A corrected completed workout can establish a strength baseline with its actual load, clean repetitions, RIR and source set preserved.',
+ ]},
  {version:'0.5.13',title:'Practical working weights',improved:[
   'Existing plans use practical equipment steps automatically. Standard barbells count equal plates on both sides; dumbbell and cable weights use normal steps.',
   'Change smaller plates, weight increments or an exact inventory under Equipment options. Your custom equipment remains saved.',

@@ -12,6 +12,10 @@ For whole-body movements, the existing strength model uses bodyweight plus addit
 
 Previously saved numeric bodyweight tests retain their original setup, loads and strength estimates. Loading the update does not convert or delete them. Choosing a new setup creates a new baseline while keeping old results in History.
 
+During a workout, use **Resistance for this workout** to choose bodyweight, assistance, or added resistance, then record the actual amount. Constrained workouts also allow **Edit actual load**. The correction applies to all sets of the exercise; completed reps and RIR stay saved. If sets are already logged, changing the resistance type requires a confirmation. A performed load confirms that single equipment option for future prescriptions. Unmeasured bodyweight setups retain the observation without inventing a strength estimate.
+
+Record full repetitions only. A prescribed **<0** finisher does not make the last complete rep a negative-RIR rep: record **0 actual RIR** when the last full rep reaches failure, and exclude later partial or assisted repetitions from the full-rep count.
+
 ## Apple Health in the current web app
 
 PANDR currently runs as a web app on iPhone and as an Electron app on desktop. It has no native iOS HealthKit bridge. Apple documents HealthKit access through an app capability, a HealthKit store, and explicit permission for each data type. The conclusion that PANDR cannot directly read Apple Health in Safari or its installed web app follows from those native requirements; there is no HealthKit browser API in this app. [Apple: Setting up HealthKit](https://developer.apple.com/documentation/healthkit/setting-up-healthkit), [Apple: Authorizing access to health data](https://developer.apple.com/documentation/healthkit/authorizing-access-to-health-data).

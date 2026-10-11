@@ -2,7 +2,9 @@
 
 A training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
 
-## Version 0.5.13
+## Version 0.5.14
+
+Record actual added resistance or machine assistance during bodyweight workouts, with an explicit override for constrained prescriptions. Completed days stay locked for the current training week in both modes. A confirmed restart preserves voided workout history while removing its effect from progression, volume and strength evidence. Assessments unlock days without a persistent readiness banner. Beyond-failure targets record the last complete rep at zero actual RIR by default, and corrected completed workouts can establish a performance-based strength baseline. Use 0.5.14 on every device before sharing the new optional fields; no database migration or account reset is needed.
 
 Record your current bodyweight once in Settings or assessment. Future bodyweight loads use it while historical results and active workouts retain their original weight. Use reps-only baselines for unmeasured push-ups, and review Apple Health weight through a foreground iPhone Shortcut. History displays reps-only results without requesting a weighted strength estimate or stopping the app. Set allocation now shows every proposed exercise count and weekly total before you apply it, with explicit exercise priorities and a preference for at least two sets when feasible. Existing exercise selections and set counts stay intact. Legacy load defaults upgrade automatically; explicitly configured equipment is preserved. See [bodyweight instructions](docs/bodyweight.md) and [set-allocation research and policy](docs/set-allocation.md). No account reset or database migration is required.
 
