@@ -21,7 +21,7 @@ it('saves legacy equipment upgrades through revision guards without changing obs
  const {createMemoryPersistence}=await import('./memory');
  const {beginAssessment,recordAssessment}=await import('../domain/strength');
  const now=new Date('2026-10-10T12:00:00Z');let d=createInitialData();
- d.settings.unit='lb';const slot=d.plan.days[0]!.exercises[0]!;
+ d.settings.unit='lb';d.settings.startDate='2026-10-10';const slot=d.plan.days[0]!.exercises[0]!;
  Object.assign(slot,{increment:1.1023,load:202.8232});delete slot.availableLoads;delete slot.equipmentPreset;
  d=beginAssessment(d,d.plan.days[0],now);
  d=recordAssessment(d,0,{...d.strength!.active!.items[0]!,load:225,reps:8,setup:'Saved bench setup',confirmed:true},now);
