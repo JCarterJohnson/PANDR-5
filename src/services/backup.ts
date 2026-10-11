@@ -1,4 +1,5 @@
 import { assessmentEstimate } from '../domain/strength';
+import { isRepsOnly } from '../domain/bodyweight';
 import { cyclesFor, localDate, recordCycleId } from '../domain/training';
 import { z } from 'zod';
 import type { AppData, Exercise, Session } from '../domain/types';
@@ -45,7 +46,7 @@ export function exportCsv(input: AppData): string {
   type Row = Partial<Record<typeof columns[number], Cell>>;
   const rows: string[] = [columns.map(csvCell).join(',')];
   const add = (row: Row, record: unknown) => rows.push(columns.map(c => csvCell({ profile_id: data.id, schema_version: data.schemaVersion, ...row, record_json: JSON.stringify(record) }[c])).join(','));
-  for (const a of data.strength?.assessments ?? []) add({record_type:'strength_assessment',record_id:a.id,exercise_id:a.exerciseId,exercise_name:a.name,date:a.date,completed_at:a.completedAt,load:a.load,unit:a.unit,load_mode:a.loadMode,reps:a.reps,actual_rir:0,assessment_method:a.method,assessment_curve:a.curve,estimated_1rm_kg:assessmentEstimate(a),assessment_setup:a.setup,bodyweight_resistance:a.bodyweight?.resistance},a);
+  for (const a of data.strength?.assessments ?? []) add({record_type:'strength_assessment',record_id:a.id,exercise_id:a.exerciseId,exercise_name:a.name,date:a.date,completed_at:a.completedAt,load:a.load,unit:a.unit,load_mode:a.loadMode,reps:a.reps,actual_rir:0,assessment_method:a.method,assessment_curve:a.curve,estimated_1rm_kg:isRepsOnly(a.bodyweight)?undefined:assessmentEstimate(a),assessment_setup:a.setup,bodyweight_resistance:a.bodyweight?.resistance},a);
   if(data.strength) add({record_type:'strength_state',record_id:data.id},data.strength);
   for (const cycle of cyclesFor(data)) add({ record_type: 'cycle', record_id: cycle.id, cycle_id: cycle.id, cycle_name: cycle.name, date: cycle.startDate }, cycle);
   add({ record_type: 'settings', record_id: data.id, unit: data.settings.unit, updated_at: data.updatedAt }, data.settings);

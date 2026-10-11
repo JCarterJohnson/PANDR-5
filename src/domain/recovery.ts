@@ -2,7 +2,7 @@ import { calculateVolume, isPivotWeek, validatePlan } from './engine';
 import type { CheckIn, Exercise, RecoveryDecision, Session, TrainingPlan, PlanExercise } from './types';
 
 export function planPrescriptionSignature(plan: TrainingPlan): string {
-  return JSON.stringify({ targets: Object.entries(plan.targets).sort(([a], [b]) => a.localeCompare(b)), days: plan.days.map(d => ({ id: d.id, kind: d.kind, exercises: d.exercises.map(e => ({ id: e.id, exerciseId: e.exerciseId, sets: e.sets, rir: e.rir, repMin: e.repMin, repMax: e.repMax })) })) });
+  return JSON.stringify({ targets: Object.entries(plan.targets).sort(([a], [b]) => a.localeCompare(b)), days: plan.days.map(d => ({ id: d.id, kind: d.kind, exercises: d.exercises.map(e => ({ id: e.id, exerciseId: e.exerciseId, sets: e.sets, rir: e.rir, repMin: e.repMin, repMax: e.repMax, ...(e.allocationPriority === 'priority' ? {allocationPriority:'priority'} : {}) })) })) });
 }
 
 /** Remove intermediate work while retaining early effort targets and the exact anchor/finisher. */

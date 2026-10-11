@@ -45,8 +45,8 @@ export function PlanExercises({slots,exercises,disabled,onEdit,onRemove,onReorde
     <span className="sr-only" role="status" aria-live="polite">{announcement}</span>
     {ordered.map((slot,index)=><div className={`plan-row ${dragging===slot.id?'dragging':''}`} key={slot.id} data-plan-slot={slot.id}>
       <span className="row-index">{String(index+1).padStart(2,'0')}</span>
-      <button className="text-button exercise-name" onClick={()=>onEdit(slot.id)}>{names.get(slot.exerciseId)}</button>
-      <span>{slot.sets} sets · {slot.repMin}–{slot.repMax} reps</span>
+      <button className="text-button exercise-name" onClick={()=>onEdit(slot.id)}>{names.get(slot.exerciseId)}{slot.allocationPriority==='priority'&&<small className="allocation-priority" aria-hidden="true">Priority</small>}</button>
+      <span>{slot.sets} {slot.sets===1?'set':'sets'} · {slot.repMin}–{slot.repMax} reps</span>
       <div className="row-actions"><button type="button" className="icon-button reorder-handle" disabled={disabled} aria-label={`Reorder ${names.get(slot.exerciseId)}`} aria-describedby={helpId} aria-pressed={dragging===slot.id} onPointerDown={e=>{
         if(disabled||e.button!==0||drag.current)return;
         e.preventDefault();e.currentTarget.focus({preventScroll:true});

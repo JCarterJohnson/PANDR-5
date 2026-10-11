@@ -71,3 +71,9 @@ Velocity profiling is not implemented because this app has no validated velocity
 ## Verification
 
 Domain tests cover exact measured maxima, curve monotonicity and bounds, program order, mandatory onboarding, 14-day boundaries, partial sessions, bodyweight/assistance, unavailable equipment, unit conversion, override enforcement, authoritative progression, backup preservation and exports. Account contract tests cover hydration and competing strength edits. Browser tests cover initial assessment, persisted drafts, reload, first training day, mobile layout, later bypass and switching to custom mode mid-workout. These tests check software behavior, not prospective physiological prediction accuracy. Live production-account saving is not exercised by the isolated fixtures.
+
+## Shared bodyweight and unmeasured movements
+
+Current bodyweight is saved once in Settings. Whole-body setups use it directly; partially supported setups use an explicitly calibrated fraction. Historical assessments and workouts retain their original resistance, and an active workout remains frozen. Initial strength capacity stays absolute when bodyweight changes. Later prescriptions translate the last total-resistance target into current added-load or assistance options while preserving PANDR percentage limits; an unavailable target requires equipment review or reassessment.
+
+Unmeasured bodyweight setups use a reps-only baseline (2–100 clean failure reps), with same-setup reps and RIR guidance. They produce no numerical resistance, 1RM estimate, or percentage-load progression. Changing bodyweight requires a new test for those setups. Existing numeric setups remain fixed until explicitly linked or recalibrated. See [bodyweight and Apple Health instructions](bodyweight.md).
