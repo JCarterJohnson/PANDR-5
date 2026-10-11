@@ -8,9 +8,9 @@ test('mandatory onboarding, persisted draft, test result, same-day training and 
  await page.clock.install({time:new Date('2026-09-01T12:00:00')});const account=await accountFixture(page,smallPlan());const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/');
  await expect(page).toHaveTitle(/PANDR/);await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await page.getByRole('button',{name:'Begin initial assessment'}).click();await expect(page.getByRole('button',{name:/Bypass assessment/})).toHaveCount(0);await page.getByRole('button',{name:'Start assessment',exact:true}).click();
- await page.getByLabel('Test load (kg)').fill('80');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('Rack 1, full ROM, total barbell load');await page.getByRole('button',{name:'Save assessment progress'}).click();
- await expect.poll(()=>account.getHead().metadata.strength.active.items[0].load).toBe(80);await page.reload();await expect(page.getByLabel('Test load (kg)')).toHaveValue('80');
- await page.getByRole('checkbox',{name:/next clean rep was impossible/}).check();await page.getByRole('button',{name:'Save test result'}).click();await expect(page.getByText('Baseline saved',{exact:true})).toBeVisible();
+ await page.getByLabel('Weight used (kg)').fill('80');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('Rack 1, full ROM, total barbell load');await page.getByRole('button',{name:'Save assessment progress'}).click();
+ await expect.poll(()=>account.getHead().metadata.strength.active.items[0].load).toBe(80);await page.reload();await expect(page.getByLabel('Weight used (kg)')).toHaveValue('80');
+ await page.getByRole('checkbox',{name:/I could not do another clean rep/}).check();await page.getByRole('button',{name:'Save test result'}).click();await expect(page.getByText('Baseline saved',{exact:true})).toBeVisible();
  await page.screenshot({path:'/tmp/pandr-strength-desktop.png',fullPage:true,animations:'disabled'});await page.getByRole('button',{name:'Finish assessment',exact:true}).click();
  await expect.poll(()=>account.getHead().metadata.strength.onboardingCompletedAt).toBeTruthy();await expect(page.getByRole('button',{name:'Start session',exact:true})).toBeEnabled();
  await page.getByRole('button',{name:'Start session',exact:true}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeEnabled();
@@ -20,7 +20,7 @@ test('mandatory onboarding, persisted draft, test result, same-day training and 
 test('phone assessment and 14-day custom bypass stay usable after reload',async({page})=>{
  await page.setViewportSize({width:390,height:844});await page.clock.install({time:new Date('2026-09-01T12:00:00')});const account=await accountFixture(page,smallPlan());await page.goto('/');await page.getByRole('button',{name:'Begin initial assessment'}).click();await page.getByRole('button',{name:'Start assessment',exact:true}).click();
  await page.screenshot({path:'/tmp/pandr-strength-mobile.png',fullPage:true,animations:'disabled'});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
- await page.getByLabel('Test load (kg)').fill('70');await page.getByLabel('Test method').selectOption('1rm');await page.getByLabel('Exact setup').fill('Flat bench, safeties, full ROM');await page.getByRole('checkbox',{name:/one clean maximum rep/}).check();await page.getByRole('button',{name:'Save test result'}).click();await page.getByRole('button',{name:'Finish assessment',exact:true}).click();
+ await page.getByLabel('Weight used (kg)').fill('70');await page.getByLabel('Test method').selectOption('1rm');await page.getByLabel('Exact setup').fill('Flat bench, safeties, full ROM');await page.getByRole('checkbox',{name:/one clean maximum rep/}).check();await page.getByRole('button',{name:'Save test result'}).click();await page.getByRole('button',{name:'Finish assessment',exact:true}).click();
  await expect.poll(()=>account.getHead().metadata.strength.onboardingCompletedAt).toBeTruthy();await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await page.clock.setSystemTime(new Date('2026-09-15T12:00:00'));await page.clock.runFor(1100);await page.reload();await page.getByRole('button',{name:'Start session',exact:true}).click();await expect(page.getByText(/14\+ days without training/)).toBeVisible();await page.getByRole('button',{name:'Bypass assessment for this workout'}).click();await expect(page.getByLabel('Working load',{exact:true})).toBeVisible();
 });
@@ -51,7 +51,7 @@ test('save and exit preserves drafts, unlocks one day, and keeps the next day ma
  const d=smallPlan();const other=createInitialData().plan.days[1];d.plan.days.push({...other,exercises:[other.exercises[0]]});
  const account=await accountFixture(page,d);await page.goto('/');
  await page.getByRole('button',{name:'Begin initial assessment'}).click();await page.getByRole('button',{name:'Start assessment',exact:true}).click();
- await page.getByLabel('Test load (kg)').fill('80');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('Rack A');
+ await page.getByLabel('Weight used (kg)').fill('80');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('Rack A');
  await page.getByRole('button',{name:'Save and exit'}).click();
  await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await expect.poll(()=>account.getHead().metadata.strength.active.paused).toBe(true);
@@ -59,8 +59,8 @@ test('save and exit preserves drafts, unlocks one day, and keeps the next day ma
  await expect(page.getByRole('button',{name:'Resume assessment'})).toHaveCount(1);
  await page.reload();await expect(page.getByRole('heading',{name:'Your next session'})).toBeVisible();
  await expect(page.getByRole('button',{name:'Begin initial assessment'})).toHaveCount(0);
- await page.getByRole('button',{name:'Resume assessment'}).click();await expect(page.getByLabel('Test load (kg)')).toHaveValue('80');await expect(page.getByLabel('Exact setup')).toHaveValue('Rack A');
- await page.getByRole('checkbox',{name:/next clean rep was impossible/}).check();await page.getByRole('button',{name:'Save test result'}).click();
+ await page.getByRole('button',{name:'Resume assessment'}).click();await expect(page.getByLabel('Weight used (kg)')).toHaveValue('80');await expect(page.getByLabel('Exact setup')).toHaveValue('Rack A');
+ await page.getByRole('checkbox',{name:/I could not do another clean rep/}).check();await page.getByRole('button',{name:'Save test result'}).click();
  await page.getByRole('button',{name:'Save and exit'}).click();
  await page.getByRole('button',{name:new RegExp('Day 2')}).click();await page.getByRole('button',{name:'Start session',exact:true}).click();
  await expect(page.getByRole('button',{name:/Bypass assessment/})).toHaveCount(0);

@@ -1,20 +1,16 @@
-# Bodyweight, exercise resistance, and Apple Health
+# Bodyweight and Apple Health
 
-Bodyweight belongs in **Settings → Bodyweight**. Enter your scale weight once. PANDR saves it in kilograms with the date it was recorded and displays it in your selected unit. Updating it changes future exercises that use your full bodyweight or a measured share of it. Past assessments and workouts retain the bodyweight they used; an active workout keeps the weight it started with.
+Save your bodyweight once in **Settings → Your bodyweight**. Future workouts use it; completed tests and workouts keep their original values.
 
-Your scale weight is different from the resistance moved in an exercise. For a pull-up or chin-up, the setup can use your full bodyweight. For an incline push-up, your hands support only part of it. Record a measurement for that exact hand height, foot position, and range of motion instead of entering your entire scale weight. There is no universal percentage that works for every push-up setup.
+PANDR recognizes bodyweight movements automatically. Pull-ups, chin-ups and dips use your saved bodyweight. Push-ups, rows and other supported movements use a reps test for the same variation. You do not need scales under your hands, a percentage, or a resistance measurement.
 
-**Added weight** means weight carried during the movement, such as a weighted vest or a plate attached to a belt. **Assistance** means a measured force that makes the movement easier, such as a calibrated assisted pull-up machine. Plates resting under your hands change a push-up’s setup; their printed weight is neither added load nor assistance. Describe the elevation in the setup notes. Band color or a printed band range is not a measurement of assistance throughout your range of motion.
+**Additional weight** is the actual weight of a vest, belt or added plates. Select **Use additional weight** only when you wear or carry it. **Assistance** is the setting on an assistance machine. A bench or plates under your hands belong in **Exact setup**, not in a weight field. Describe bands and other variation details there too.
 
-For partially supported movements, added loads and assistance must be measured changes in supported load, rather than the mass printed on equipment. If your hands support 140 lb unweighted and 146 lb while wearing a 10 lb vest, the added resistance for this setup is 6 lb. The unweighted supported load is the base. Whole-body movements can use the carried vest or belt weight directly.
+The main assessment asks for clean repetitions and a short setup note. **Equipment options** contains weights you have available for future workouts; those are separate from the weight used for this test.
 
-For setups with known resistance, the model uses:
+For whole-body movements, the existing strength model uses bodyweight plus additional weight minus machine assistance. For push-ups and other supported movements, the app compares reps and RIR in the same setup, including any additional weight. It does not invent a precise effective load or weighted 1RM. Retest if your bodyweight, additional weight or variation changes. RIR still means the clean reps you could do before failure.
 
-`effective resistance = bodyweight resistance + added weight − measured assistance`
-
-The app uses this effective resistance for the strength estimate and load progression. Your actual RIR still means the number of clean repetitions you could have completed. A change in scale weight does not change previously logged RIR or establish a new strength result. Upcoming loads can account for the new weight; retest after changing technique, elevation, equipment, or range of motion.
-
-When resistance is unknown, a reps-only baseline accepts 2–100 clean repetitions and records your performance in the same setup. Retest after a bodyweight or setup change. It cannot support a precise weighted 1RM estimate or numeric load progression. Do not invent a resistance value to make the calculation available.
+Previously saved numeric bodyweight tests retain their original setup, loads and strength estimates. Loading the update does not convert or delete them. Choosing a new setup creates a new baseline while keeping old results in History.
 
 ## Apple Health in the current web app
 

@@ -3,22 +3,26 @@ import { accountFixture, trainingReadyData } from './account-fixture';
 import { readFile } from 'node:fs/promises';
 
 const chin='Close-Grip Chinups (Assisted, BW, or Weighted)';
-test('confirmed bodyweight setup progresses, saves modes and exports complete resistance data',async({page},info)=>{
- const account=await accountFixture(page,trainingReadyData());await page.goto('/');
+test('saved bodyweight setup stays intact and progresses, saves modes and exports complete resistance data',async({page})=>{
+ const data=trainingReadyData();const observations=structuredClone(data.strength!.assessments);
+ const account=await accountFixture(page,data);await page.goto('/');
  await page.getByRole('button',{name:'Your plan',exact:true}).click();
  await page.getByRole('button',{name:chin,exact:true}).click();
- await expect(page.getByLabel('Set up bodyweight resistance')).toBeChecked();
- await page.getByLabel('Bodyweight resistance (kg)',{exact:true}).fill('80');
- await page.getByLabel('Available added loads (kg)',{exact:true}).fill('2.5, 5');
- await page.getByLabel('Available measured assistance (kg)',{exact:true}).fill('2, 4');
+ await page.getByText('Equipment options',{exact:true}).click();
+ await expect(page.getByText('Using your saved setup. Your previous test is unchanged.',{exact:true})).toBeVisible();
+ await expect(page.getByLabel('Set up bodyweight resistance')).toHaveCount(0);
+ await expect(page.getByLabel('Bodyweight resistance (kg)',{exact:true})).toHaveCount(0);
+ await expect(page.getByLabel(/Supported load/)).toHaveCount(0);
  await page.getByRole('button',{name:'Apply exercise'}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises.find((s:any)=>s.bodyweight)?.bodyweight.resistance).toBe(80);
+ expect(account.getHead().metadata.strength.assessments).toEqual(observations);
+ expect(account.getHead().metadata.plan.days[0].exercises.find((s:any)=>s.bodyweight)?.bodyweight).toEqual({resistance:80,addedLoads:[2.5,5],assistanceLoads:[2,4]});
  await page.reload();await page.getByRole('button',{name:'Start session',exact:true}).click();
  await page.locator('.exercise-picker').getByRole('button',{name:new RegExp('Chinups')}).click();
  const repCount=await page.getByLabel(/Set \d+ reps/).count();
  for(let i=1;i<=repCount;i++){await page.getByLabel(`Set ${i} reps`,{exact:true}).fill('30');await page.getByLabel(`Set ${i} actual RIR`,{exact:true}).selectOption('1');await page.getByRole('button',{name:`Log set ${i}`,exact:true}).click();}
  await expect(page.getByText('Ready to progress',{exact:true})).toBeVisible();await expect(page.getByText(/Use 2.5 kg added load next time/)).toBeVisible();
- await page.screenshot({path:info.outputPath('calibrated-bodyweight-desktop.png'),fullPage:true});
+ await page.screenshot({path:'/tmp/pandr-saved-bodyweight-desktop.png',fullPage:true});
  await page.getByRole('button',{name:'Finish session',exact:true}).click();await page.getByRole('button',{name:/Finish with .* unlogged sets/}).click();
  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises.find((s:any)=>s.bodyweight)?.loadMode).toBe('external');
  await page.getByRole('button',{name:'Settings',exact:true}).click();
@@ -30,19 +34,20 @@ test('confirmed bodyweight setup progresses, saves modes and exports complete re
  expect(backup.plan.days[0].exercises.find((e:any)=>e.bodyweight)).toMatchObject({loadMode:'external',load:5.5116});
 });
 
-test('exact equipment lists survive reload and stay usable on a phone',async({page},info)=>{
+test('exact equipment lists survive reload and stay usable on a phone',async({page})=>{
  await page.setViewportSize({width:390,height:844});const account=await accountFixture(page);await page.goto('/');
  await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();
  await page.getByRole('button',{name:'Bench Press',exact:true}).click();
- if(!await page.getByLabel('Use an exact list of available loads').isVisible())await page.getByText('Equipment and bodyweight progression',{exact:true}).click();
- await page.getByLabel('Use an exact list of available loads').check();
- await page.getByLabel('Available working loads (kg)',{exact:true}).fill('10, 10.25, 12.5');
- await expect(page.getByLabel('Working load',{exact:true})).toBeDisabled();await page.screenshot({path:info.outputPath('equipment-mobile.png'),fullPage:true});
+ await page.getByText('Equipment options',{exact:true}).click();
+ await page.getByLabel('List available weights').check();
+ await page.getByLabel(/^Available weights \(kg\)/).fill('10, 10.25, 12.5');
+ await expect(page.getByLabel('Working load',{exact:true})).toBeDisabled();await page.screenshot({path:'/tmp/pandr-equipment-mobile.png',fullPage:true});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.getByRole('button',{name:'Apply exercise'}).click();await page.getByRole('button',{name:'Save plan',exact:true}).click();
  await expect.poll(()=>account.getHead()?.metadata.plan.days[0].exercises[0].availableLoads).toEqual([10,10.25,12.5]);
  await page.reload();await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('button',{name:'Your plan',exact:true}).click();await page.getByRole('button',{name:'Bench Press',exact:true}).click();
- await expect(page.getByLabel('Available working loads (kg)',{exact:true})).toHaveValue('10, 10.25, 12.5');
+ await page.getByText('Equipment options',{exact:true}).click();
+ await expect(page.getByLabel(/^Available weights \(kg\)/)).toHaveValue('10, 10.25, 12.5');
 });
 
 test('repeated recovery trouble changes next week only and keeps the pivot rule',async({page})=>{

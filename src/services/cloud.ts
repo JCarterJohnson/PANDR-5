@@ -4,6 +4,7 @@ import type { AppData, CheckIn, Session } from '../domain/types';
 import { strengthSchema, checkInSchema, cycleSchema, exerciseSchema, idSchema, planSchema, sessionSchema, settingsSchema, validateAppData } from '../domain/validation';
 import { loadData, loadSyncState, saveSyncedData } from './storage';
 import { PUBLIC_CLOUD } from '../data/cloud-config';
+import { removeClosedCycle } from '../domain/cycle-deletion';
 
 export interface SyncPersistence {
   loadData: typeof loadData;
@@ -125,6 +126,44 @@ export async function readCloudData(userId: string, persistence: SyncPersistence
 }
 
 const running = new Set<string>();
+/** Explicit deletion bypasses append-only sync and accepts only an acknowledged snapshot. */
+export async function deleteClosedCycle(userId: string, input: AppData, cycleId: string, persistence: SyncPersistence = legacyPersistence): Promise<AppData> {
+  if (running.has(userId)) throw new Error('Wait for your account to finish saving before deleting a cycle.');
+  running.add(userId);
+  try {
+    const local = validateAppData(input);
+    const expected = removeClosedCycle(local, cycleId);
+    const baselineInput = await persistence.loadSyncState(userId);
+    if (!baselineInput) throw new Error('Save your account before deleting a cycle.');
+    const baseline = baselineSchema.parse(baselineInput);
+    const localMetadata = metadata(local);
+    for (const key of metadataFields) {
+      if (await fingerprint(localMetadata[key]) !== (baseline.metadata[key] ?? await fingerprint(undefined))) throw new Error('Save your pending changes before deleting a cycle.');
+    }
+    const logs = localLogs(local);
+    if (logs.size !== baseline.records.length) throw new Error('Save your pending history before deleting a cycle.');
+    for (const ref of baseline.records) {
+      if (!logs.has(recordKey(ref)) || await fingerprint(logs.get(recordKey(ref))) !== ref.fingerprint) throw new Error('Save your pending history before deleting a cycle.');
+    }
+    const api = await authenticated(userId);
+    const { data, error } = await api.rpc('pandr_delete_closed_cycle', { expected_revision: baseline.revision, cycle_id: cycleId });
+    if (error) {
+      if (error.code === '40001') throw new Error('Your account changed on another device. Refresh History before deleting this cycle. Nothing was deleted.');
+      if (error.code === 'PGRST202') throw new Error('Cycle deletion is not available yet. Your history is unchanged.');
+      throw new Error(`Could not delete this cycle: ${error.message}`);
+    }
+    const head = headSchema.parse(data);
+    if (head.user_id !== userId) throw new Error('The deletion response belongs to a different account. Reopen the app.');
+    const result = await hydrate(api, head, local);
+    // The limited RPC must preserve every field and record outside the chosen cycle.
+    const { updatedAt: _expectedTime, ...expectedContent } = expected;
+    const { updatedAt: _resultTime, ...resultContent } = result;
+    if (canonical(expectedContent) !== canonical(resultContent)) throw new Error('The account returned an unexpected history change. Reopen the app to reload your saved account.');
+    await persistence.saveSyncedData(userId, result, await makeBaseline(head), local);
+    return result;
+  } finally { running.delete(userId); }
+}
+
 export async function syncData(userId: string, input: AppData, persistence: SyncPersistence = legacyPersistence): Promise<{ data: AppData; status: string }> {
   if (running.has(userId)) throw new Error('This account is already syncing.');
   running.add(userId);

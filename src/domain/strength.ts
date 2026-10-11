@@ -95,15 +95,17 @@ export function reconcileAssessment(data: AppData, previousPlan?: TrainingPlan, 
     const saved=prior.get(slot.exerciseId);
     const previousSlot=previousPlan?.days.flatMap(day=>day.exercises).find(s=>s.id===slot.id);
     const massTracked = slot.bodyweight?.tracking === 'full-body' || slot.bodyweight?.tracking === 'measured' || slot.bodyweight?.tracking === 'reps-only';
-    const sameTrackedSetup = massTracked && previousSlot && previousSlot.bodyweight?.tracking === slot.bodyweight?.tracking && (slot.bodyweight?.tracking !== 'measured' || previousSlot.bodyweight?.fraction === slot.bodyweight.fraction);
+    const sameTrackedSetup = massTracked && previousSlot && previousSlot.bodyweight?.tracking === slot.bodyweight?.tracking && (slot.bodyweight?.tracking !== 'measured' || previousSlot.bodyweight?.fraction === slot.bodyweight.fraction) && (slot.bodyweight?.tracking !== 'reps-only' || (previousSlot.bodyweight?.additionalWeightKg ?? 0) === (slot.bodyweight.additionalWeightKg ?? 0));
     const savedCompatible = saved && compatible({ ...saved.slot, unit: saved.unit },slot,data.settings.unit);
     const setupChanged=!saved||!!saved.resultId&&!savedCompatible||!!previousSlot&&!sameTrackedSetup&&JSON.stringify([previousSlot.bodyweight,previousSlot.loadMode])!==JSON.stringify([slot.bodyweight,slot.loadMode]);
     if (saved?.resultId && savedCompatible) { items.push({ ...structuredClone(saved), slot: { ...structuredClone(saved.slot), id: slot.id } }); continue; }
     if(saved&&(!setupChanged||saved.resultId&&savedCompatible)){
-      // Keep an unfinished test's measured inputs and inline equipment setup.
-      // A deliberate plan edit refreshes its snapshot; a reload alone does not
-      // erase equipment entered in the assessment but not yet recorded.
-      const snapshot=previousSlot&&JSON.stringify(previousSlot)!==JSON.stringify(slot)?structuredClone(slot):{...structuredClone(saved.slot),id:slot.id,sets:slot.sets,repMin:slot.repMin,repMax:slot.repMax,rir:[...slot.rir]};
+      // Set allocation changes the training prescription, not the test setup.
+      // Keep inline test equipment when only sets, reps, RIR or priority changed;
+      // intentional equipment edits still refresh the plan's equipment snapshot.
+      const equipmentSnapshot=({sets:_sets,repMin:_min,repMax:_max,rir:_rir,allocationPriority:_priority,...equipment}:PlanExercise)=>JSON.stringify(equipment);
+      const equipmentChanged=previousSlot&&equipmentSnapshot(previousSlot)!==equipmentSnapshot(slot);
+      const snapshot=equipmentChanged?structuredClone(slot):{...structuredClone(saved.slot),id:slot.id,sets:slot.sets,repMin:slot.repMin,repMax:slot.repMax,rir:[...slot.rir]};
       items.push({...structuredClone(saved),slot:snapshot});
     }else items.push({exerciseId:slot.exerciseId,slot:structuredClone(slot),reason:due.get(slot.exerciseId)?.reason??'setup',method:'failure',reps:0,load:slot.load,loadMode:slot.loadMode,unit:data.settings.unit,setup:'',confirmed:false});
   }

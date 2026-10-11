@@ -2,7 +2,7 @@
 
 A training app built from the PANDR-5 v1.1.1 spreadsheet. Choose a plan, log your working sets, and get a clear explanation of the next session’s load.
 
-## Version 0.5.11
+## Version 0.5.12
 
 Record your current bodyweight once in Settings or assessment. Future bodyweight loads use it while historical results and active workouts retain their original weight. Use reps-only baselines for unmeasured push-ups, and review Apple Health weight through a foreground iPhone Shortcut. History displays reps-only results without requesting a weighted strength estimate or stopping the app. Set allocation now shows every proposed exercise count and weekly total before you apply it, with explicit exercise priorities and a preference for at least two sets when feasible. Existing plans stay intact until edited. See [bodyweight instructions](docs/bodyweight.md) and [set-allocation research and policy](docs/set-allocation.md). No account reset or database migration is required.
 
@@ -10,10 +10,10 @@ Autosaving uses a quiet status line without shifting the editor or showing a bot
 
 ## Public app and downloads
 
-**0.5.11 includes shared bodyweight tracking, reviewed set allocation, and the reps-only History fix in both the web and desktop apps.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
+**0.5.12 includes automatic bodyweight setup, simple test inputs, cycle deletion with two confirmations, reviewed set allocation, and preserved strength history in both the web and desktop apps.** The 372-exercise catalog, alias search, research notes and custom imports are preserved. Google sign-in and cloud synchronization remain available. The current working version saves training to a Google-linked account. Signed-out use is an unsaved preview; account saves require a connection. Old device histories remain available for export. Use Settings to export your complete history as CSV or a lossless JSON backup. Read the [coaching comparison report](research/coaching-refinements/report/REPORT.md) for results and remaining limits.
 
 - **Phone or desktop browser:** [open PANDR-5](https://pandr-5.vercel.app/), then install it from your browser.
-- **Desktop downloads:** [get version 0.5.11](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.5.11). Replace the existing application; keep its application data. Web updates do not update a downloaded desktop bundle. Use 0.5.11 on every device before sharing the new optional bodyweight, resistance-tracking, and exercise-priority fields; older desktop builds can reject them after a successful Google sign-in.
+- **Desktop downloads:** [get version 0.5.12](https://github.com/JCarterJohnson/PANDR-5/releases/tag/v0.5.12). Replace the existing application; keep its application data. Web updates do not update a downloaded desktop bundle. Use 0.5.12 on every device before sharing the new optional bodyweight, resistance-tracking, and exercise-priority fields; older desktop builds can reject them after a successful Google sign-in.
 - **Earlier local edition:** [GitHub Pages edition](https://jcarterjohnson.github.io/PANDR-5/).
 - Windows/macOS packages are unsigned. They do not have paid code-signing or Apple notarization. Download only from this repository; operating systems may display security warnings.
 - Hosting uses Vercel Hobby, Supabase Free, and GitHub. No purchased domain or paid upgrade was required. Free service quotas and availability limits apply.

@@ -8,6 +8,15 @@ export type AppUpdate = {
 
 /** User-facing release history. Add the new release here when bumping package.json. */
 export const appUpdates: AppUpdate[] = [
+ {version:'0.5.12',title:'Simple bodyweight tests and cycle history controls',added:[
+  'Delete a previous ended cycle from History after two confirmations. Your strength assessments and current training stay saved.',
+ ],improved:[
+  'Bodyweight exercises choose their setup automatically. Log clean reps, additional weight, or machine assistance with simple inputs.',
+  'Equipment options describe weights available for future workouts. Push-ups track reps and RIR without scale or hand-load measurements.',
+ ],fixed:[
+  'Set adjustments preserve equipment, reps and notes entered in an unfinished strength test.',
+  'Saved tests and workouts retain their original results. Use version 0.5.12 on every device before saving optional additional-weight context.',
+ ]},
  {version:'0.5.11',title:'Bodyweight history fix',improved:[
   'Includes shared bodyweight in Settings, reps-only assessments, foreground Apple Health Shortcut imports that require confirmation, and reviewed set allocation with exercise priorities.',
  ],fixed:[

@@ -46,7 +46,7 @@ export function BodyMassField({ data, update, compact = false }: { data: AppData
 
  return <section className={compact ? 'body-mass-field' : 'panel body-mass-field'}>
   {compact ? <h3>Your bodyweight</h3> : <h2>Your bodyweight</h2>}
-  <Field label={`Current bodyweight (${unit})`} hint="Your scale weight. Save it once here; whole-body movements and measured setups linked to it update automatically.">
+  <Field label={`Current bodyweight (${unit})`} hint="Save it once for the whole app. Past tests and workouts keep their original weight.">
    <input aria-label={`Current bodyweight (${unit})`} type="number" inputMode="decimal" min="0.01" step="any" value={value} onChange={event => { setValue(event.target.value); setDirty(true); setMessage(''); setError(''); }}/>
   </Field>
   {bodyMass && <p className="muted"><small>Last updated {new Date(bodyMass.recordedAt).toLocaleDateString()}. Saved assessments and workouts keep the bodyweight used at the time.</small></p>}

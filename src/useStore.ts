@@ -4,7 +4,7 @@ import { validateAppData } from './domain/validation';
 import { createInitialData } from './data/seed';
 import { initializeDefaultPlan } from './domain/initial-plan';
 import { reconcileAssessment } from './domain/strength';
-import { getCloudClient, readCloudData, syncData } from './services/cloud';
+import { deleteClosedCycle, getCloudClient, readCloudData, syncData } from './services/cloud';
 import { createMemoryPersistence } from './services/memory';
 
 export function useStore() {
@@ -96,6 +96,22 @@ export function useStore() {
   };
   const task = queue.current.then(work); queue.current = task.catch(() => {}); return task;
  }, [publish, profile]);
+ const deleteCycle = useCallback(async (cycleId: string) => {
+  const gen = generation.current, id = profileRef.current;
+  if (id === 'local') throw new Error('Sign in before deleting saved history.');
+  if (profile !== id || dirty.current) throw new Error('Save your pending changes before deleting a cycle.');
+  const work = async () => {
+   if (!current.current || gen !== generation.current || id !== profileRef.current) throw new Error('Your account changed. Reopen History.');
+   if (dirty.current) throw new Error('Save your pending changes before deleting a cycle.');
+   setBusy(true);
+   try {
+    const next = await deleteClosedCycle(id, current.current, cycleId, persistence.current);
+    if (gen !== generation.current || id !== profileRef.current) throw new Error('Your account changed. Reopen History to see your saved account.');
+    current.current = next; setData(next); setPending(false); setStatus('Saved to your account'); setError('');
+   } finally { if (gen === generation.current) setBusy(false); }
+  };
+  const task = queue.current.then(work); queue.current = task.catch(() => {}); return task;
+ }, [profile]);
  const sync = useCallback(async () => {
   const gen = generation.current, id = profileRef.current;
   if (id === 'local') return;
@@ -114,5 +130,5 @@ export function useStore() {
   window.addEventListener('online', online); window.addEventListener('beforeunload', beforeUnload);
   return () => { window.removeEventListener('online', online); window.removeEventListener('beforeunload', beforeUnload); };
  }, [sync]);
- return { data, update, error, setError, status, busy, ready, pending, interrupted, profile, email, client, sync, openProfile, signOut };
+ return { data, update, deleteCycle, error, setError, status, busy, ready, pending, interrupted, profile, email, client, sync, openProfile, signOut };
 }

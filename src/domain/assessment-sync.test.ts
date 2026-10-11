@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createInitialData } from '../data/seed';
 import { beginAssessment, recordAssessment, reconcileAssessment } from './strength';
-import { makeRir } from './engine';
+import { allocateSets, makeRir } from './engine';
 import { validateAppData } from './validation';
 
 const now=new Date('2026-10-08T12:00:00Z');
@@ -90,6 +90,33 @@ describe('assessment queue follows the live plan',()=>{
     const reloaded=reconcileAssessment(d,undefined,now);
     const updated=reconcileAssessment(reloaded,structuredClone(d.plan),now);
     expect(updated.strength!.active!.items.find(i=>i.slot.id==='curl')).toEqual(item);
+  });
+  it('preserves unfinished inline equipment and confirmed test inputs when sets are reallocated',()=>{
+    const d=partialAssessment(),old=structuredClone(d.plan);
+    const item=d.strength!.active!.items.find(i=>i.slot.id==='curl')!;
+    item.slot.bodyweight={tracking:'measured',resistance:40,bodyMassKg:80,fraction:.5,addedLoads:[5,7.5],assistanceLoads:[10]};
+    item.slot.availableLoads=[5,7.5];item.slot.increment=.25;item.slot.load=5;item.slot.loadMode='external';
+    Object.assign(item,{load:5,reps:8,confirmed:true,setup:'Saved inline station and range'});
+    const before=structuredClone(d),savedItem=structuredClone(item);
+    d.plan.targets={hamstrings:12};
+    d.plan=allocateSets(d.plan,d.exercises,false).plan;
+    const planSlot=d.plan.days[1]!.exercises.find(s=>s.id==='curl')!;
+    expect(planSlot.sets).not.toBe(old.days[1]!.exercises.find(s=>s.id==='curl')!.sets);
+    const next=reconcileAssessment(d,old,now),updated=next.strength!.active!.items.find(i=>i.slot.id==='curl')!;
+    expect(updated).toEqual({...savedItem,slot:{...savedItem.slot,sets:planSlot.sets,repMin:planSlot.repMin,repMax:planSlot.repMax,rir:[...planSlot.rir]}});
+    expect(next.strength!.assessments).toEqual(before.strength!.assessments);
+    expect(next.sessions).toEqual(before.sessions);expect(next.checkIns).toEqual(before.checkIns);expect(next.cycles).toEqual(before.cycles);
+    expect(d.strength).toEqual(before.strength);expect(()=>validateAppData(next)).not.toThrow();
+    expect(reconcileAssessment(next,undefined,now)).toEqual(next);
+  });
+  it('refreshes an unfinished prescription while preserving its inline setup and an intentionally changed RIR range',()=>{
+    const d=partialAssessment(),old=structuredClone(d.plan),item=d.strength!.active!.items.find(i=>i.slot.id==='curl')!;
+    item.slot.availableLoads=[20,22,24];item.slot.increment=2;item.confirmed=true;
+    const savedItem=structuredClone(item),slot=d.plan.days[1]!.exercises.find(s=>s.id==='curl')!;
+    Object.assign(slot,{sets:4,rir:[3,2,1,'0-1'],repMin:6,repMax:10,allocationPriority:'priority'});
+    const next=reconcileAssessment(d,old,now),updated=next.strength!.active!.items.find(i=>i.slot.id==='curl')!;
+    expect(updated).toEqual({...savedItem,slot:{...savedItem.slot,sets:4,rir:[3,2,1,'0-1'],repMin:6,repMax:10}});
+    expect(()=>validateAppData(next)).not.toThrow();
   });
   it('retains a completed movement still selected elsewhere when its original slot is replaced',()=>{
     const d=partialAssessment(),old=structuredClone(d.plan),bench=d.plan.days[0]!.exercises[0]!;

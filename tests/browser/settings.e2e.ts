@@ -25,7 +25,7 @@ for(const paused of [false,true])test(`preferences and cycles preserve a ${pause
  await page.getByRole('button',{name:'Start a new cycle'}).click();await page.getByLabel('Cycle name').fill('Return after break');await page.getByLabel('New cycle starts').fill('2026-09-21');await page.getByRole('button',{name:'Start cycle',exact:true}).click();
  await expect.poll(()=>account.getHead().metadata.settings.startDate).toBe('2026-09-21');expect(account.getHead().metadata.strength).toEqual(strength);
  await page.reload();if(paused){await expect(page.getByText('Return after break starts on 2026-09-21.',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Resume assessment'}).click();}
- await expect(page.getByLabel('Test load (kg)')).toHaveValue('35');await expect(page.getByLabel('Exact setup')).toHaveValue('Unfinished test station');
+ await expect(page.getByLabel('Weight used (kg)')).toHaveValue('35');await expect(page.getByLabel('Exact setup')).toHaveValue('Unfinished test station');
  expect(account.getHead().metadata.strength.assessments).toEqual(strength!.assessments);expect(account.getHead().metadata.sessions).toBeUndefined();
 });
 

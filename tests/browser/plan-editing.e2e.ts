@@ -78,8 +78,8 @@ test('changing exercises mid-assessment updates the saved queue and keeps comple
   await page.reload();await page.getByRole('button',{name:'Day 2 Legs',exact:true}).click();await page.getByRole('button',{name:'Resume assessment',exact:true}).click();
   await expect(page.locator('.exercise-picker')).toContainText('Leg Extension');await expect(page.locator('.exercise-picker')).not.toContainText('Leg Press');
   await expect(page.getByRole('heading',{name:'Leg Extension',exact:true})).toBeVisible();
-  await page.getByLabel('Test load (kg)').fill('25');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('New leg extension station');
-  await page.getByRole('checkbox',{name:/next clean rep was impossible/}).check();await page.getByRole('button',{name:'Save test result',exact:true}).click();
+  await page.getByLabel('Weight used (kg)').fill('25');await page.getByLabel('Clean repetitions',{exact:true}).fill('8');await page.getByLabel('Exact setup').fill('New leg extension station');
+  await page.getByRole('checkbox',{name:/I could not do another clean rep/}).check();await page.getByRole('button',{name:'Save test result',exact:true}).click();
   await expect.poll(()=>account.getHead()?.metadata.strength.assessments.length).toBe(2);
   expect(account.getHead().metadata.strength.assessments[0]).toEqual(history[0]);
 });
@@ -154,7 +154,7 @@ test('assessment groups follow first program appearances and keep later upper bo
   for(const [i,n] of ordered.entries())await expect(page.locator('.exercise-picker button').nth(i)).toContainText(names[n]!);
   await page.locator('.exercise-picker').screenshot({path:info.outputPath('assessment-muscle-groups-mobile.png')});
   await page.locator('.exercise-picker button').filter({hasText:'Lying Hamstring Curls'}).click();
-  await expect(page.getByLabel('Test load (kg)')).toHaveValue('22');await expect(page.getByLabel('Exact setup')).toHaveValue('Saved curl station');
+  await expect(page.getByLabel('Weight used (kg)')).toHaveValue('22');await expect(page.getByLabel('Exact setup')).toHaveValue('Saved curl station');
   await page.getByRole('button',{name:'Save and exit',exact:true}).click();await expect.poll(()=>account.getHead().metadata.strength.active.paused).toBe(true);await page.reload();
   await page.getByRole('button',{name:'Resume assessment',exact:true}).click();
   await expect(page.locator('.assessment-group')).toHaveText(['Chest','Chest','Biceps','Back','Legs','Legs','Legs','Legs']);

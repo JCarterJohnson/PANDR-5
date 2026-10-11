@@ -15,9 +15,9 @@ export function workingResistance(log: Pick<ExerciseLog, 'load' | 'loadMode' | '
 export function chooseResistanceChange(log: ExerciseLog, settings: Settings, increase: boolean, anchorIndex: number): Recommendation {
   const hold = (reason: string, extra: Partial<Recommendation> = {}): Recommendation => ({ action: 'hold', nextLoad: log.load, targetReps: log.repMin, anchorIndex, reason, ...extra });
   if (isRepsOnly(log.bodyweight)) return hold(increase
-    ? 'You reached the rep cap for this bodyweight variation. Keep this setup until you can retest a harder variation, or measure its resistance to use PANDR percentage progression. No weight or assistance amount is guessed.'
-    : 'This bodyweight variation fell below the rep floor. Retest an easier setup, or measure its resistance to use PANDR percentage progression. No weight or assistance amount is guessed.', { nextLoad: 0, nextLoadMode: 'bodyweight', targetReps: increase ? log.repMax : log.repMin, status: 'bodyweight-setup' });
-  if (log.loadMode === 'bodyweight' && !log.bodyweight) return hold('Bodyweight progression needs setup: record the bodyweight resistance actually moved and the added loads or measured assistance you have. No body-mass percentage or harder variation is guessed.', { status: 'bodyweight-setup' });
+    ? 'You reached the rep cap. Keep this setup and additional weight until you retest a harder variation.'
+    : 'You fell below the rep floor. Retest an easier variation or use less additional weight.', { nextLoad: 0, nextLoadMode: 'bodyweight', targetReps: increase ? log.repMax : log.repMin, status: 'bodyweight-setup' });
+  if (log.loadMode === 'bodyweight' && !log.bodyweight) return hold('Reassess this bodyweight exercise to use its automatic setup. Your saved workouts stay in History.', { status: 'bodyweight-setup' });
   const current = workingResistance(log);
   if (!Number.isFinite(current) || current <= 0) return hold('Enter a positive working resistance before calculating a percentage-based change.', log.bodyweight ? { status: 'bodyweight-setup' } : {});
   const minimum = 2, maximum = increase ? 5 : 3;

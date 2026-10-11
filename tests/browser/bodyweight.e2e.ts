@@ -15,7 +15,7 @@ function smallBodyweightPlan(): AppData {
   data.settings = { ...data.settings, strict: false, startDate: '2026-09-01', unit: 'lb' };
   data.plan.days = [{ id: 'bodyweight-day', name: 'Bodyweight practice', kind: 'training', exercises: [{
     id: 'incline-test', exerciseId: 'source-34', sets: 3, repMin: 8, repMax: 12,
-    rir: [2, 1, '0-1'], load: 0, increment: 1, loadMode: 'bodyweight',
+    rir: [2, 1, '0-1'], load: 0, increment: 1, loadMode: 'external',
   }] }];
   data.plan.targets = {};
   return data;
@@ -55,6 +55,7 @@ function addHistory(account: Awaited<ReturnType<typeof accountFixture>>, session
 }
 
 async function navigate(page: Page, name: string) {
+  await page.getByRole('button', { name, exact: true }).waitFor({ state: 'attached' });
   const menu = page.getByRole('button', { name: 'Open navigation', exact: true });
   if (await menu.isVisible()) await menu.click();
   await page.getByRole('button', { name, exact: true }).click();
@@ -67,7 +68,7 @@ function browserErrors(page: Page): string[] {
   return errors;
 }
 
-test('phone incline push-ups accept 16 reps with a clear reps-only setup and no invented load', async ({ page }) => {
+test('phone incline push-ups default to bodyweight and accept 16 reps without setup selectors or invented load', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: now });
   const account = await accountFixture(page, smallBodyweightPlan());
@@ -76,13 +77,16 @@ test('phone incline push-ups accept 16 reps with a clear reps-only setup and no 
   await page.getByRole('button', { name: 'Begin initial assessment' }).click();
   await page.getByRole('button', { name: 'Start assessment', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Incline/Elevated Pushups', exact: true })).toBeVisible();
-  await expect(page.getByLabel('How much of your body moves?')).toHaveValue('reps-only');
-  await expect(page.getByLabel('Test load (lb)')).toHaveCount(0);
-  await expect(page.getByLabel('Added weight used (lb)')).toHaveCount(0);
-  await expect(page.getByText(/Plates under your hands are a platform, neither added weight nor assistance/)).toBeVisible();
+  await expect(page.getByLabel('How much of your body moves?')).toHaveCount(0);
+  await expect(page.getByLabel('Test method')).toHaveCount(0);
+  await expect(page.getByLabel(/Supported load|Bodyweight resistance/)).toHaveCount(0);
+  await expect(page.getByLabel(/Current bodyweight/)).toHaveCount(0);
+  await expect(page.getByLabel('Weight used (lb)')).toHaveCount(0);
+  await expect(page.getByLabel(/^Additional weight \(lb\)/)).toHaveCount(0);
+  await expect(page.getByRole('checkbox',{name:'Use additional weight',exact:true})).not.toBeChecked();
   await page.getByLabel(/^Clean repetitions/).fill('16');
   await page.getByRole('textbox', { name: /^Exact setup/ }).fill('Three 5 lb plates used as platforms under each hand; same feet and hand height.');
-  await page.getByRole('checkbox', { name: /next clean rep was impossible/ }).check();
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
   await expect(page.getByRole('button', { name: 'Save test result' })).toBeEnabled();
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({ path: '/tmp/pandr-bodyweight-mobile.png', fullPage: true, animations: 'disabled' });
@@ -104,6 +108,71 @@ test('phone incline push-ups accept 16 reps with a clear reps-only setup and no 
   expect(errors).toEqual([]);
 });
 
+test('phone push-up additional weight is optional, persists after reload, and stays context rather than an estimated load', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.clock.install({ time: now });
+  const account = await accountFixture(page, smallBodyweightPlan());
+  const errors = browserErrors(page);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Begin initial assessment' }).click();
+  await page.getByRole('button', { name: 'Start assessment', exact: true }).click();
+  const additional = page.getByLabel(/^Additional weight \(lb\)/);
+  const useAdditional = page.getByRole('checkbox', { name: 'Use additional weight', exact: true });
+  await expect(additional).toHaveCount(0);
+  await useAdditional.check();
+  await additional.fill('10');
+  await page.getByLabel('Clean repetitions', { exact: true }).fill('16');
+  const setup = 'Ten-pound vest; three plates under each hand; same height and full range of motion.';
+  await page.getByRole('textbox', { name: /^Exact setup/ }).fill(setup);
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByRole('button', { name: 'Save assessment progress', exact: true }).click();
+  await expect.poll(() => account.getHead().metadata.strength.active.items[0].slot.bodyweight?.additionalWeightKg).toBeCloseTo(10 / poundsPerKg, 8);
+  await page.reload();
+  await expect(useAdditional).toBeChecked();
+  await expect(additional).toHaveValue('10');
+  await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('16');
+  await expect(page.getByLabel('How much of your body moves?')).toHaveCount(0);
+  await expect(page.getByLabel(/Supported load|Bodyweight resistance|Current bodyweight/)).toHaveCount(0);
+  await page.screenshot({ path: '/tmp/pandr-simple-pushup-added-mobile.png', fullPage: true, animations: 'disabled' });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole('button', { name: 'Save test result', exact: true }).click();
+  await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
+  await expect.poll(() => account.getHead().metadata.strength.assessments[0]?.id).toBeTruthy();
+  const saved = structuredClone(account.getHead().metadata.strength.assessments[0]);
+  expect(saved).toMatchObject({ reps: 16, load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0 } });
+  expect(saved.bodyweight.additionalWeightKg).toBeCloseTo(10 / poundsPerKg, 8);
+  await expect(page.getByRole('heading', { name: 'Estimated fresh-set capacity', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Finish assessment', exact: true }).click();
+  await navigate(page, 'History');
+  const row = page.locator(`[data-assessment-id="${saved.id}"]`);
+  await expect(row).toContainText('16 clean reps');
+  await expect(row).toContainText(setup);
+  await expect(row).toContainText(/10(?:\.0)? lb/);
+  await expect(row).toContainText(/additional weight/i);
+  await expect(row).not.toContainText('Estimated maximum');
+  expect(account.getHead().metadata.strength.assessments[0]).toEqual(saved);
+  await navigate(page, 'Train');
+  await page.getByRole('button', { name: 'Start session', exact: true }).click();
+  await expect(page.getByLabel('Working load', { exact: true })).toHaveCount(0);
+  await expect.poll(() => account.getHead().metadata.activeSession?.exercises[0]?.bodyweight?.additionalWeightKg).toBeCloseTo(10 / poundsPerKg, 8);
+  expect(account.getHead().metadata.activeSession.exercises[0]).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0 } });
+  for (let index = 1; index <= 3; index++) {
+    await page.getByLabel(`Set ${index} reps`, { exact: true }).fill('20');
+    await page.getByLabel(`Set ${index} actual RIR`, { exact: true }).selectOption('1');
+    await page.getByRole('button', { name: `Log set ${index}`, exact: true }).click();
+  }
+  await expect(page.getByText('Bodyweight setup needed', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Next load:/)).toContainText('10 lb additional weight');
+  await page.getByRole('button', { name: 'Finish session', exact: true }).click();
+  await page.getByRole('button', { name: 'Save completed session', exact: true }).click();
+  await expect.poll(() => account.records.size).toBe(1);
+  const logged = [...account.records.values()][0].payload.exercises[0];
+  expect(logged.recommendation).toMatchObject({ action: 'hold', nextLoad: 0, nextLoadMode: 'bodyweight', status: 'bodyweight-setup' });
+  expect(logged.bodyweight.additionalWeightKg).toBeCloseTo(10 / poundsPerKg, 8);
+  expect(account.getHead().metadata.strength.assessments[0]).toEqual(saved);
+  expect(errors).toEqual([]);
+});
+
 test('saving scale weight during a new chin-up assessment supplies whole-body resistance', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: now });
@@ -114,18 +183,31 @@ test('saving scale weight during a new chin-up assessment supplies whole-body re
   await page.goto('/');
   await page.getByRole('button', { name: 'Begin initial assessment' }).click();
   await page.getByRole('button', { name: 'Start assessment', exact: true }).click();
+  await page.getByLabel('Clean repetitions', { exact: true }).fill('15');
+  await page.getByRole('textbox', { name: /^Exact setup/ }).fill('Chin-up bar; no added weight or assistance.');
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await expect(page.getByRole('button', { name: 'Save test result', exact: true })).toBeDisabled();
   await page.getByLabel('Current bodyweight (lb)').fill('235');
   await page.getByRole('button', { name: 'Save bodyweight', exact: true }).click();
   await expect.poll(() => account.getHead().metadata.settings.bodyMass?.kg).toBeCloseTo(235 / poundsPerKg, 8);
-  await expect(page.getByLabel('How much of your body moves?')).toHaveValue('full-body');
-  await expect(page.getByText('Bodyweight used: 235 lb', { exact: true })).toBeVisible();
-  await page.getByLabel('How much of your body moves?').selectOption('reps-only');
-  await page.getByLabel('How much of your body moves?').selectOption('full-body');
-  await expect(page.getByText('Bodyweight used: 235 lb', { exact: true })).toBeVisible();
-  await expect(page.getByLabel('Test load (lb)')).toHaveCount(0);
+  await expect(page.getByLabel('How much of your body moves?')).toHaveCount(0);
+  await expect(page.getByText('Your bodyweight: 235 lb', { exact: true })).toBeVisible();
+  await expect(page.getByLabel('Weight used (lb)')).toHaveCount(0);
+  const useAdditional = page.getByRole('checkbox', { name: 'Use additional weight', exact: true });
+  const useAssistance = page.getByRole('checkbox', { name: 'Use assistance', exact: true });
+  await expect(useAdditional).not.toBeChecked();
+  await expect(useAssistance).not.toBeChecked();
+  await useAdditional.check();
+  await page.getByLabel(/^Additional weight \(lb\)/).fill('10');
+  await useAssistance.check();
+  await expect(useAdditional).not.toBeChecked();
+  await expect(page.getByLabel(/^Additional weight \(lb\)/)).toHaveCount(0);
+  await page.getByLabel(/^Assistance \(lb\)/).fill('20');
+  await useAssistance.uncheck();
+  await expect(page.getByLabel(/^Assistance \(lb\)/)).toHaveCount(0);
   await page.getByLabel('Clean repetitions', { exact: true }).fill('15');
   await page.getByRole('textbox', { name: /^Exact setup/ }).fill('Chin-up bar; full range of motion; no weight carried or counterweight.');
-  await page.getByRole('checkbox', { name: /next clean rep was impossible/ }).check();
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
   await page.getByRole('button', { name: 'Save test result' }).click();
   await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
   await expect.poll(() => account.getHead().metadata.strength.assessments.length).toBe(1);
@@ -134,6 +216,80 @@ test('saving scale weight during a new chin-up assessment supplies whole-body re
   expect(result.bodyweight.resistance).toBeCloseTo(235, 8);
   expect(result.bodyweight.bodyMassKg).toBeCloseTo(235 / poundsPerKg, 8);
   expect(result.bodyweight.fraction).toBeUndefined();
+  expect(result.load).toBe(0);
+  expect(result.loadMode).toBe('bodyweight');
+  expect(errors).toEqual([]);
+});
+
+test('a machine dip press remains an external-load movement instead of defaulting to bodyweight', async ({ page }) => {
+  await page.clock.install({ time: now });
+  const data = smallBodyweightPlan();
+  const original = data.exercises.find(exercise => exercise.id === 'source-34')!;
+  const machine = { ...original, id: 'fixture-machine-dip-press', name: 'Machine Dip Press', equipment: 'Selectorized Machine' };
+  data.exercises.push(machine);
+  data.plan.days[0].exercises[0].exerciseId = machine.id;
+  const account = await accountFixture(page, data);
+  const errors = browserErrors(page);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Begin initial assessment' }).click();
+  await page.getByRole('button', { name: 'Start assessment', exact: true }).click();
+  await expect(page.getByRole('heading', { name: machine.name, exact: true })).toBeVisible();
+  await expect(page.getByLabel('Weight used (lb)')).toBeVisible();
+  await expect(page.getByLabel(/Current bodyweight/)).toHaveCount(0);
+  await expect(page.getByRole('checkbox', { name: 'Use additional weight', exact: true })).toHaveCount(0);
+  await page.getByLabel('Weight used (lb)').fill('80');
+  await page.getByLabel('Clean repetitions', { exact: true }).fill('8');
+  await page.getByRole('textbox', { name: /^Exact setup/ }).fill('Dip press machine, same seat setting and full range of motion.');
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByRole('button', { name: 'Save test result', exact: true }).click();
+  await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
+  await expect.poll(() => account.getHead().metadata.strength.assessments[0]?.load).toBe(80);
+  const result = account.getHead().metadata.strength.assessments[0];
+  expect(result).toMatchObject({ load: 80, loadMode: 'external', reps: 8 });
+  expect(result.bodyweight).toBeUndefined();
+  expect(errors).toEqual([]);
+});
+
+test('the phone plan chooser defaults new push-ups and chin-ups to their bodyweight setup', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.clock.install({ time: now });
+  const data = createInitialData();
+  data.settings = { ...data.settings, strict: false, startDate: '2026-09-01', unit: 'lb', bodyMass: { kg: 80, recordedAt: now.toISOString() } };
+  const original = structuredClone(data.plan.days[0].exercises[0]);
+  data.plan.days = [{ ...data.plan.days[0], exercises: [original] }];
+  data.plan.targets = {};
+  const account = await accountFixture(page, data);
+  const errors = browserErrors(page);
+  await page.goto('/'); await navigate(page, 'Your plan');
+  for (const { query, name, tracking } of [
+    { query: 'Incline/Elevated Pushups', name: /^Incline\/Elevated Pushups ·/, tracking: 'reps-only' },
+    { query: 'Close-Grip Chinups', name: /^Close-Grip Chinups \(Assisted, BW, or Weighted\) ·/, tracking: 'full-body' },
+  ]) {
+    await page.getByRole('button', { name: 'Add exercise', exact: true }).click();
+    await page.getByRole('combobox', { name: 'Find an exercise', exact: true }).fill(query);
+    await page.getByRole('option', { name }).click();
+    const editor = page.getByRole('dialog', { name: 'Add exercise prescription', exact: true });
+    await expect(editor).toBeVisible();
+    await expect(editor.getByLabel('Working load', { exact: true })).toHaveCount(0);
+    await expect(editor.getByLabel('Load type', { exact: true })).toHaveCount(0);
+    await expect(editor.getByLabel('How much of your body moves?')).toHaveCount(0);
+    await editor.getByText('Equipment options', { exact: true }).click();
+    await expect(editor.getByLabel(/Set up bodyweight|Bodyweight exercise|Supported load|Bodyweight resistance/)).toHaveCount(0);
+    if (tracking === 'full-body') {
+      await expect(editor.getByLabel(/^Weights you can add \(lb\)/)).toBeVisible();
+      await expect(editor.getByLabel(/^Machine assistance options \(lb\)/)).toBeVisible();
+    }
+    await page.getByRole('button', { name: 'Apply exercise', exact: true }).click();
+    await page.getByRole('button', { name: 'Save plan', exact: true }).click();
+    await expect.poll(() => account.getHead().metadata.plan.days[0].exercises.at(-1)?.bodyweight?.tracking).toBe(tracking);
+    const slot = account.getHead().metadata.plan.days[0].exercises.at(-1);
+    expect(slot).toMatchObject({ load: 0, loadMode: 'bodyweight' });
+    expect(slot.bodyweight.resistance).toBeCloseTo(tracking === 'full-body' ? 80 * poundsPerKg : 0, 8);
+  }
+  expect(account.getHead().metadata.plan.days[0].exercises[0]).toEqual(original);
+  await page.reload(); await navigate(page, 'Your plan');
+  expect(account.getHead().metadata.plan.days[0].exercises.slice(1).map((slot: PlanExercise) => slot.bodyweight?.tracking)).toEqual(['reps-only', 'full-body']);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(errors).toEqual([]);
 });
 
@@ -227,26 +383,27 @@ test('a resumed test clears stale reps and confirmation when current bodyweight 
   const errors = browserErrors(page);
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Strength assessment', exact: true })).toBeVisible();
-  await expect(page.getByText('Bodyweight used: 90 kg', { exact: true })).toBeVisible();
+  await expect(page.getByText('Your bodyweight: 90 kg', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('');
-  await expect(page.getByRole('checkbox', { name: /next clean rep was impossible/ })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /I could not do another clean rep/ })).not.toBeChecked();
   await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
   await page.getByLabel('Clean repetitions', { exact: true }).fill('8');
-  await page.getByRole('checkbox', { name: /next clean rep was impossible/ }).check();
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByText('Update bodyweight', { exact: true }).click();
   await page.getByLabel('Current bodyweight (kg)').fill('95');
   await page.getByRole('button', { name: 'Save bodyweight', exact: true }).click();
   await expect.poll(() => account.getHead().metadata.settings.bodyMass.kg).toBe(95);
-  await expect(page.getByText('Bodyweight used: 95 kg', { exact: true })).toBeVisible();
+  await expect(page.getByText('Your bodyweight: 95 kg', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('');
-  await expect(page.getByRole('checkbox', { name: /next clean rep was impossible/ })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /I could not do another clean rep/ })).not.toBeChecked();
   await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
   await page.getByRole('button', { name: 'Save assessment progress', exact: true }).click();
   await expect.poll(() => account.getHead().metadata.strength.active.items[0].slot.bodyweight.resistance).toBe(95);
   expect(account.getHead().metadata.strength.active.items[0]).toMatchObject({ reps: 0, confirmed: false, setup });
   await page.reload();
-  await expect(page.getByText('Bodyweight used: 95 kg', { exact: true })).toBeVisible();
+  await expect(page.getByText('Your bodyweight: 95 kg', { exact: true })).toBeVisible();
   await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('');
-  await expect(page.getByRole('checkbox', { name: /next clean rep was impossible/ })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /I could not do another clean rep/ })).not.toBeChecked();
   await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
   await expect(page.getByRole('button', { name: 'Save test result', exact: true })).toBeDisabled();
   expect(errors).toEqual([]);
@@ -280,4 +437,96 @@ test('History opens a saved reps-only baseline without calculating a maximum and
   await expect(row).toContainText('16 clean reps · bodyweight only');
   expect(account.getHead().metadata.strength).toEqual(saved);
   expect(errors).toEqual([]);
+});
+
+test('a resumed first push-up draft defaults to reps tracking while retaining its entered 16 reps and setup', async ({ page }) => {
+  await page.clock.install({ time: now });
+  let data = smallBodyweightPlan();
+  data = beginAssessment(data, data.plan.days[0], now);
+  const pending = data.strength!.active!.items[0];
+  const setup = 'Three plates under each hand; same hand and foot position.';
+  pending.reps = 16; pending.setup = setup; pending.confirmed = true;
+  expect(pending.slot.bodyweight).toBeUndefined();
+  const account = await accountFixture(page, data), errors = browserErrors(page);
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Strength assessment', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Weight used (lb)')).toHaveCount(0);
+  await expect(page.getByLabel(/Supported load|Bodyweight resistance/)).toHaveCount(0);
+  await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('16');
+  await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByRole('button', { name: 'Save test result', exact: true }).click();
+  await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
+  await expect.poll(() => account.getHead().metadata.strength.assessments.length).toBe(1);
+  const saved = account.getHead().metadata.strength.assessments[0];
+  expect(saved).toMatchObject({ reps: 16, setup, load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0 } });
+  expect(errors).toEqual([]);
+});
+
+test('reassessing an old weighted measured push-up clears its hidden load and stale reps without changing the saved test', async ({ page }) => {
+  await page.clock.install({ time: now });
+  let data = smallBodyweightPlan();
+  data.settings.bodyMass = { kg: 80, recordedAt: '2026-08-31T19:00:00.000Z' };
+  const slot = data.plan.days[0].exercises[0];
+  slot.bodyweight = { tracking: 'measured', resistance: 140, bodyMassKg: 80, fraction: 140 / poundsPerKg / 80, addedLoads: [5], assistanceLoads: [] };
+  slot.load = 5; slot.loadMode = 'external';
+  const original = {
+    id: 'old-weighted-pushup', exerciseId: slot.exerciseId, name: 'Incline/Elevated Pushups',
+    date: '2026-08-31', completedAt: '2026-08-31T19:00:00.000Z', method: 'failure' as const,
+    reps: 8, load: 5, loadMode: 'external' as const, unit: 'lb' as const,
+    bodyweight: structuredClone(slot.bodyweight), setup: 'Original weighted measured setup', curve: 'general' as const, version: 1 as const,
+  };
+  data.strength = { onboardingCompletedAt: original.completedAt, assessments: [structuredClone(original)] };
+  data = beginAssessment(data, data.plan.days[0], now, true);
+  const pending = data.strength!.active!.items[0], setup = 'Saved unfinished reassessment notes';
+  pending.reps = 8; pending.setup = setup; pending.confirmed = true;
+  const account = await accountFixture(page, data), errors = browserErrors(page);
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Strength assessment', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('');
+  await expect(page.getByRole('checkbox', { name: /I could not do another clean rep/ })).not.toBeChecked();
+  await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
+  await expect(page.getByLabel('Weight used (lb)')).toHaveCount(0);
+  await expect(page.getByRole('checkbox', { name: 'Use additional weight', exact: true })).not.toBeChecked();
+  await page.getByRole('button', { name: 'Save assessment progress', exact: true }).click();
+  await expect.poll(() => account.getHead().metadata.strength.active.items[0].slot.bodyweight?.tracking).toBe('reps-only');
+  expect(account.getHead().metadata.strength.active.items[0]).toMatchObject({ load: 0, loadMode: 'bodyweight', reps: 0, confirmed: false, setup });
+  expect(account.getHead().metadata.strength.assessments[0]).toEqual(original);
+  await page.getByLabel('Clean repetitions', { exact: true }).fill('16');
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByRole('button', { name: 'Save test result', exact: true }).click();
+  await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
+  await expect.poll(() => account.getHead().metadata.strength.assessments.length).toBe(2);
+  const tests = account.getHead().metadata.strength.assessments;
+  expect(tests).toHaveLength(2); expect(tests[0]).toEqual(original);
+  expect(tests[1]).toMatchObject({ reps: 16, setup, load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0 } });
+  expect(errors).toEqual([]);
+});
+
+test('a resumed first chin-up clears old external-weight reps before using its saved bodyweight', async ({ page }) => {
+  await page.clock.install({ time: now });
+  let data = smallBodyweightPlan();
+  data.settings.bodyMass = { kg: 80, recordedAt: '2026-08-31T19:00:00.000Z' };
+  const slot = data.plan.days[0].exercises[0]; slot.exerciseId = 'source-8'; slot.load = 10;
+  data = beginAssessment(data, data.plan.days[0], now);
+  const pending = data.strength!.active!.items[0], setup = 'Saved first chin-up draft notes; same bar and grip';
+  pending.reps = 8; pending.setup = setup; pending.confirmed = true;
+  expect(pending.slot.bodyweight).toBeUndefined(); expect(pending.load).toBe(10);
+  const account = await accountFixture(page, data), errors = browserErrors(page);
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Strength assessment', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Clean repetitions', { exact: true })).toHaveValue('');
+  await expect(page.getByRole('checkbox', { name: /I could not do another clean rep/ })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Use additional weight', exact: true })).not.toBeChecked();
+  await expect(page.getByRole('textbox', { name: /^Exact setup/ })).toHaveValue(setup);
+  await expect(page.getByLabel('Weight used (lb)')).toHaveCount(0);
+  await page.getByLabel('Clean repetitions', { exact: true }).fill('8');
+  await page.getByRole('checkbox', { name: /I could not do another clean rep/ }).check();
+  await page.getByRole('button', { name: 'Save test result', exact: true }).click();
+  await expect(page.getByText('Baseline saved', { exact: true })).toBeVisible();
+  await expect.poll(() => account.getHead().metadata.strength.assessments.length).toBe(1);
+  const saved = account.getHead().metadata.strength.assessments[0];
+  expect(saved).toMatchObject({ reps: 8, setup, load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'full-body', bodyMassKg: 80 } });
+  expect(saved.bodyweight.resistance).toBeCloseTo(80 * poundsPerKg, 8);
+  expect(saved.bodyweight.additionalWeightKg).toBeUndefined(); expect(errors).toEqual([]);
 });

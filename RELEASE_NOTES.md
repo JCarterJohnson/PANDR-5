@@ -1,3 +1,13 @@
+# 0.5.12 — Simple bodyweight tests and cycle history controls
+
+- Bodyweight movements choose their setup automatically. Push-ups and other supported movements start with reps tracking; pull-ups, chin-ups and dips use shared bodyweight.
+- Test inputs use plain labels: clean reps, additional weight, and machine assistance. Equipment options describe weights available for future workouts. Scale and hand-load measurement instructions are removed.
+- Additional vest, belt or plate weight stays with a reps-based test as setup context, without inventing a lifted-bodyweight percentage or strength estimate.
+- Previous ended cycles can be deleted from History after two confirmations. The final dialog shows exactly what will be deleted. Strength assessments and current training stay saved.
+- Adjusting exercise sets preserves equipment, reps and setup entered in an unfinished assessment, as well as all saved results and workout history.
+
+Install **0.5.12 on every device** before saving optional additional-weight context. Replace the desktop application and keep its application support data. The owner-only cycle deletion function must be installed from `supabase/cycle-deletion.sql`; no account reset or bulk history rewrite is required.
+
 # 0.5.11 — Bodyweight history fix
 
 - Fix History for reps-only assessments. Show the recorded repetitions and setup without requesting a weighted strength estimate or stopping the app.

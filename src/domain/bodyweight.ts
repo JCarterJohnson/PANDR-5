@@ -1,9 +1,35 @@
-import type { AppData, BodyweightResistance, PlanExercise, Settings } from './types';
+import type { AppData, BodyweightResistance, Exercise, PlanExercise, Settings } from './types';
 
 const KG_TO_LB = 2.2046226218;
 const fromKg = (value: number, unit: Settings['unit']) => unit === 'kg' ? value : value * KG_TO_LB;
 const toKg = (value: number, unit: Settings['unit']) => unit === 'kg' ? value : value / KG_TO_LB;
 export const isRepsOnly = (bodyweight?: BodyweightResistance) => bodyweight?.tracking === 'reps-only';
+
+/** Catalog-informed defaults. Machine dip presses and band exercises never imply whole-body load. */
+export function bodyweightMovement(exercise?: Pick<Exercise, 'name' | 'equipment'>): 'full-body' | 'partial-body' | undefined {
+  if (!exercise) return;
+  const whole = /\b(?:pull[\s-]?ups?|chin[\s-]?ups?|dips?)\b/i.test(exercise.name);
+  const partial = /\bpush[\s-]?ups?\b|\b(?:inverted|ring)\b.*\brows?\b/i.test(exercise.name);
+  const bodyweight = /\bbody[\s-]?weight\b/i.test(exercise.equipment);
+  const band = /\b(?:resistance[\s-]?bands?|bands?)\b/i.test(exercise.equipment) || /\bband[\s-]?assisted\b/i.test(exercise.name);
+  if (!bodyweight && (!band || (!whole && !partial))) return;
+  if (whole && bodyweight && !band && !/\bbench\b/i.test(exercise.name)) return 'full-body';
+  return 'partial-body';
+}
+
+/** Used only for a new, unconfigured movement; existing measurements are never inferred or rewritten. */
+export function defaultBodyweightSlot(slot: PlanExercise, exercise: Pick<Exercise, 'name' | 'equipment'> | undefined, settings: Settings): PlanExercise {
+  if (slot.bodyweight) return slot;
+  const movement = bodyweightMovement(exercise);
+  if (!movement) return slot;
+  const mass = settings.bodyMass?.kg;
+  const fullBody = movement === 'full-body' && !!mass;
+  return { ...slot, load: 0, loadMode: 'bodyweight', availableLoads: undefined, bodyweight: {
+    tracking: fullBody ? 'full-body' : 'reps-only',
+    resistance: fullBody ? fromKg(mass!, settings.unit) : 0,
+    addedLoads: [], assistanceLoads: [], ...(mass ? { bodyMassKg: mass } : {}),
+  } };
+}
 
 /** Resolve only explicitly tracked setups. Old numeric profiles remain measured constants. */
 export function resolveBodyweight(slot: PlanExercise, settings: Settings): PlanExercise {
@@ -41,7 +67,7 @@ export function updateBodyMass(data: AppData, value: number, unit: Settings['uni
 export function sameBodyweightSetup(a?: BodyweightResistance, b?: BodyweightResistance, aUnit: Settings['unit'] = 'kg', bUnit: Settings['unit'] = aUnit): boolean {
   if (!a || !b) return !a && !b;
   if (a.tracking !== b.tracking) return false;
-  if (isRepsOnly(a)) return a.bodyMassKg === b.bodyMassKg;
+  if (isRepsOnly(a)) return a.bodyMassKg === b.bodyMassKg && (a.additionalWeightKg ?? 0) === (b.additionalWeightKg ?? 0);
   if (a.tracking === 'full-body') return true;
   if (a.fraction !== undefined || b.fraction !== undefined) return a.fraction !== undefined && b.fraction !== undefined && Math.abs(a.fraction-b.fraction) < 1e-8;
   // Manual/legacy supported loads identify the measured setup. Recalibration

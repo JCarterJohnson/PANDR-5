@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createInitialData } from '../data/seed';
-import { resolveBodyweight, updateBodyMass } from './bodyweight';
+import { BUILTIN_EXERCISES } from '../data/catalog';
+import { bodyweightMovement, defaultBodyweightSlot, resolveBodyweight, sameBodyweightSetup, updateBodyMass } from './bodyweight';
 import { completeSession, convertPlanLoads } from './coaching';
 import { createSession, recommendProgression, validatePlan } from './engine';
 import { assessmentDue, assessmentEstimate, beginAssessment, estimatedCapacity, finishAssessment, hasStrengthBaseline, prescribedSlot, reconcileAssessment, recordAssessment, startTraining, suggestedReps } from './strength';
@@ -219,5 +220,103 @@ describe('bodyweight repetitions without a measured resistance', () => {
     const invalidMode = base(profile); invalidMode.plan.days[0].exercises[0].loadMode = 'external';
     expect(() => validateAppData(invalidMode)).toThrow();
     expect(resolveBodyweight(invalidMode.plan.days[0].exercises[0],invalidMode.settings)).toMatchObject({ loadMode: 'bodyweight', load: 0 });
+  });
+
+  it('keeps additional weight as immutable setup context without estimating resistance or 1RM', () => {
+    const data = assessed(base({ ...profile, additionalWeightKg: 10 }),16);
+    const slot = data.plan.days[0].exercises[0];
+    const baseline = structuredClone(data.strength!.assessments[0]);
+    expect(slot).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { resistance: 0, additionalWeightKg: 10 } });
+    expect(baseline.bodyweight!.additionalWeightKg).toBe(10);
+    expect(() => assessmentEstimate(baseline)).toThrow('no measured resistance');
+    expect(estimatedCapacity(data,slot)).toBeUndefined();
+    expect(parseBackup(exportBackup(data))).toEqual(data);
+    expect(validateAppData(data)).toEqual(data);
+
+    const started = startTraining(data,data.plan.days[0],false,new Date('2026-09-02T12:00:00Z'));
+    expect(started.activeSession!.exercises[0]).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { additionalWeightKg: 10 } });
+    const workout = structuredClone(started.activeSession);
+    const changed = updateBodyMass(started,90,'kg',now);
+    expect(changed.activeSession).toEqual(workout);
+    expect(changed.strength!.assessments[0]).toEqual(baseline);
+    expect(changed.plan.days[0].exercises[0].bodyweight).toMatchObject({ bodyMassKg: 90, resistance: 0, additionalWeightKg: 10 });
+
+    const converted = structuredClone(data);
+    converted.plan = convertPlanLoads(converted.plan,2.2046226218); converted.settings.unit = 'lb';
+    expect(converted.plan.days[0].exercises[0].bodyweight!.additionalWeightKg).toBe(10);
+    expect(hasStrengthBaseline(converted,converted.plan.days[0].exercises[0])).toBe(true);
+    const log = createSession(converted.plan.days[0],converted.exercises,converted.settings,1,false).exercises[0];
+    log.sets.forEach(set => { set.reps = 12; set.rir = 1; set.completed = true; });
+    expect(recommendProgression(log,converted.settings)).toMatchObject({ action: 'hold', nextLoad: 0, nextLoadMode: 'bodyweight' });
+    expect(recommendProgression(log,converted.settings).resistanceChangePercent).toBeUndefined();
+  });
+
+  it('requires a new test when additional weight changes and clears stale unfinished test inputs', () => {
+    const data = assessed(base({ ...profile, additionalWeightKg: 10 }),16);
+    const changed = structuredClone(data);
+    changed.plan.days[0].exercises[0].bodyweight!.additionalWeightKg = 15;
+    expect(hasStrengthBaseline(changed,changed.plan.days[0].exercises[0])).toBe(false);
+    expect(assessmentDue(changed,changed.plan.days[0],now)[0].reason).toBe('setup');
+    expect(changed.strength!.assessments).toEqual(data.strength!.assessments);
+
+    const unfinished = beginAssessment(base({ ...profile, additionalWeightKg: 10 }),base({ ...profile, additionalWeightKg: 10 }).plan.days[0],now);
+    unfinished.strength!.active!.items[0] = { ...unfinished.strength!.active!.items[0], reps: 16, confirmed: true, setup: 'Same elevation; vest' };
+    const previousPlan = structuredClone(unfinished.plan);
+    unfinished.plan.days[0].exercises[0].bodyweight!.additionalWeightKg = 15;
+    expect(reconcileAssessment(unfinished,previousPlan,now).strength!.active!.items[0]).toMatchObject({ reps: 0, confirmed: false, slot: { bodyweight: { additionalWeightKg: 15 } } });
+    expect(sameBodyweightSetup(profile,{ ...profile, additionalWeightKg: 0 })).toBe(true);
+    expect(sameBodyweightSetup(profile,{ ...profile, additionalWeightKg: 1 })).toBe(false);
+  });
+
+  it('validates additional weight only as finite nonnegative reps-only context', () => {
+    for (const weight of [0,10]) expect(() => validateAppData(base({ ...profile, additionalWeightKg: weight }))).not.toThrow();
+    for (const weight of [-1,NaN,Infinity,1_000_001]) expect(() => validateAppData(base({ ...profile, additionalWeightKg: weight }))).toThrow();
+    for (const tracking of [undefined,'measured','full-body'] as const) {
+      expect(() => validateAppData(base({ tracking, resistance: 80, bodyMassKg: 80, addedLoads: [], assistanceLoads: [], additionalWeightKg: 10 }))).toThrow();
+    }
+  });
+});
+
+describe('automatic defaults for new bodyweight movements', () => {
+  it('recognizes bodyweight movement families without confusing machine or band resistance', () => {
+    const catalog = BUILTIN_EXERCISES;
+    for (const name of ['Incline/Elevated Pushups','Push-Up','Feet-Elevated Push-Up','Kneeling Push-Up','Deficit Push-Up','Close-Grip Push-Up','Ring Push-Up','Pike Push-Up','Wall-Supported Handstand Push-Up','Inverted Row','Ring Row','Feet-Elevated Inverted Row','Wide-Grip Inverted Row','Band-Assisted Pull-Up','Band-Assisted Parallel-Bar Dip']) {
+      const exercise = catalog.find(e => e.name === name);
+      expect(exercise, name).toBeDefined();
+      expect(bodyweightMovement(exercise), name).toBe('partial-body');
+    }
+    for (const name of ['Close-Grip Chinups (Assisted, BW, or Weighted)','Parallel-Bar Dip','Ring Dip','Pull-Up','Neutral-Grip Pull-Up','Wide-Grip Pull-Up','Ring Chin-Up']) {
+      expect(bodyweightMovement(catalog.find(e => e.name === name)), name).toBe('full-body');
+    }
+    expect(bodyweightMovement(catalog.find(e => e.name === 'Seated Lever Dip Press'))).toBeUndefined();
+    expect(bodyweightMovement({ name: 'Pull-Up', equipment: 'Cable machine' })).toBeUndefined();
+    expect(bodyweightMovement({ name: 'Bench Dip', equipment: 'Bodyweight' })).toBe('partial-body');
+    for (const name of ['Custom exercise','Bodyweight Squat','Crunch','Nordic Curl','Glute Bridge']) expect(bodyweightMovement({ name, equipment: 'Bodyweight' })).toBe('partial-body');
+    expect(bodyweightMovement({ name: 'Biceps Curl', equipment: 'Resistance band' })).toBeUndefined();
+    expect(bodyweightMovement()).toBeUndefined();
+  });
+
+  it('uses saved bodyweight for whole-body movements and reps for partial-body movements', () => {
+    const data = createInitialData();
+    const slot = data.plan.days[0].exercises[0];
+    data.settings.unit = 'lb'; data.settings.bodyMass = { kg: 80, recordedAt: now.toISOString() };
+    const whole = { name: 'Pull-Up', equipment: 'Bodyweight' };
+    const partial = { name: 'Incline/Elevated Pushups', equipment: 'Bodyweight' };
+    expect(defaultBodyweightSlot(slot,whole,data.settings)).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'full-body', resistance: 80 * 2.2046226218, bodyMassKg: 80 } });
+    expect(defaultBodyweightSlot(slot,partial,data.settings)).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0, bodyMassKg: 80 } });
+    delete data.settings.bodyMass;
+    expect(defaultBodyweightSlot(slot,whole,data.settings)).toMatchObject({ load: 0, loadMode: 'bodyweight', bodyweight: { tracking: 'reps-only', resistance: 0 } });
+    expect(defaultBodyweightSlot(slot,{ name: 'Bench Press', equipment: 'Barbell' },data.settings)).toBe(slot);
+  });
+
+  it('never changes an existing profile, including legacy measured setups and saved snapshots', () => {
+    const exercise = { name: 'Incline/Elevated Pushups', equipment: 'Bodyweight' };
+    for (const tracking of [undefined,'measured','full-body','reps-only'] as const) {
+      const data = base(tracking === 'reps-only' ? { tracking, resistance: 0, addedLoads: [], assistanceLoads: [], bodyMassKg: 80, additionalWeightKg: 10 } : { tracking, resistance: 80, addedLoads: [10], assistanceLoads: [5], bodyMassKg: 80 });
+      const slot = data.plan.days[0].exercises[0];
+      const before = structuredClone(slot);
+      expect(defaultBodyweightSlot(slot,exercise,data.settings)).toBe(slot);
+      expect(slot).toEqual(before);
+    }
   });
 });
