@@ -75,7 +75,9 @@ function legacyPreset(slot: PlanExercise, exercise: ExerciseEquipment, unit: Set
     }
   }
   if (/dumbbell/i.test(exercise.equipment) && sameList([...Array.from({length:19},(_,i)=>5+i*2.5),...Array.from({length:30},(_,i)=>55+i*5)])) return 'auto';
-  if (!slot.availableLoads && close(pounds(slot.increment),5)) return 'auto';
+  // Old automatic barbells and dumbbells always had weight lists. An unlisted
+  // 5 lb step therefore reflects an explicit equipment choice, not a default.
+  if (!slot.availableLoads && close(pounds(slot.increment),5) && !/barbell|dumbbell/i.test(exercise.equipment)) return 'auto';
   const standard = standardEquipment(exercise,unit);
   if (close(slot.increment,standard.increment) && JSON.stringify(slot.availableLoads) === JSON.stringify(standard.availableLoads)) return 'auto';
   return 'custom';

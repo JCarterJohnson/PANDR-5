@@ -99,6 +99,21 @@ describe('practical equipment migration', () => {
     expect(custom).toMatchObject({ equipmentPreset: 'custom', increment: .125, availableLoads: [199.875, 200, 200.125], load: 200 });
   });
 
+  it('preserves older explicitly selected five-pound barbell and dumbbell steps without an inventory', () => {
+    for (const equipment of ['barbell', 'dumbbell']) for (const unit of ['lb', 'kg'] as const) {
+      const data = legacyAccount(), slot = data.plan.days[0]!.exercises[0]!;
+      slot.exerciseId = data.exercises.find(exercise => new RegExp(equipment, 'i').test(exercise.equipment))!.id;
+      data.settings.unit = unit;
+      const increment = unit === 'lb' ? 5 : 2.267962;
+      const load = unit === 'lb' ? 200 : 90.71848;
+      Object.assign(slot, { increment, load, availableLoads: undefined, equipmentPreset: undefined });
+      const migrated = migratePracticalEquipment(data).plan.days[0]!.exercises[0]!;
+      expect(migrated).toMatchObject({ equipmentPreset: 'custom', increment, load });
+      expect(migrated.availableLoads).toBeUndefined();
+      expect(migratePracticalEquipment(migratePracticalEquipment(data))).toEqual(migratePracticalEquipment(data));
+    }
+  });
+
   it('rebuilds automatic presets in native units and physically converts custom values with precision', () => {
     const data = createInitialData(), automatic = data.plan.days[0]!.exercises[0]!;
     automatic.load = 92;

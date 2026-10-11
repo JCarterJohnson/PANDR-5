@@ -93,6 +93,38 @@ test('workout weight controls follow the configured bar grid and historical micr
  expect(account.getHead().metadata.strength.assessments[0].load).toBe(10.25);
 });
 
+test('legacy five-pound barbell increments remain custom without changing a saved baseline', async ({ page }) => {
+ await page.setViewportSize({ width: 390, height: 844 });
+ const data = oneBench(), slot = data.plan.days[0]!.exercises[0]!;
+ slot.load = 200; slot.increment = 5; delete slot.availableLoads; delete slot.equipmentPreset;
+ const now = new Date();
+ data.strength = { onboardingCompletedAt: now.toISOString(), assessments: [{ id: crypto.randomUUID(), exerciseId: slot.exerciseId, name: 'Bench Press', date: localDate(now), completedAt: now.toISOString(), method: 'failure', reps: 8, load: 200, loadMode: 'external', unit: 'lb', setup: 'Recorded setup with five-pound total changes', curve: 'bench', version: 1 }] };
+ const observations = structuredClone(data.strength.assessments);
+ const account = await accountFixture(page, data);
+ const openExercise = async () => {
+  await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
+  await page.getByRole('button', { name: 'Your plan', exact: true }).click();
+  await page.getByRole('button', { name: 'Bench Press', exact: true }).click();
+  await expect(page.getByLabel('Working load', { exact: true })).toHaveValue('200');
+  await expect(page.getByLabel('Working load', { exact: true })).toHaveAttribute('step', '5');
+  await expect(page.locator('.equipment-summary')).toHaveText('Custom equipment');
+  await page.getByText('Equipment options', { exact: true }).click();
+  await expect(page.getByRole('combobox', { name: 'Equipment preset', exact: true })).toHaveValue('custom');
+  await expect(page.getByLabel('Weight increment (lb)')).toHaveValue('5');
+  await expect(page.getByLabel('List available weights', { exact: true })).not.toBeChecked();
+  await expect(page.getByLabel('Available weights (lb)')).toHaveCount(0);
+ };
+ await page.goto('/');
+ await expect.poll(() => account.getHead().metadata.plan.days[0].exercises[0]).toMatchObject({ load: 200, increment: 5, equipmentPreset: 'custom' });
+ await openExercise();
+ expect(account.getHead().metadata.plan.days[0].exercises[0].availableLoads).toBeUndefined();
+ expect(account.getHead().metadata.strength.assessments).toEqual(observations);
+ await page.reload();
+ await openExercise();
+ expect(account.getHead().metadata.plan.days[0].exercises[0]).toMatchObject({ load: 200, increment: 5, equipmentPreset: 'custom' });
+ expect(account.getHead().metadata.strength.assessments).toEqual(observations);
+});
+
 for (const [name, increment, hint] of [
  ['Converging Chest Press', 5, 'Smallest weight change on one side.'],
  ['Horizontal Lever Leg Press', 10, 'Smallest total weight change. Count plates on both sides.'],

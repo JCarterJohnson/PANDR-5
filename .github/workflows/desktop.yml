@@ -100,4 +100,6 @@ jobs:
           shopt -s nullglob
           files=(release/*.dmg release/*.zip release/*.exe release/*.AppImage)
           test ${#files[@]} -gt 0
-          gh release upload "$RELEASE_TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY"
+          # A reviewed retry may rebuild this unpublished version. The draft
+          # guard above prevents replacing downloads on a public release.
+          gh release upload "$RELEASE_TAG" "${files[@]}" --clobber --repo "$GITHUB_REPOSITORY"
