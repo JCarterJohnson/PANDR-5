@@ -8,6 +8,19 @@ export type AppUpdate = {
 
 /** User-facing release history. Add the new release here when bumping package.json. */
 export const appUpdates: AppUpdate[] = [
+ {version:'0.5.10',title:'Clear bodyweight tracking and reviewed set allocation',added:[
+  'Set your current bodyweight once in Settings or assessment. Future bodyweight loads use it; past results and an active workout keep their original weight.',
+  'Use a reps-only baseline for push-ups and other movements when resistance has not been measured, without guessing a weight.',
+  'Review and import Apple Health weight through a foreground iPhone Shortcut. You confirm each import; background Health synchronization is not available.',
+  'Review every exercise’s before-and-after sets and weekly totals before applying set allocation. Mark an exercise as a priority to express a preference for a greater share.',
+ ],improved:[
+  'Bodyweight assessment explains full-bodyweight, measured supported load, added weight, and assistance. Plates under your hands are setup details.',
+  'Set allocation favors at least two sets when feasible, preserves attainable full-set budgets, and shows fractional-credit compromises and remaining one-set prescriptions.',
+ ],fixed:[
+  'Bodyweight changes affect future total-resistance calculations without rewriting assessment results, workouts, or logged RIR.',
+  'New plans keep the source exercise counts with the required lateral-raise adjustment. Existing plans change only when you apply an adjustment.',
+  'Use version 0.5.10 on every device before sharing the new bodyweight and exercise-priority fields. Older desktop builds can reject them; update the app without resetting your account.',
+ ]},
  {version:'0.5.9',title:'Feedback, name saving, and independent assessments',added:[
   'Read the update log beside your app version in Settings, including new features, improvements, and bug fixes.',
   'Report a bug, request a feature, or share feedback through the new Google Form in Settings. Contact details are optional.',

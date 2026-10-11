@@ -30,6 +30,8 @@ test('mobile targets reconcile across days, show shortfalls and save without res
   await page.getByRole('button',{name:'Your plan',exact:true}).click();
   await expect(page.getByLabel('Automatic set limit per exercise')).toHaveValue('6');
   await page.getByRole('button',{name:'Adjust exercise sets to targets'}).click();
+  await expect(page.getByRole('dialog',{name:'Review set allocation'})).toBeVisible();
+  await page.getByRole('button',{name:'Apply set allocation',exact:true}).click();
   await page.getByRole('button',{name:'Day 3 Legs',exact:true}).click();
   await expect(page.locator('.plan-row').filter({hasText:'Leg Extension'})).toContainText('6 sets');
   await expect(page.locator('.plan-row').filter({hasText:'Seated Hamstring Curls'})).toContainText('3 sets');
@@ -38,12 +40,18 @@ test('mobile targets reconcile across days, show shortfalls and save without res
   await expect(page.locator('.plan-row').filter({hasText:'Lying Hamstring Curls'})).toContainText('6 sets');
   await page.getByLabel('Quads target').fill('20');
   await page.getByRole('button',{name:'Adjust exercise sets to targets'}).click();
+  await expect(page.getByRole('dialog',{name:'Review set allocation'})).toBeVisible();
+  await page.getByRole('button',{name:'Apply set allocation',exact:true}).click();
   await expect(page.getByText(/Planned \/ target: Quads 12\/20/)).toBeVisible();
   await page.getByLabel('Automatic set limit per exercise').fill('4');
   await page.getByRole('button',{name:'Adjust exercise sets to targets'}).click();
+  await expect(page.getByRole('dialog',{name:'Review set allocation'})).toBeVisible();
+  await page.getByRole('button',{name:'Apply set allocation',exact:true}).click();
   await expect(page.locator('.plan-row').filter({hasText:'Leg Extension'})).toContainText('4 sets');
   await page.getByLabel('Quads target').fill('8');await page.getByLabel('Hamstrings target').fill('8');
   await page.getByRole('button',{name:'Adjust exercise sets to targets'}).click();
+  await expect(page.getByRole('dialog',{name:'Review set allocation'})).toBeVisible();
+  await page.getByRole('button',{name:'Apply set allocation',exact:true}).click();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   // Applied allocation saves automatically; history remains intact.
   await expect.poll(()=>account.getHead().metadata.plan.days[2].exercises[2].sets).toBe(4);

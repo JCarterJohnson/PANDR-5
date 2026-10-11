@@ -1,5 +1,5 @@
 import { chooseResistanceChange } from './resistance';
-import { fitSetCounts } from './allocation';
+import { fitSetCounts, SET_TARGET_TOLERANCE } from './allocation';
 import { resolveBodyweight } from './bodyweight';
 import { DEFAULT_EXERCISES, DEFAULT_PLAN, MUSCLES } from '../data/seed';
 import type { CheckIn, ConstraintIssue, Exercise, ExerciseLog, PlanDay, Recommendation, Rir, Session, Settings, TrainingPlan, VolumeRow } from './types';
@@ -90,6 +90,7 @@ export function validatePlan(plan: TrainingPlan, exercises: Exercise[], strict: 
         }
       }
       if (!Number.isInteger(slot.sets) || slot.sets < 1 || slot.sets > 30) error('sets', `${label}: enter 1–30 whole working sets.`);
+      if (slot.allocationPriority !== undefined && slot.allocationPriority !== 'standard' && slot.allocationPriority !== 'priority') error('allocation-priority', `${label}: use standard or priority set allocation.`);
       if (!Number.isInteger(slot.repMin) || !Number.isInteger(slot.repMax) || slot.repMin < 1 || slot.repMax < slot.repMin || slot.repMax > 100) error('rep-range', `${label}: use a whole-number rep range from 1 to 100 with the floor at or below the cap.`);
       if (!finite(slot.load) || slot.load < 0 || !finite(slot.increment) || slot.increment <= 0) error('load', `${label}: load must be nonnegative and equipment increment must be positive.`);
       if (slot.availableLoads && (slot.availableLoads.some(n => !finite(n) || n < 0) || new Set(slot.availableLoads).size !== slot.availableLoads.length)) error('equipment-loads', `${label}: available loads must be unique nonnegative numbers.`);
@@ -202,7 +203,8 @@ export function createSession(planDay: PlanDay, exercises: Exercise[], settings:
   }) };
 }
 
-/** Bounded integer search. Exact targets are preferences; strict weekly bounds stay hard. */
+/** Intentional whole-set allocation. Small target differences may preserve exercise coverage;
+ * strict weekly bounds remain hard. All extra allocation thresholds are app policy. */
 export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict = true, maxSetsPerExercise = 6): { plan: TrainingPlan; issues: ConstraintIssue[] } {
   const next = structuredClone(plan);
   if (!Number.isInteger(maxSetsPerExercise) || maxSetsPerExercise < 1 || maxSetsPerExercise > 30) return { plan: next, issues: [{ code: 'allocation-limit', severity: 'error', message: 'Use a whole automatic set limit between 1 and 30 per exercise.' }] };
@@ -214,8 +216,14 @@ export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict =
   const slots = next.days.filter(day => day.kind === 'training').flatMap(day => day.exercises);
   const targets = Object.entries(next.targets);
   const matrix = slots.map(slot => targets.map(([muscle]) => (catalog.get(slot.exerciseId)?.contributions ?? []).filter(c => c.muscle === muscle).reduce((sum, c) => sum + c.coefficient, 0)));
+  const primary = slots.map(slot => {
+    const exercise = catalog.get(slot.exerciseId)!;
+    const roles = primaryRoles(exercise);
+    return targets.map(([muscle]) => roles.includes(muscle) ? exercise.contributions.filter(c => c.muscle === muscle).reduce((sum, c) => sum + c.coefficient, 0) : 0);
+  });
   const days = next.days.flatMap((day, i) => day.kind === 'training' ? day.exercises.map(() => i) : []);
-  const counts = fitSetCounts(matrix, days, targets.map(([, target]) => target), slots.map(slot => slot.sets), strict, maxSetsPerExercise);
+  const keys = next.days.filter(day => day.kind === 'training').flatMap(day => day.exercises.map(slot => `${day.id}\0${slot.exerciseId}\0${slot.id}`));
+  const counts = fitSetCounts(matrix, days, targets.map(([, target]) => target), slots.map(slot => slot.sets), strict, maxSetsPerExercise, { primary, priorities: slots.map(slot => slot.allocationPriority === 'priority' ? 2 : 1), keys });
   let changed = false;
   slots.forEach((slot, i) => {
     if (slot.sets !== counts[i]) { changed = true; slot.sets = counts[i]!; slot.rir = makeRir(slot.sets, slot.rir.at(-1) === '<0'); }
@@ -226,7 +234,12 @@ export function allocateSets(plan: TrainingPlan, exercises: Exercise[], strict =
     issues.unshift({ code: 'allocation-infeasible', severity: 'error', message: `No constrained allocation was found within the ${maxSetsPerExercise}-set limit per exercise. Change exercises, coverage, targets, or the automatic set limit; custom mode allows lower weekly volume.` });
   }
   const missed = calculateVolume(next, exercises).filter(row => row.target !== undefined && Math.abs(row.total - row.target) > EPSILON);
-  if (missed.length) issues.push({ code: 'target-approximation', severity: 'warning', message: `Some targets were not matched with whole sets and the ${maxSetsPerExercise}-set limit per exercise. Planned / target: ${missed.map(row => `${MUSCLES.find(m => m.id === row.muscle)?.name ?? row.muscle} ${row.total}/${row.target}`).join(', ')}. Adjust targets, exercise coverage, or the automatic set limit. Retained exercises keep at least one set.` });
+  if (missed.length) {
+    const outside = missed.some(row => Math.abs(row.total - row.target!) > SET_TARGET_TOLERANCE + EPSILON);
+    issues.push({ code: 'target-approximation', severity: 'warning', message: `Whole-set allocation leaves target differences. Muscles with fractional credits may use the app’s ±${SET_TARGET_TOLERANCE} effective-set tolerance to preserve exercise coverage and balance; direct-only muscle budgets retain the closest whole-set fit. Planned / target: ${missed.map(row => `${MUSCLES.find(m => m.id === row.muscle)?.name ?? row.muscle} ${row.total}/${row.target}`).join(', ')}.${outside ? ` Some differences exceed one set under the ${maxSetsPerExercise}-set limit; change targets, exercise coverage, or the automatic set limit.` : ''} Fractional credits and the tolerance are planning estimates, not precise biological doses.` });
+  }
+  const singles = slots.filter((slot, i) => counts[i] === 1 && matrix[i]!.some(Boolean));
+  if (singles.length) issues.push({ code: 'allocation-single-set', severity: 'warning', message: `Retained one-set exercises: ${singles.map(slot => catalog.get(slot.exerciseId)!.name).join(', ')}. The target, exercise selection, and ${maxSetsPerExercise}-set limit prevented this search from giving every retained exercise two sets. One set can still be useful; remove an optional exercise, adjust targets, or change the set limit if you prefer fewer exercises with more sets.` });
   return { plan: next, issues };
 }
 
