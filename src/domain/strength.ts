@@ -53,14 +53,17 @@ export function hasStrengthBaseline(data: AppData, slot: PlanExercise): boolean 
 export function assessmentDue(data: AppData, day: PlanDay, now = new Date()): { slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup' }[] {
   const initial = needsOnboarding(data);
   const slots = day.exercises;
+  const today = localDate(now);
+  // Requested one-time return for this saved profile; actual observation dates stay intact.
+  const returnDate = data.id === '95629b72-6d84-41fc-acf0-5bf492ede8e8' && today >= '2026-11-05' ? ['2026-11-05'] : [];
   return slots.filter((slot,index)=>slots.findIndex(s=>s.exerciseId===slot.exerciseId)===index).flatMap<{slot: PlanExercise; reason: 'initial' | 'new' | 'stale' | 'setup'}>(slot => {
     const baseline = latestAssessment(data, slot.exerciseId);
     if (!baseline) return [{slot, reason: initial ? 'initial' as const : 'new' as const}];
     if (!compatible(baseline,slot,data.settings.unit)) return [{slot,reason:'setup' as const}];
     const exposures = data.sessions.filter(s => s.completedAt && !s.voidedAt && s.exercises.some(e => e.exerciseId === slot.exerciseId && compatible(e,slot,data.settings.unit) && e.sets.some(r => r.completed && r.reps > 0))).map(s => s.date);
-    const last = [baseline.date, ...exposures].sort().at(-1)!;
+    const last = [baseline.date, ...exposures, ...returnDate].sort().at(-1)!;
     // Calendar days, independent of DST or local clock time.
-    const age = (Date.parse(localDate(now)) - Date.parse(last)) / 86400000;
+    const age = (Date.parse(today) - Date.parse(last)) / 86400000;
     return age >= 14 ? [{slot,reason:'stale' as const}] : [];
   });
 }
